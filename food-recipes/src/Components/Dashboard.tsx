@@ -3,6 +3,7 @@ import { fetchRecipes, type Recipe } from "./Redux/RecipesReducer"
 import { ShoppingCart } from 'lucide-react';
 import { useAppDispatch, useAppSelector } from "./hooks"
 import { NavLink } from 'react-router-dom'
+import { addCart } from "./Redux/CartReducers";
 import { AnimatePresence, motion } from 'framer-motion'
 import { increasePage } from "./Redux/RecipesReducer";
 
@@ -10,6 +11,7 @@ const Dashboard = () => {
    const dispatch = useAppDispatch()
    const [filteredData, setFilteredData] = useState<Recipe[]>([])
    const { recipes, loading, error, page, hasMore } = useAppSelector((state) => state.foodrecipes)
+   const {count} = useAppSelector((state)=> state.foodCart)
 
    const hoverEffect = {
       scale: 1.1,
@@ -23,6 +25,10 @@ const Dashboard = () => {
       ))
       setFilteredData(filterData)
    }
+
+   function handleCart(foodItem:Recipe) {
+        dispatch(addCart(foodItem))
+    }
 
    useEffect(() => {
       if (recipes.length > 0) {
@@ -45,7 +51,7 @@ const Dashboard = () => {
         window.addEventListener("scroll", handleScroll);
         return () => window.removeEventListener("scroll", handleScroll);
     }, [loading]);
-    
+
 
    if (error) {
       return <div style={{ fontSize: "5rem", display: "flex", justifyContent: "center", alignItems: "center", backdropFilter: "blur(10px)", height: "100vh" }} >{error}</div>
@@ -59,7 +65,7 @@ const Dashboard = () => {
                <input type="search" onChange={handleChange} placeholder='Which Type of meal you want' />
                <motion.div className='Authentication'>
                   <motion.div whileHover={hoverEffect}>
-                     {/* <NavLink to="/cart" className='cart'>Cart{count > 0 ? `(${count})` : ""}<ShoppingCart size={25} /></NavLink> */}
+                     <NavLink to="/cart" className='cart'>Cart{count > 0 ? `(${count})` : ""}<ShoppingCart size={25} /></NavLink>
                   </motion.div>
 
                   <motion.div whileHover={hoverEffect}>
@@ -70,7 +76,8 @@ const Dashboard = () => {
                      <NavLink to="/login" className='cart'>Login</NavLink>
                   </motion.div>
                   <motion.div whileHover={hoverEffect}>
-                     {/* <button onClick={handleLogout} className='cart'>Logout</button> */}
+                     <button className='cart'>Logout</button> 
+                     {/* onClick={handleLogout} */}
                   </motion.div>
                </motion.div>
             </div>
@@ -94,8 +101,7 @@ const Dashboard = () => {
                               </motion.div>
 
                               <motion.div whileHover={hoverEffect} >
-                                 <button className="btn">Add to Cart</button>
-                                 {/* onClick={() => handleCart(food)} */}
+                                 <button onClick={() => handleCart(food)} className="btn">Add to Cart</button>
                               </motion.div>
                            </div>
                         </div>

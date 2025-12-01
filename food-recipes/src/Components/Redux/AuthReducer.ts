@@ -2,7 +2,7 @@ import { createSlice} from "@reduxjs/toolkit";
 import type { PayloadAction} from "@reduxjs/toolkit";
 
 
-type Users = {
+export type Users = {
     userName: string,
     email: string,
     password: string,

@@ -2,6 +2,7 @@ import { Route, Routes } from 'react-router-dom'
 import './App.css'
 import Dashboard from './Components/Dashboard'
 import AddToCart from './Components/AddToCart'
+import Signup from './Components/Signup'
 
 function App() {
   return (
@@ -11,7 +12,7 @@ function App() {
         <Route path='/food' element={<Dashboard />}></Route>
         {/* <Route path='/food/:id' element={<ProtectedRoutes> <RecipesDetails/> </ProtectedRoutes>}></Route> */}
         <Route path='/cart' element={<AddToCart/>}></Route>
-        {/* <Route path='/signup' element={<Signup/>}></Route> */}
+        <Route path='/signup' element={<Signup/>}></Route>
         {/* <Route path='/login' element={<Login/>} ></Route> */}
       </Routes>
     </>

@@ -1,9 +1,18 @@
+import { Route, Routes } from 'react-router-dom'
 import './App.css'
+import Dashboard from './Components/Dashboard'
 
 function App() {
   return (
     <>
-    
+    <Routes>
+        <Route path='/' element={<Dashboard />}></Route>
+        {/* <Route path='/food' element={<Dashboard />}></Route>
+        <Route path='/food/:id' element={<ProtectedRoutes> <RecipesDetails/> </ProtectedRoutes>}></Route>
+        <Route path='/cart' element={<AddToCart/>}></Route>
+        <Route path='/signup' element={<Signup/>}></Route>
+        <Route path='/login' element={<Login/>} ></Route> */}
+      </Routes>
     </>
   )
 }

@@ -28,7 +28,7 @@ export type Recipe = {
 }
 
 
-type initial = {
+export type initial = {
   loading: boolean,
   recipes: Recipe[],
   page: number,
@@ -36,7 +36,7 @@ type initial = {
   hasMore: boolean
 }
 
-const initialState: initial = {
+ const initialState: initial = {
   loading: false,
   recipes: [],
   page: 1,

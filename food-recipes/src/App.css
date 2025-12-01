@@ -1,0 +1,382 @@
+body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  color: white;
+}
+
+body {
+  background-image: url("../public/recipesBg.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  /* background-position: center; */
+  background-attachment: fixed;
+}
+
+.food-recipes {
+  margin-left: 35rem;
+}
+
+.search-food {
+  margin-top: 3rem;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 3rem;
+}
+
+.search-food input {
+  width: 60%;
+  padding: 0.6rem;
+  border: 1px solid black;
+  border-radius: 10px;
+  text-align: center;
+  background-color: white;
+  font-weight: bold;
+  outline: none;
+  color: black;
+}
+
+.Authentication {
+  display: flex;
+  gap: 2rem;
+}
+
+.cart {
+  display: flex;
+  align-items: center;
+  font-size: 1.3rem;
+  border: 1px solid black;
+  border-radius: 10px;
+  padding: 0.2rem 1.5rem;
+  background-color: white;
+  color: black;
+  cursor: pointer;
+  outline: none;
+  text-decoration: none; 
+  appearance: none;
+  border: 1px solid black;
+}
+
+.food-info {
+  width: 96%;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+}
+
+.food-box {
+  width: 90%;
+  margin: auto;
+  border: 2px solid black;
+  border-radius: 10px;
+  text-align: center;
+  padding: 1rem;
+}
+
+.food-box img {
+  width: 100%;
+  height: 20rem;
+  border: 1px solid black;
+  border-radius: 10px;
+  margin-top: 0.8rem;
+}
+
+.food-names {
+  color: white;
+  font-size: large;
+  font-weight: bold;
+}
+
+.details {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+.btn {
+  border: 1px solid black;
+  border-radius: 10px;
+  padding: 0.6rem 1.5rem;
+  background-color: black;
+  color: gold;
+  font-weight: bolder;
+  font-size: medium;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  margin-right: 1rem;
+}
+
+.pagination{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+  margin: 2rem 0rem
+}
+
+.pagination-btn{
+  padding: 0.3rem 1rem;
+  background-color: black;
+  color: gold;
+  border: 1px solid black;
+  border-radius: 10px;
+  font-weight: bold;
+}
+
+@media screen and (max-width:1762px) {
+  .food-recipes {
+    margin-left: 30rem;
+  }
+}
+
+@media screen and (max-width:1687px) {
+  .food-recipes {
+    margin-left: 25rem;
+  }
+
+  .food-box {
+    height: 33rem;
+  }
+}
+
+@media screen and (max-width:1556px) {
+  .food-recipes {
+    margin-left: 20rem;
+  }
+}
+
+@media screen and (max-width:1475px) {
+  .food-recipes {
+    margin-left: 15rem;
+  }
+
+  .search-food {
+    width: 95%;
+  }
+
+}
+
+@media screen and (max-width:1272px) {
+  .food-recipes {
+    margin-left: 10rem;
+  }
+}
+
+@media screen and (max-width:1053px) {
+  .food-recipes {
+    margin-left: 5rem;
+  }
+}
+
+@media screen and (max-width:974px) {
+  .food-recipes {
+    margin-left: 0;
+  }
+
+  .search-food {
+    gap: 2rem
+  }
+}
+
+@media screen and (max-width:700px) {
+  .search-food {
+    gap: 1rem
+  }
+
+  .Authentication {
+    gap: 1rem;
+  }
+}
+
+@media screen and (max-width:636px) {
+  .search-food {
+    display: grid;
+    justify-content: space-evenly;
+  }
+
+  .search-food input {
+    width: 100%;
+  }
+}
+
+
+/* Recipes Details */
+.food-Info {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin-left: 25rem;
+}
+
+.food-Info-img {
+  text-align: center;
+  margin-top: 3rem;
+  color: gold;
+}
+
+.food-Info-img img {
+  border: 2px solid black;
+  border-radius: 10px;
+  width: 100%;
+  max-width: 30rem;
+}
+
+.food-Details {
+  margin-top: 3rem;
+  display: flex;
+  gap: 3rem;
+}
+
+.food-prep-list li {
+  list-style: none;
+  font-size: x-large;
+  margin-bottom: 1.5rem;
+}
+
+.food-instruction {
+  margin-top: 2rem;
+  margin-left: 25rem;
+  text-align: center;
+  border: 1px solid black;
+  backdrop-filter: blur(10px);
+  border-radius: 10px;
+}
+
+.food-instruction h1 {
+  color: gold;
+}
+
+.food-instruction li {
+  list-style: none;
+  font-size: large;
+  margin-bottom: 0.5rem;
+}
+
+/* Add to Cart Page */
+
+.Cart-food-box {
+  margin: auto;
+  border: 2px solid black;
+  border-radius: 10px;
+  text-align: center;
+  padding: 1rem;
+}
+
+.Cart-food-box img {
+  width: 100%;
+  height: 20rem;
+  border: 1px solid black;
+  border-radius: 10px;
+  margin-top: 0.8rem;
+}
+
+.cartCount {
+  width: 30%;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  border: 1px solid black;
+  border-radius: 10px;
+  background-color: black;
+  color: gold;
+  margin-bottom: 1rem;
+  padding: 0.4rem 1rem;
+  cursor: pointer;
+  font-weight: bolder;
+  font-size: medium;
+  text-decoration: none;
+}
+
+
+/* SignUp and LogIn  */
+
+.Auth {
+  height: 80vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.Auth-box {
+  padding: 1rem;
+  width: 40%;
+  border: 1px solid black;
+  border-radius: 20px;
+  text-align: center;
+  backdrop-filter: blur(10px);
+}
+
+.Auth-box p {
+  margin-bottom: 3rem;
+  font-size: 2.5rem;
+  font-weight: bold;
+}
+
+.Auth-data {
+  width: 50%;
+  margin: auto;
+}
+
+.Auth-inputs label {
+  display: block;
+  text-align: left;
+  margin-left: 0.3rem;
+  margin-bottom: 0.5rem;
+  font-size: large;
+  font-weight: bold;
+}
+
+.Auth-inputs input {
+  width: 100%;
+  border: 1px solid black;
+  border-radius: 10px;
+  margin-bottom: 1.5rem;
+  padding: 0.3rem;
+  outline: none;
+}
+
+.Auth-button button {
+  padding: 0.3rem 3rem;
+  margin-bottom: 1rem;
+  margin-top: 1rem;
+  border: 1px solid black;
+  border-radius: 20px;
+  font-weight: bold;
+  color: gold;
+  background-color: black;
+  font-size: 1rem;
+}
+
+@media screen and (max-width:1200px) {
+  .Auth-box {
+    width: 50%;
+  }
+}
+
+@media screen and (max-width:1000px) {
+  .Auth-box {
+    width: 60%;
+  }
+}
+
+@media screen and (max-width:800px) {
+  .Auth-box {
+    width: 70%;
+  }
+}
+
+@media screen and (max-width:600px) {
+  .Auth-box {
+    width: 80%;
+  }
+}
+
+@media screen and (max-width:500px) {
+  .Auth-box {
+    width: 98%;
+  }
+}

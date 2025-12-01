@@ -21,7 +21,6 @@ const initialState: initial = {
     isLogin: storedLogin
 }
 
-
 const authReducer = createSlice({
     name: "auth",
     initialState,

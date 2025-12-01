@@ -81,10 +81,6 @@ const Dashboard = () => {
                   </motion.div>
                </motion.div>
             </div>
-
-            <div>
-               hellooo Feature
-            </div>
  
             <div className='food-info'>
                <AnimatePresence>

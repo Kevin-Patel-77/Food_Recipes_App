@@ -3,11 +3,16 @@ import { useNavigate } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from './hooks'
 import { login } from './Redux/AuthReducer'
 
+ type login = {
+    email:string , 
+    password:string
+ } 
+
 const Login = () => {
   const disptach = useAppDispatch()
   const navigate = useNavigate()
-  const [loginData, setLoginData] = useState({ email: "", password: "" })
-  const [submitted, setSubmitted] = useState(false);
+  const [loginData, setLoginData] = useState<login>({ email: "", password: "" })
+  const [submitted, setSubmitted] = useState<boolean>(false);
 
   const { isLogin } = useAppSelector((state) => state.foodAuth)
 

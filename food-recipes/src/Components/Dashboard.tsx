@@ -119,16 +119,15 @@ const Dashboard = () => {
                   Array.from({ length: itemsPerPage }).map((_, i) => (
                      <motion.div
                         key={`skeleton-${i}`}
-                        // initial={{ opacity: 0, scale: 0.5 }}
-                        // animate={{ opacity: 1, scale: 1 }}
-                        // exit={{ opacity: 0 }}
-                        // transition={{ duration: 0.5 }}
+                        initial={{ opacity: 0, scale: 0.5 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.5 }}
                      >
                         <RecipeSkeleton />
                      </motion.div>
                   ))
                }
-
             </div>
          </div>
       </div >

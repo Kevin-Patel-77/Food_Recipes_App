@@ -17,6 +17,7 @@ const Signup = () => {
   function handleClick(){
     if(userData.userName == "" || userData.userName == "" || userData.password==""){
       alert("Fill All the Details")
+      return
     }
 
     disptach(addUser(userData))

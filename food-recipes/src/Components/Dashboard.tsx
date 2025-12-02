@@ -7,12 +7,14 @@ import { addCart } from "./Redux/CartReducers";
 import { AnimatePresence, motion } from 'framer-motion'
 import { increasePage } from "./Redux/RecipesReducer";
 import { logout } from "./Redux/AuthReducer";
+import RecipeSkeleton from "./RecipeSkeleton";
 
 const Dashboard = () => {
    const dispatch = useAppDispatch()
    const [filteredData, setFilteredData] = useState<Recipe[]>([])
    const { recipes, loading, error, page, hasMore } = useAppSelector((state) => state.foodrecipes)
    const { count } = useAppSelector((state) => state.foodCart)
+   const itemsPerPage:number = 6
 
    const hoverEffect = {
       scale: 1.1,
@@ -43,7 +45,7 @@ const Dashboard = () => {
    }, [recipes])
 
    useEffect(() => {
-      dispatch(fetchRecipes(page))
+      dispatch(fetchRecipes({page , limit:itemsPerPage}))
    }, [page])
 
    useEffect(() => {
@@ -113,11 +115,20 @@ const Dashboard = () => {
                   ))}
                </AnimatePresence>
 
-               {loading && (
-                  <p style={{ textAlign: "center", padding: "20px", fontSize: "2rem" }}>
-                     Loading...
-                  </p>
-               )}
+               {loading &&
+                  Array.from({ length: itemsPerPage }).map((_, i) => (
+                     <motion.div
+                        key={`skeleton-${i}`}
+                        // initial={{ opacity: 0, scale: 0.5 }}
+                        // animate={{ opacity: 1, scale: 1 }}
+                        // exit={{ opacity: 0 }}
+                        // transition={{ duration: 0.5 }}
+                     >
+                        <RecipeSkeleton />
+                     </motion.div>
+                  ))
+               }
+
             </div>
          </div>
       </div >

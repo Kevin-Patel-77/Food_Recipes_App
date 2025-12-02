@@ -119,8 +119,35 @@ const Dashboard = () => {
                   </p>
                )}
             </div>
+         </div>
+      </div >
+   )
+}
 
-            {/* <div className='pagination'>
+export default Dashboard
+
+
+// Pagination
+// const [currentPage , setCurrentPage] = useState(1)
+// const itemsPerPage = 6
+
+// const lastIndex = currentPage * itemsPerPage
+// const firstIndex = lastIndex - itemsPerPage
+
+// const currentItem = filteredData.slice(firstIndex , lastIndex)
+
+// const totalPages = Math.ceil(filteredData.length / itemsPerPage)
+
+
+// function handlePrev(){
+//     setCurrentPage((prev)=> prev - 1)
+// }
+
+// function handleNext(){
+//     setCurrentPage((prev) => prev + 1)
+// }
+
+/* <div className='pagination'>
                    <div>
                     <button disabled={currentPage === 1} onClick={handlePrev} className='pagination-btn'>Prev</button>
                    </div>
@@ -138,10 +165,4 @@ const Dashboard = () => {
                    <div>
                     <button  disabled={currentPage === totalPages} className='pagination-btn' onClick={handleNext}>Next</button>
                    </div>
-                </div> */}
-         </div>
-      </div >
-   )
-}
-
-export default Dashboard
+</div> */

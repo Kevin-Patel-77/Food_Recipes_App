@@ -1,11 +1,13 @@
 import { configureStore} from "@reduxjs/toolkit"
 import recipesReducer from '../RecipesReducer'
 import cartReducer from '../CartReducers'
+import authReducer from '../AuthReducer'
 
 const recipesStore = configureStore({
       reducer : {
         foodrecipes: recipesReducer,
         foodCart : cartReducer ,
+        foodAuth : authReducer
       }
 })
 

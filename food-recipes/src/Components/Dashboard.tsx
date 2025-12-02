@@ -6,12 +6,13 @@ import { NavLink } from 'react-router-dom'
 import { addCart } from "./Redux/CartReducers";
 import { AnimatePresence, motion } from 'framer-motion'
 import { increasePage } from "./Redux/RecipesReducer";
+import { logout } from "./Redux/AuthReducer";
 
 const Dashboard = () => {
    const dispatch = useAppDispatch()
    const [filteredData, setFilteredData] = useState<Recipe[]>([])
    const { recipes, loading, error, page, hasMore } = useAppSelector((state) => state.foodrecipes)
-   const {count} = useAppSelector((state)=> state.foodCart)
+   const { count } = useAppSelector((state) => state.foodCart)
 
    const hoverEffect = {
       scale: 1.1,
@@ -26,9 +27,14 @@ const Dashboard = () => {
       setFilteredData(filterData)
    }
 
-   function handleCart(foodItem:Recipe) {
-        dispatch(addCart(foodItem))
-    }
+   function handleCart(foodItem: Recipe) {
+      dispatch(addCart(foodItem))
+   }
+
+   function handleLogout() {
+      dispatch(logout())
+      alert("Logout Successful")
+   }
 
    useEffect(() => {
       if (recipes.length > 0) {
@@ -40,17 +46,16 @@ const Dashboard = () => {
       dispatch(fetchRecipes(page))
    }, [page])
 
-
    useEffect(() => {
-        const handleScroll = () => {
-            if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 10 && !loading && hasMore) {
-                dispatch(increasePage());
-            }
-        };
+      const handleScroll = () => {
+         if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 10 && !loading && hasMore) {
+            dispatch(increasePage());
+         }
+      };
 
-        window.addEventListener("scroll", handleScroll);
-        return () => window.removeEventListener("scroll", handleScroll);
-    }, [loading]);
+      window.addEventListener("scroll", handleScroll);
+      return () => window.removeEventListener("scroll", handleScroll);
+   }, [loading]);
 
 
    if (error) {
@@ -76,12 +81,11 @@ const Dashboard = () => {
                      <NavLink to="/login" className='cart'>Login</NavLink>
                   </motion.div>
                   <motion.div whileHover={hoverEffect}>
-                     <button className='cart'>Logout</button> 
-                     {/* onClick={handleLogout} */}
+                     <button onClick={handleLogout} className='cart'>Logout</button>
                   </motion.div>
                </motion.div>
             </div>
- 
+
             <div className='food-info'>
                <AnimatePresence>
                   {filteredData.map((food) => (
@@ -108,7 +112,7 @@ const Dashboard = () => {
                      </motion.div>
                   ))}
                </AnimatePresence>
-               
+
                {loading && (
                   <p style={{ textAlign: "center", padding: "20px", fontSize: "2rem" }}>
                      Loading...

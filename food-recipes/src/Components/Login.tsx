@@ -2,11 +2,12 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from './hooks'
 import { login } from './Redux/AuthReducer'
+import { Box, Button, InputLabel, TextField, Typography } from '@mui/material'
 
- type login = {
-    email:string , 
-    password:string
- } 
+type login = {
+  email: string,
+  password: string
+}
 
 const Login = () => {
   const disptach = useAppDispatch()
@@ -16,11 +17,15 @@ const Login = () => {
 
   const { isLogin } = useAppSelector((state) => state.foodAuth)
 
-  function handleChange(event:React.ChangeEvent<HTMLInputElement>) {
+  function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
     setLoginData({ ...loginData, [event.target.name]: event.target.value })
   }
 
   function handleClick() {
+    if (loginData.email === "" && loginData.password === "") {
+      alert("Fill the details")
+      return
+    }
     setSubmitted(true)
     disptach(login(loginData))
   }
@@ -35,31 +40,27 @@ const Login = () => {
     } else {
       alert("Invalid Credentials");
     }
-  }, [isLogin , submitted]);
+  }, [isLogin, submitted]);
 
   return (
-    <div className='Auth'>
-      <div className='Auth-box'>
-        <p>Log In</p>
+    <Box sx={{ height: "80vh", display: "flex", justifyContent: "center", alignItems: "center" }}>
+      <Box sx={{ width: { xs: "98%", sm: "80%", md: "70%", lg: "50%" }, padding: "1rem", border: "1px solid black", borderRadius: "20px", textAlign: "center", backdropFilter: "blur(10px)" }}>
+        <Typography variant='body1' sx={{ mb: "3rem", fontSize: "2.5rem", fontWeight: "bold" }}>Log In</Typography>
 
-        <div className='Auth-data'>
+        <Box sx={{ width: "50%", margin: "auto" }}>
 
-          <div className='Auth-inputs'>
-            <label htmlFor="email">Email:</label>
-            <input type="email" onChange={handleChange} name='email' value={loginData.email} id="email" />
-          </div>
+          <InputLabel htmlFor="email">Email</InputLabel>
+          <TextField type='email' id='email' name="email" onChange={handleChange} value={loginData.email} sx={{ marginBottom: "1rem" }} fullWidth />
 
-          <div className='Auth-inputs'>
-            <label htmlFor="password">Password:</label>
-            <input type="password" onChange={handleChange} name='password' value={loginData.password} id="password" />
-          </div>
+          <InputLabel htmlFor="password">Password</InputLabel>
+          <TextField id='password' value={loginData.password} name='password' fullWidth onChange={handleChange} type='password' sx={{ marginBottom: "1rem" }} />
 
-          <div className='Auth-button'>
-            <button onClick={handleClick}>Log In</button>
-          </div>
-        </div>
-      </div>
-    </div>
+
+          <Button variant="contained" onClick={handleClick} sx={{ p: "0.5rem 3rem", marginTop: "1.5rem", marginBottom: "1rem" }}>Log In</Button>
+
+        </Box>
+      </Box>
+    </Box>
   )
 }
 

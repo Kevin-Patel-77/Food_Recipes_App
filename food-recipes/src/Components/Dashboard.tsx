@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react"
 import { fetchRecipes, type Recipe } from "./Redux/RecipesReducer"
-import { ShoppingCart } from 'lucide-react';
 import { useAppDispatch, useAppSelector } from "./hooks"
 import { NavLink } from 'react-router-dom'
 import { addCart } from "./Redux/CartReducers";
@@ -8,13 +7,17 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { increasePage } from "./Redux/RecipesReducer";
 import { logout } from "./Redux/AuthReducer";
 import RecipeSkeleton from "./RecipeSkeleton";
+import { Box, Button, TextField, Typography } from '@mui/material';
+
+const MotionBox = motion.create(Box)
+const MotionImg = motion("img");
 
 const Dashboard = () => {
    const dispatch = useAppDispatch()
    const [filteredData, setFilteredData] = useState<Recipe[]>([])
    const { recipes, loading, error, page, hasMore } = useAppSelector((state) => state.foodrecipes)
    const { count } = useAppSelector((state) => state.foodCart)
-   const itemsPerPage:number = 6
+   const itemsPerPage: number = 6
 
    const hoverEffect = {
       scale: 1.1,
@@ -45,7 +48,7 @@ const Dashboard = () => {
    }, [recipes])
 
    useEffect(() => {
-      dispatch(fetchRecipes({page , limit:itemsPerPage}))
+      dispatch(fetchRecipes({ page, limit: itemsPerPage }))
    }, [page])
 
    useEffect(() => {
@@ -66,58 +69,73 @@ const Dashboard = () => {
 
 
    return (
-      <div>
-         <div className='food-recipes'>
-            <div className='search-food'>
-               <input type="search" onChange={handleChange} placeholder='Which Type of meal you want' />
-               <motion.div className='Authentication'>
-                  <motion.div whileHover={hoverEffect}>
-                     <NavLink to="/cart" className='cart'>Cart{count > 0 ? `(${count})` : ""}<ShoppingCart size={25} /></NavLink>
-                  </motion.div>
+      <Box>
+         <Box sx={{ marginLeft: { sm: "0rem", md: "15rem", lg: "35rem" } }}>
+            <Box sx={{ marginTop: "3rem", marginBottom: "1.5rem", display: { xs: "grid", sm: "grid", md: "flex" }, justifyContent: { xs: "space-evenly", sm: "space-evenly" }, alignItems: "center", gap: "1rem" }}>
+               <TextField type="search" fullWidth sx={{ "& .MuiInputBase-input": { textAlign: "center" } }} onChange={handleChange} placeholder='Which Type of meal you want' />
+               <Box sx={{ display: "flex", gap: "2rem" }}>
 
-                  <motion.div whileHover={hoverEffect}>
-                     <NavLink to="/signup" className='cart'>Signup</NavLink>
-                  </motion.div>
+                  <MotionBox whileHover={hoverEffect}>
+                     <Button component={NavLink} to="/cart" variant="contained"
+                        sx={{ backgroundColor: "white", color: "black" }}>Cart{count > 0 ? `(${count})` : ""}</Button>
+                  </MotionBox>
 
-                  <motion.div whileHover={hoverEffect}>
-                     <NavLink to="/login" className='cart'>Login</NavLink>
-                  </motion.div>
-                  <motion.div whileHover={hoverEffect}>
-                     <button onClick={handleLogout} className='cart'>Logout</button>
-                  </motion.div>
-               </motion.div>
-            </div>
+                  <MotionBox whileHover={hoverEffect}>
+                     <Button component={NavLink} to="/signup" variant="contained"
+                        sx={{ backgroundColor: "white", color: "black" }}>Signup</Button>
+                  </MotionBox>
 
-            <div className='food-info'>
+                  <MotionBox whileHover={hoverEffect}>
+                     <Button component={NavLink} to="/login" variant="contained"
+                        sx={{ backgroundColor: "white", color: "black" }}>Login</Button>
+                  </MotionBox>
+
+
+                  <MotionBox whileHover={hoverEffect}>
+                     <Button variant="contained" onClick={handleLogout} sx={{ backgroundColor: "white", color: "black" }} >Logout</Button>
+                  </MotionBox>
+
+               </Box>
+            </Box>
+
+            <Box sx={{ width: "96%", display: "grid", gridTemplateColumns: "repeat(auto-fit , minmax(300px , 1fr))", gap: "1rem", justifyContent: "center", alignItems: "center" }}>
                <AnimatePresence>
                   {filteredData.map((food) => (
-                     <motion.div
+                     <MotionBox
                         initial={{ opacity: 0, scale: 0.5 }}
                         animate={{ opacity: 1, scale: 1 }}
                         transition={{ duration: 0.5 }}
-                        className='food-box'
+                        sx={{ width: "90%", margin: "auto", border: "2px solid black", borderRadius: "10px", textAlign: "center", padding: "1rem" }}
                         key={food.id}>
-                        <motion.img whileHover={hoverEffect} src={food.image} alt={food.name} />
-                        <div className='food-names'>
-                           <p>Name: {food.name}</p>
-                           <p>Meal Type: {food.mealType.map((meal, index) => <span key={index} style={{ marginRight: "0.5rem" }}>{meal}</span>)}</p>
-                           <div className='details'>
-                              <motion.div whileHover={hoverEffect} >
-                                 <NavLink to={`/food/${food.id}`} className="btn">View Details</NavLink>
-                              </motion.div>
+                        <MotionImg style={{ width: "100%", height: "20rem", border: "1px solid black", borderRadius: "10px", marginTop: "0.8rem", marginBottom: "1rem" }} whileHover={hoverEffect} src={food.image} alt={food.name} ></MotionImg>
+                        <Box sx={{ color: "white", fontSize: "large", fontWeight: "bold" }}>
+                           <Typography variant='body1'>Name: {food.name}</Typography>
+                           <Typography variant='body1' sx={{ marginBottom: "1rem" }}>Meal Type: {food.mealType.map((meal, index) => <Typography
+                              key={index}
+                              component="span"
+                              sx={{ marginRight: "0.5rem" }}
+                           >
+                              {meal}
+                           </Typography>)}</Typography>
+                           <Box sx={{ display: "flex", gap: "1rem", justifyContent: 'center', marginBottom: "1rem" }}>
+                              <MotionBox whileHover={hoverEffect} >
+                                 <Button component={NavLink} to={`/food/${food.id}`} variant="contained"
+                                 >View Details</Button>
+                              </MotionBox>
 
-                              <motion.div whileHover={hoverEffect} >
-                                 <button onClick={() => handleCart(food)} className="btn">Add to Cart</button>
-                              </motion.div>
-                           </div>
-                        </div>
-                     </motion.div>
+                              <MotionBox whileHover={hoverEffect} >
+                                 <Button type='button' onClick={() => handleCart(food)} variant="contained"
+                                 >Add to Cart</Button>
+                              </MotionBox>
+                           </Box>
+                        </Box>
+                     </MotionBox>
                   ))}
                </AnimatePresence>
 
                {loading &&
                   Array.from({ length: itemsPerPage }).map((_, i) => (
-                     <motion.div
+                     <MotionBox
                         key={`skeleton-${i}`}
                         initial={{ opacity: 0, scale: 0.5 }}
                         animate={{ opacity: 1, scale: 1 }}
@@ -125,16 +143,19 @@ const Dashboard = () => {
                         transition={{ duration: 0.5 }}
                      >
                         <RecipeSkeleton />
-                     </motion.div>
+                     </MotionBox>
                   ))
                }
-            </div>
-         </div>
-      </div >
+            </Box>
+         </Box>
+      </Box >
    )
 }
 
 export default Dashboard
+
+
+
 
 
 // Pagination

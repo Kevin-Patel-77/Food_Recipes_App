@@ -5,6 +5,11 @@ import { Plus } from 'lucide-react';
 import { addCart, deleteCart } from './Redux/CartReducers';
 import { useAppDispatch, useAppSelector } from './hooks';
 import type { Recipe } from './Redux/RecipesReducer';
+import { Box, Button, Typography } from '@mui/material';
+
+const MotionBox = motion(Box)
+const MotionImg = motion("img");
+
 
 
 const AddToCart = () => {
@@ -25,42 +30,59 @@ const AddToCart = () => {
   }
 
   return (
-    <div className='food-recipes'>
-      <div className='food-info'>
+    <Box sx={{ marginLeft: { sm: "0rem", md: "15rem", lg: "35rem" } }}>
+      <Box sx={{ width: "96%", display: "grid", gridTemplateColumns: "repeat(auto-fit , minmax(300px , 1fr))", gap: "1rem", justifyContent: "center", alignItems: "center" }}>
         <AnimatePresence>
           {items.length > 0 ? items.map((food) => (
-            <motion.div
+            <MotionBox
               initial={{ opacity: 0, scale: 0.5 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 1, scale: 0.8 }}
               transition={{ duration: 0.5 }}
-              className='Cart-food-box'
+              sx={{ margin: "auto", border: "2px solid black", borderRadius: "10px", textAlign: "center", padding: "1rem" }}
               key={food.id}>
-              <motion.img whileHover={hoverEffect} src={food.image} alt={food.name} />
-              <div className='food-names'>
-                <p>Name: {food.name}</p>
-                <p>Meal Type: {food.mealType.map((meal , index ) => <span key={index} style={{ marginRight: "0.5rem" }}>{meal}</span>)}</p>
-                <div className='details'>
-                  <motion.div whileHover={hoverEffect} >
-                    <NavLink to={`/food/${food.id}`} className="btn">View Details</NavLink>
-                  </motion.div>
+              <MotionImg style={{ width: "100%", height: "20rem", border: "1px solid black", borderRadius: "10px", marginTop: "0.8rem" }} whileHover={hoverEffect} src={food.image} alt={food.name} />
+              <Box sx={{ color: "white", fontSize: "large", fontWeight: "bold" }}>
+                <Typography variant='body1' sx={{ marginTop: "1rem" }}>Name: {food.name}</Typography>
+                <Typography variant='body1' sx={{ marginBottom: "1rem" }}>Meal Type: {food.mealType.map((meal, index) => (
+                  <Box
+                    key={index}
+                    component="span"
+                    sx={{ marginRight: "0.5rem" }}
+                  >
+                    {meal}
+                  </Box>
+                ))}</Typography>
 
-                  <motion.div className='cartCount' whileHover={hoverEffect} >
+
+                <Box sx={{display:"flex" , justifyContent:"center" , marginBottom:"1rem" , gap:"1rem"}}>
+                  <MotionBox whileHover={hoverEffect} >
+                    <Button component={NavLink} to={`/food/${food.id}`} sx={{padding:"0.5rem 2rem"}}>View Details</Button>
+                  </MotionBox>
+
+                  <MotionBox whileHover={hoverEffect} sx={{width:"30%" , display:"flex" , 
+                    justifyContent:"space-evenly" , alignItems:"center" , 
+                    border:"1px solid black" , borderRadius:"10px" , 
+                    backgroundColor:"black" , color:"gold" , marginBottom:"1rem" , 
+                    padding:"0.4rem 1rem" , cursor:"pointer" , fontWeight:"bolder" , 
+                    fontSize:"medium" , textDecoration:"none", gap:"0.5rem" }} >
+
                     <CookingPot onClick={() => handleDelete(food.id)} />
                     {food.quantity}
-                    <Plus onClick={() => handleAdd(food)} />
-                  </motion.div>
-                </div>
-              </div>
-            </motion.div>
-          )) : <motion.div style={{textAlign:"center" ,  border:"2px solid black", color:"gold" , backgroundColor:"black" , borderRadius:"10px"}} initial={{ opacity: 0, scale: 0.5 }}
+                    <Plus onClick={() => handleAdd(food)} />   
+                  </MotionBox>
+
+                </Box>
+              </Box>
+            </MotionBox>
+          )) : <MotionBox sx={{ textAlign: "center", border: "2px solid black", color: "gold", backgroundColor: "black", borderRadius: "10px" }} initial={{ opacity: 0, scale: 0.5 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 1 }}>
-            <h1>Your Recipes Cart is empty</h1>
-          </motion.div>}
+            <Typography  variant='h4'>Your Recipes Cart is empty</Typography>
+          </MotionBox>}
         </AnimatePresence>
-      </div>
-    </div>
+      </Box>
+    </Box>
   )
 }
 

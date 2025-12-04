@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react"
-import { fetchRecipes, type Recipe } from "./Redux/RecipesReducer"
+import { useEffect, useRef, useState } from "react"
+import { fetchRecipes } from "./Redux/RecipesReducer"
+import type { Recipe } from "./Redux/RecipesReducer"
 import { useAppDispatch, useAppSelector } from "./hooks"
 import { NavLink } from 'react-router-dom'
 import { addCart } from "./Redux/CartReducers";
@@ -8,6 +9,7 @@ import { increasePage } from "./Redux/RecipesReducer";
 import { logout } from "./Redux/AuthReducer";
 import RecipeSkeleton from "./RecipeSkeleton";
 import { Box, Button, TextField, Typography } from '@mui/material';
+import { debounce } from "lodash";
 
 const MotionBox = motion.create(Box)
 const MotionImg = motion("img");
@@ -18,6 +20,10 @@ const Dashboard = () => {
    const { recipes, loading, error, page, hasMore } = useAppSelector((state) => state.foodrecipes)
    const { count } = useAppSelector((state) => state.foodCart)
    const itemsPerPage: number = 6
+   const [hasSearched, setHasSearched] = useState<Boolean>(false);
+   const [isSearching, setIsSearching] = useState<Boolean>(false);
+
+   const debouncing = useRef<(((value: Recipe[]) => void) & { cancel: () => void }) | null>(null);
 
    const hoverEffect = {
       scale: 1.1,
@@ -25,11 +31,27 @@ const Dashboard = () => {
    };
 
    function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
+      let value = event.target.value.trim()
+
+      if (value.length > 0) {
+         setIsSearching(true);
+         setHasSearched(true);
+      } else {
+         setIsSearching(false);
+         setFilteredData(recipes);
+         return;
+      }
+
       let filterData = recipes.filter((meal) => (
-         meal.mealType.some((type) => type.toLowerCase().includes(event.target.value.toLowerCase())) ||
-         meal.name.toLowerCase().includes(event.target.value.toLowerCase())
+         meal.mealType.some((type) => type.toLowerCase().includes(value.toLowerCase())) ||
+         meal.name.toLowerCase().includes(value.toLowerCase())
       ))
-      setFilteredData(filterData)
+
+      if (filterData.length === 0) {
+         debouncing.current?.([])
+      } else {
+         debouncing.current?.(filterData)
+      }
    }
 
    function handleCart(foodItem: Recipe) {
@@ -40,6 +62,14 @@ const Dashboard = () => {
       dispatch(logout())
       alert("Logout Successful")
    }
+
+   useEffect(() => {
+      debouncing.current = debounce((value: Recipe[]) => {
+         setFilteredData(value)
+      }, 500)
+
+      return () => debouncing.current?.cancel()
+   }, [])
 
    useEffect(() => {
       if (recipes.length > 0) {
@@ -53,6 +83,9 @@ const Dashboard = () => {
 
    useEffect(() => {
       const handleScroll = () => {
+
+         if (isSearching) return
+
          if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 10 && !loading && hasMore) {
             dispatch(increasePage());
          }
@@ -60,7 +93,7 @@ const Dashboard = () => {
 
       window.addEventListener("scroll", handleScroll);
       return () => window.removeEventListener("scroll", handleScroll);
-   }, [loading]);
+   }, [loading, isSearching, hasMore]);
 
 
    if (error) {
@@ -100,7 +133,11 @@ const Dashboard = () => {
 
             <Box sx={{ width: "96%", display: "grid", gridTemplateColumns: "repeat(auto-fit , minmax(300px , 1fr))", gap: "1rem", justifyContent: "center", alignItems: "center" }}>
                <AnimatePresence>
-                  {filteredData.map((food) => (
+                  {filteredData.length === 0 && !loading && hasSearched ? (
+                     <Typography variant="h4" sx={{ textAlign: "center", color: "white", padding: "2rem" }}>
+                        No Data Found
+                     </Typography>
+                  ) : filteredData.map((food) => (
                      <MotionBox
                         initial={{ opacity: 0, scale: 0.5 }}
                         animate={{ opacity: 1, scale: 1 }}

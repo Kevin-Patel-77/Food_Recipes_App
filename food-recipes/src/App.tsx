@@ -35,13 +35,13 @@ function App() {
         </Routes>
       </ThemeProvider>
       <ToastContainer
-        position="top-right" 
-        autoClose={2000} 
+        position="top-right"
+        autoClose={1000}
         hideProgressBar={false}
-        newestOnTop={true} 
-        closeOnClick 
-        pauseOnHover 
-        draggable 
+        newestOnTop={true}
+        closeOnClick
+        pauseOnHover
+        draggable
         theme="colored"
       />
     </>

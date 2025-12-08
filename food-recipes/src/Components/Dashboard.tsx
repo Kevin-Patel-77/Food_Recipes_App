@@ -10,6 +10,7 @@ import { logout } from "./Redux/AuthReducer";
 import RecipeSkeleton from "./RecipeSkeleton";
 import { Box, Button, TextField, Typography } from "@mui/material";
 import { debounce } from "lodash";
+import { toast } from "react-toastify";
 
 const MotionBox = motion.create(Box);
 const MotionImg = motion("img");
@@ -66,8 +67,8 @@ const Dashboard = () => {
   }
 
   function handleLogout() {
-    dispatch(logout());
-    alert("Logout Successful");
+   dispatch(logout());
+   toast.success("Logout Successful");
   }
 
   useEffect(() => {
@@ -138,7 +139,7 @@ const Dashboard = () => {
           <TextField
             type="search"
             sx={{
-              width:"70%",
+              width:{sm:"100%" , md:"70%"  },
               "& .MuiInputBase-input": { textAlign: "center" },
             }}
             onChange={handleChange}
@@ -210,7 +211,7 @@ const Dashboard = () => {
             {filteredData.length === 0 && !loading && hasSearched ? (
               <Typography
                 variant="h4"
-                sx={{ textAlign: "center", color: "white", padding: "2rem" }}
+                sx={{ textAlign: "center", color: "black", padding: "2rem" }}
               >
                 No Data Found
               </Typography>

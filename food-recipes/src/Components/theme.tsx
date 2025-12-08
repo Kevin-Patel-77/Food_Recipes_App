@@ -45,7 +45,7 @@ export const theme = createTheme({
             borderColor: "white",
           },
 
-          "&:hover .MuiOutlinedInput-notchedOutline": {
+          "& .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline": {
             borderColor: "white",
           },
 

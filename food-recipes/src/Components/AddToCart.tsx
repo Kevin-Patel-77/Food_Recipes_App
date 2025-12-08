@@ -30,7 +30,7 @@ const AddToCart = () => {
   }
 
   return (
-    <Box sx={{ marginLeft: { sm: "0rem", md: "15rem", lg: "35rem" } }}>
+    <Box sx={{padding:"1rem"}} >
       <Box sx={{ width: "96%", display: "grid", gridTemplateColumns: "repeat(auto-fit , minmax(300px , 1fr))", gap: "1rem", justifyContent: "center", alignItems: "center" }}>
         <AnimatePresence>
           {items.length > 0 ? items.map((food) => (
@@ -75,7 +75,7 @@ const AddToCart = () => {
                 </Box>
               </Box>
             </MotionBox>
-          )) : <MotionBox sx={{ textAlign: "center", border: "2px solid black", color: "gold", backgroundColor: "black", borderRadius: "10px" }} initial={{ opacity: 0, scale: 0.5 }}
+          )) : <MotionBox sx={{ textAlign: "center", color: "white", backgroundColor: "#ff6f00", borderRadius: "10px" }} initial={{ opacity: 0, scale: 0.5 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 1 }}>
             <Typography  variant='h4'>Your Recipes Cart is empty</Typography>

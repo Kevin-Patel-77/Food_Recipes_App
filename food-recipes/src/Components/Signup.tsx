@@ -29,10 +29,10 @@ const Signup = () => {
   return (
     <Box sx={{ height: "80vh", display: "flex", justifyContent: "center", alignItems: "center" }}>
       <Box sx={{ padding: "1rem", width: { xs: "98%", sm: "80%", md: "70%", lg: "50%" }, border: "1px solid black", borderRadius: "20px", textAlign: "center", backdropFilter: "blur(10px)" }}>
-        <Typography variant='h4' mb="3rem" fontWeight="bold">Create Account</Typography>
+        <Typography variant='h4' mb="3rem" fontWeight="bold" sx={{color:"#ff6f00"}}>Create Account</Typography>
 
         <Box sx={{ width: "50%", margin: "auto" }}>
-          <InputLabel htmlFor='username'>UserName:</InputLabel>
+          <InputLabel htmlFor='username' sx={{color:"#ff6f00"}}>UserName:</InputLabel>
           <TextField
             id='username'
             name="userName"
@@ -43,7 +43,7 @@ const Signup = () => {
           />
 
 
-          <InputLabel htmlFor='email'>Email:</InputLabel>
+          <InputLabel htmlFor='email' sx={{color:"#ff6f00"}}>Email:</InputLabel>
           <TextField
             id='email'
             name="email"
@@ -54,7 +54,7 @@ const Signup = () => {
             sx={{ marginBottom: "1rem" }}
           />
 
-          <InputLabel htmlFor='password'>Password:</InputLabel>
+          <InputLabel htmlFor='password' sx={{color:"#ff6f00"}}>Password:</InputLabel>
           <TextField
             id='password'
             name="password"
@@ -67,7 +67,7 @@ const Signup = () => {
         </Box>
 
         <Box>
-          <Button variant='contained' sx={{ p: "0.5rem 3rem", marginTop: "1.5rem", marginBottom: "1rem" }} onClick={handleClick}>Sign Up</Button>
+          <Button variant='contained' sx={{ p: "0.5rem 3rem", marginTop: "1.5rem", marginBottom: "1rem"}} onClick={handleClick}>Sign Up</Button>
         </Box>
 
       </Box>

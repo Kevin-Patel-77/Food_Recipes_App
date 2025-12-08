@@ -19,7 +19,7 @@ const Dashboard = () => {
    const [filteredData, setFilteredData] = useState<Recipe[]>([])
    const { recipes, loading, error, page, hasMore } = useAppSelector((state) => state.foodrecipes)
    const { count } = useAppSelector((state) => state.foodCart)
-   const itemsPerPage: number = 6
+   const itemsPerPage: number = 8
    const [hasSearched, setHasSearched] = useState<Boolean>(false);
    const [isSearching, setIsSearching] = useState<Boolean>(false);
 
@@ -103,35 +103,35 @@ const Dashboard = () => {
 
    return (
       <Box>
-         <Box sx={{ marginLeft: { sm: "0rem", md: "15rem", lg: "35rem" } }}>
+         <Box>
             <Box sx={{ marginTop: "3rem", marginBottom: "1.5rem", display: { xs: "grid", sm: "grid", md: "flex" }, justifyContent: { xs: "space-evenly", sm: "space-evenly" }, alignItems: "center", gap: "1rem" }}>
-               <TextField type="search" fullWidth sx={{ "& .MuiInputBase-input": { textAlign: "center" } }} onChange={handleChange} placeholder='Which Type of meal you want' />
+               <TextField type="search" sx={{ width:"70%" , marginLeft:"1rem", "& .MuiInputBase-input": { textAlign: "center" }}} onChange={handleChange} placeholder='Which Type of meal you want' />
                <Box sx={{ display: "flex", gap: "2rem" }}>
 
                   <MotionBox whileHover={hoverEffect}>
                      <Button component={NavLink} to="/cart" variant="contained"
-                        sx={{ backgroundColor: "white", color: "black" }}>Cart{count > 0 ? `(${count})` : ""}</Button>
+                        sx={{ backgroundColor: "ff8c00", color: "#fff" }}>Cart{count > 0 ? `(${count})` : ""}</Button>
                   </MotionBox>
 
                   <MotionBox whileHover={hoverEffect}>
                      <Button component={NavLink} to="/signup" variant="contained"
-                        sx={{ backgroundColor: "white", color: "black" }}>Signup</Button>
+                        sx={{ backgroundColor: "ff8c00", color: "#fff" }}>Signup</Button>
                   </MotionBox>
 
                   <MotionBox whileHover={hoverEffect}>
                      <Button component={NavLink} to="/login" variant="contained"
-                        sx={{ backgroundColor: "white", color: "black" }}>Login</Button>
+                        sx={{ backgroundColor: "ff8c00", color: "#fff" }}>Login</Button>
                   </MotionBox>
 
 
                   <MotionBox whileHover={hoverEffect}>
-                     <Button variant="contained" onClick={handleLogout} sx={{ backgroundColor: "white", color: "black" }} >Logout</Button>
+                     <Button variant="contained" onClick={handleLogout} sx={{ backgroundColor: "ff8c00", color: "#fff" }} >Logout</Button>
                   </MotionBox>
 
                </Box>
             </Box>
 
-            <Box sx={{ width: "96%", display: "grid", gridTemplateColumns: "repeat(auto-fit , minmax(300px , 1fr))", gap: "1rem", justifyContent: "center", alignItems: "center" }}>
+            <Box sx={{ width: "96%", display: "grid", gridTemplateColumns: "repeat(auto-fit , minmax(350px , 1fr))", gap: "1rem", justifyContent: "center", alignItems: "center" }}>
                <AnimatePresence>
                   {filteredData.length === 0 && !loading && hasSearched ? (
                      <Typography variant="h4" sx={{ textAlign: "center", color: "white", padding: "2rem" }}>
@@ -146,8 +146,8 @@ const Dashboard = () => {
                         key={food.id}>
                         <MotionImg style={{ width: "100%", height: "20rem", border: "1px solid black", borderRadius: "10px", marginTop: "0.8rem", marginBottom: "1rem" }} whileHover={hoverEffect} src={food.image} alt={food.name} ></MotionImg>
                         <Box sx={{ color: "white", fontSize: "large", fontWeight: "bold" }}>
-                           <Typography variant='body1'>Name: {food.name}</Typography>
-                           <Typography variant='body1' sx={{ marginBottom: "1rem" }}>Meal Type: {food.mealType.map((meal, index) => <Typography
+                           <Typography variant='body1' sx={{color:"black"}}>Name: {food.name}</Typography>
+                           <Typography variant='body1' sx={{ marginBottom: "1rem" , color:"black" }}>Meal Type: {food.mealType.map((meal, index) => <Typography
                               key={index}
                               component="span"
                               sx={{ marginRight: "0.5rem" }}

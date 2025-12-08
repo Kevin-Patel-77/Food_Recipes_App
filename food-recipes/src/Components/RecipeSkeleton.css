@@ -1,54 +1,54 @@
 .skeleton-card {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    padding: 12px;
-    border-radius: 12px;
-    background: white;
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.05);
-    margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 12px;
+  border-radius: 12px;
+  background: #ffe0b2;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.05);
+  margin-bottom: 20px;
 }
 
 .skeleton {
-    background: #e0e0e0;
-    border-radius: 8px;
-    animation: shimmer 1.2s infinite linear;
+  background: #ffe0b2;
+  border-radius: 8px;
+  animation: shimmer 1.2s infinite linear;
 }
 
 .skeleton-img {
-    width: 100%;
-    height: 15rem;
+  width: 100%;
+  height: 15rem;
 }
 
 .skeleton-title {
-    width: 70%;
-    height: 20px;
+  width: 70%;
+  height: 20px;
 }
 
 .skeleton-meal {
-    width: 50%;
-    height: 16px;
+  width: 50%;
+  height: 16px;
 }
 
 .skeleton-btn-container {
-    display: flex;
-    gap: 10px;
+  display: flex;
+  gap: 10px;
 }
 
 .skeleton-btn {
-    width: 45%;
-    height: 35px;
-    margin-right: 5%;
+  width: 45%;
+  height: 35px;
+  margin-right: 5%;
 }
 
 @keyframes shimmer {
-    0% {
-        background-position: 200% 0;
-    }
+  0% {
+    background-position: 200% 0;
+  }
 
-    100% {
-        background-position: -200% 0;
-    }
+  100% {
+    background-position: -200% 0;
+  }
 }
 
 .skeleton,
@@ -56,9 +56,8 @@
 .skeleton-title,
 .skeleton-meal,
 .skeleton-btn {
-    background: linear-gradient(90deg,
-            #e0e0e0 25%,
-            #f1f1f1 50%,
-            #e0e0e0 75%);
-    background-size: 200% 100%;
+  background: linear-gradient(90deg, #ffd9b3 25%, #fff4e6 50%, #ffd9b3 75%);
+  background-size: 200% 100%;
+  border-radius: 8px;
+  animation: shimmer 1.2s infinite linear;
 }

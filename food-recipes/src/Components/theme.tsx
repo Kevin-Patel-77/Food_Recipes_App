@@ -8,11 +8,7 @@ export const theme = createTheme({
           margin: 0,
           padding: 0,
           boxSizing: "border-box",
-          color: "white",
-          backgroundImage: 'url("/recipesBg.jpg")',
-          backgroundRepeat: "no-repeat",
-          backgroundSize: "cover",
-          backgroundAttachment: "fixed",
+         background: "linear-gradient(135deg, #fff9c4, #ffe0b2)",
         },
       },
     },
@@ -20,8 +16,11 @@ export const theme = createTheme({
     MuiButton: {
       styleOverrides: {
         root: {
-          backgroundColor: "black",
-          color: "gold",
+          backgroundColor: "#ff8c00",
+          color: "#fff;",
+          "&:hover":{
+             backgroundColor: "#ff6f00"
+          },
           borderRadius: "10px",
           fontWeight: "bold",
           textTransform: "none",
@@ -47,10 +46,11 @@ export const theme = createTheme({
           "&:hover .MuiOutlinedInput-notchedOutline": {
             borderColor: "black",
           },
-          "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
-            borderColor: "white",
-            boxShadow: "none",
-          },
+          "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline":
+            {
+              borderColor: "white",
+              boxShadow: "none",
+            },
         },
       },
     },

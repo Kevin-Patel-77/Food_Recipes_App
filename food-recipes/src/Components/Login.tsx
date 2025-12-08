@@ -83,6 +83,7 @@ const Login = () => {
 
         <Box
           component="form"
+          noValidate
           onSubmit={handleSubmit(onSubmit)}
           sx={{ width: "50%", margin: "auto" }}
         >

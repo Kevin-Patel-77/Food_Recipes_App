@@ -23,7 +23,7 @@ const Signup = () => {
   const onSubmit: SubmitHandler<Users> = (data) => {
     dispatch(addUser(data));
     toast.success("SignUp Successful");
-    navigate("/food");
+    navigate("/login");
   };
 
   return (
@@ -56,6 +56,7 @@ const Signup = () => {
 
         <Box
           component="form"
+          noValidate
           onSubmit={handleSubmit(onSubmit)}
           sx={{ width: "50%", margin: "auto" }}
         >
@@ -75,11 +76,12 @@ const Signup = () => {
             Email:
           </InputLabel>
           <TextField
+          
             id="email"
             type="email"
             {...register("email", {
               required: "Email is required",
-              pattern: { value: /^\S+@\S+$/i, message: "Invalid email format" },
+              pattern: { value:/^[a-z0-9]+(\.[a-z0-9]+)*@[a-z0-9]+\.[a-z]{2,}$/ , message: "Invalid email format" },
             })}
             error={!!errors.email}
             helperText={errors.email?.message}

@@ -67,8 +67,8 @@ const Dashboard = () => {
   }
 
   function handleLogout() {
-   dispatch(logout());
-   toast.success("Logout Successful");
+    dispatch(logout());
+    toast.success("Logout Successful");
   }
 
   useEffect(() => {
@@ -139,13 +139,13 @@ const Dashboard = () => {
           <TextField
             type="search"
             sx={{
-              width:{sm:"100%" , md:"70%"  },
+              width: { sm: "100%", md: "70%" },
               "& .MuiInputBase-input": { textAlign: "center" },
             }}
             onChange={handleChange}
             placeholder="Which Type of meal you want"
           />
-          <Box sx={{ display: "flex",  gap:isLogin ? "0.5rem" : "1rem" }}>
+          <Box sx={{ display: "flex", gap: isLogin ? "0.5rem" : "1rem" }}>
             <MotionBox whileHover={hoverEffect}>
               <Button
                 component={NavLink}

@@ -90,7 +90,7 @@ const Dashboard = () => {
     dispatch(fetchRecipes({ page, limit: itemsPerPage }));
   }, [page]);
 
-  useEffect(() => {
+   useEffect(() => {
     const handleScroll = () => {
       if (isSearching) return;
 
@@ -104,7 +104,7 @@ const Dashboard = () => {
       }
     };
 
-    window.addEventListener("scroll", handleScroll);
+   window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, [loading, isSearching, hasMore]);
 
@@ -264,7 +264,7 @@ const Dashboard = () => {
                         tooltip: {
                           sx: {
                             backgroundColor: "#ff6f00",
-                            fontSize:"small"
+                            fontSize: "small",
                           },
                         },
                         arrow: {

@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { fetchRecipes } from "./Redux/RecipesReducer";
 import type { Recipe } from "./Redux/RecipesReducer";
 import { useAppDispatch, useAppSelector, useAuthSelector } from "./hooks";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { addCart } from "./Redux/CartReducers";
 import { AnimatePresence, motion } from "framer-motion";
 import { increasePage } from "./Redux/RecipesReducer";
@@ -16,6 +16,7 @@ const MotionBox = motion.create(Box);
 const MotionImg = motion("img");
 
 const Dashboard = () => {
+  const navigate = useNavigate()
   const dispatch = useAppDispatch();
   const [filteredData, setFilteredData] = useState<Recipe[]>([]);
   const { recipes, loading, error, page, hasMore } = useAppSelector(
@@ -240,6 +241,7 @@ const Dashboard = () => {
                       marginTop: "0.8rem",
                       marginBottom: "1rem",
                     }}
+                    onClick={()=> navigate(`/food/${food.id}`)}
                     whileHover={hoverEffect}
                     src={food.image}
                     alt={food.name}

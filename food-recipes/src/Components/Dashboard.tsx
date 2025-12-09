@@ -2,13 +2,13 @@ import { useEffect, useRef, useState } from "react";
 import { fetchRecipes } from "./Redux/RecipesReducer";
 import type { Recipe } from "./Redux/RecipesReducer";
 import { useAppDispatch, useAppSelector, useAuthSelector } from "./hooks";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { addCart } from "./Redux/CartReducers";
 import { AnimatePresence, motion } from "framer-motion";
 import { increasePage } from "./Redux/RecipesReducer";
 import { logout } from "./Redux/AuthReducer";
 import RecipeSkeleton from "./RecipeSkeleton";
-import { Box, Button, TextField, Typography } from "@mui/material";
+import { Box, Button, TextField, Tooltip, Typography } from "@mui/material";
 import { debounce } from "lodash";
 import { toast } from "react-toastify";
 
@@ -16,6 +16,7 @@ const MotionBox = motion.create(Box);
 const MotionImg = motion("img");
 
 const Dashboard = () => {
+  const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const [filteredData, setFilteredData] = useState<Recipe[]>([]);
   const { recipes, loading, error, page, hasMore } = useAppSelector(
@@ -89,7 +90,7 @@ const Dashboard = () => {
     dispatch(fetchRecipes({ page, limit: itemsPerPage }));
   }, [page]);
 
-  useEffect(() => {
+   useEffect(() => {
     const handleScroll = () => {
       if (isSearching) return;
 
@@ -103,7 +104,7 @@ const Dashboard = () => {
       }
     };
 
-    window.addEventListener("scroll", handleScroll);
+   window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, [loading, isSearching, hasMore]);
 
@@ -240,6 +241,7 @@ const Dashboard = () => {
                       marginTop: "0.8rem",
                       marginBottom: "1rem",
                     }}
+                    onClick={() => navigate(`/food/${food.id}`)}
                     whileHover={hoverEffect}
                     src={food.image}
                     alt={food.name}
@@ -249,11 +251,43 @@ const Dashboard = () => {
                       color: "white",
                       fontSize: "large",
                       fontWeight: "bold",
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
                     }}
                   >
-                    <Typography variant="body1" sx={{ color: "black" }}>
-                      Name: {food.name}
-                    </Typography>
+                    <Tooltip
+                      title={food.name}
+                      placement="right"
+                      arrow
+                      slotProps={{
+                        tooltip: {
+                          sx: {
+                            backgroundColor: "#ff6f00",
+                            fontSize: "small",
+                          },
+                        },
+                        arrow: {
+                          sx: {
+                            color: "#ff6f00",
+                          },
+                        },
+                      }}
+                    >
+                      <Typography
+                        variant="body1"
+                        sx={{
+                          color: "black",
+                          maxWidth: "150px",
+                          whiteSpace: "nowrap",
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                        }}
+                      >
+                        Name: {food.name}
+                      </Typography>
+                    </Tooltip>
+
                     <Typography
                       variant="body1"
                       sx={{ marginBottom: "1rem", color: "black" }}

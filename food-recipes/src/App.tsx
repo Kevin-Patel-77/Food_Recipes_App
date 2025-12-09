@@ -10,6 +10,8 @@ import { CssBaseline, ThemeProvider } from "@mui/material";
 import { theme } from "./Components/theme";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
+import GuestRoutes from "./Components/GuestRoutes";
+import NotFound from "./Components/NotFound";
 
 function App() {
   console.log(localStorage.getItem("users"));
@@ -30,8 +32,20 @@ function App() {
             }
           ></Route>
           <Route path="/cart" element={<AddToCart />}></Route>
-          <Route path="/signup" element={<Signup />}></Route>
-          <Route path="/login" element={<Login />}></Route>
+
+          <Route path="/signup" element={ 
+            <GuestRoutes> 
+              <Signup /> 
+            </GuestRoutes>
+          }
+          ></Route>
+          <Route path="/login" element={
+            <GuestRoutes>
+            <Login />
+            </GuestRoutes>
+          }
+          ></Route>
+          <Route path="*" element={<NotFound/>}></Route>
         </Routes>
       </ThemeProvider>
       <ToastContainer

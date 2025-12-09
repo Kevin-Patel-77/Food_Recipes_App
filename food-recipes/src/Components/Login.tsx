@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "./hooks";
 import { login } from "./Redux/AuthReducer";
 import {
@@ -47,7 +47,7 @@ const Login = () => {
       toast.error("Invalid Credentials");
     }
 
-    setSubmitted(false)
+    setSubmitted(false);
   }, [isLogin, submitted]);
 
   return (
@@ -134,13 +134,34 @@ const Login = () => {
             }}
           />
 
-          <Button
-            variant="contained"
-            type="submit"
-            sx={{ p: "0.5rem 3rem", marginTop: "1.5rem", marginBottom: "1rem" }}
-          >
-            Log In
-          </Button>
+          <Box sx={{display:"flex" , justifyContent:"center", gap:"2rem"}} >
+            <Button
+              component={NavLink}
+              to="/signup"
+              variant="contained"
+              sx={{
+                backgroundColor: "ff8c00",
+                color: "#fff",
+                p: "0.5rem 3rem",
+                marginTop: "1.5rem",
+                marginBottom: "1rem",
+              }}
+            >
+              Sign Up
+            </Button>
+
+            <Button
+              variant="contained"
+              type="submit"
+              sx={{
+                p: "0.5rem 3rem",
+                marginTop: "1.5rem",
+                marginBottom: "1rem",
+              }}
+            >
+              Log In
+            </Button>
+          </Box>
         </Box>
       </Box>
     </Box>

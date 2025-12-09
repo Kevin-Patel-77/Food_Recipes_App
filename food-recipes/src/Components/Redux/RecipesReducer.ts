@@ -1,12 +1,10 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import axios from 'axios'
 
-export const fetchRecipes = createAsyncThunk('recipes/fetchRecipes', async (page:number) => {
-  let limit = 6;
-  let skip = ((page - 1) * limit)
-  let res = await axios.get(`/api/recipes?limit=${limit}&skip=${skip}`)
-  return res.data.recipes
-})
+type scrolling = {
+  page: number,
+  limit: number
+}
 
 export type Recipe = {
   id: number;
@@ -27,6 +25,11 @@ export type Recipe = {
   mealType: string[];
 }
 
+export const fetchRecipes = createAsyncThunk('recipes/fetchRecipes', async ({ page, limit }: scrolling) => {
+  let skip = ((page - 1) * limit)
+  let res = await axios.get(`/api/recipes?limit=${limit}&skip=${skip}`)
+  return res.data.recipes
+})
 
 export type initial = {
   loading: boolean,
@@ -36,7 +39,7 @@ export type initial = {
   hasMore: boolean
 }
 
- const initialState: initial = {
+const initialState: initial = {
   loading: false,
   recipes: [],
   page: 1,

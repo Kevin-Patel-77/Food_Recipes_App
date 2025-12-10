@@ -134,7 +134,7 @@ const Login = () => {
             }}
           />
 
-          <Box sx={{display:"flex" , justifyContent:"center", gap:"2rem"}} >
+          <Box sx={{ display: "flex", justifyContent: "center", gap: "2rem" }}>
             <Button
               component={NavLink}
               to="/signup"

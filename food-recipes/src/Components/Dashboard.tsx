@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { fetchRecipes } from "./Redux/RecipesReducer";
 import type { Recipe } from "./Redux/RecipesReducer";
 import { useAppDispatch, useAppSelector, useAuthSelector } from "./hooks";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink , useNavigate } from "react-router-dom";
 import { addCart } from "./Redux/CartReducers";
 import { AnimatePresence, motion } from "framer-motion";
 import { increasePage } from "./Redux/RecipesReducer";
@@ -31,7 +31,7 @@ const Dashboard = () => {
   const debouncing = useRef<
     (((value: Recipe[]) => void) & { cancel: () => void }) | null
   >(null);
-
+  
   const hoverEffect = {
     scale: 1.1,
     transition: { type: "spring" as const, stiffness: 500, mass: 2 },
@@ -90,7 +90,7 @@ const Dashboard = () => {
     dispatch(fetchRecipes({ page, limit: itemsPerPage }));
   }, [page]);
 
-   useEffect(() => {
+  useEffect(() => {
     const handleScroll = () => {
       if (isSearching) return;
 
@@ -104,7 +104,7 @@ const Dashboard = () => {
       }
     };
 
-   window.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, [loading, isSearching, hasMore]);
 
@@ -395,3 +395,14 @@ export default Dashboard;
                     <button  disabled={currentPage === totalPages} className='pagination-btn' onClick={handleNext}>Next</button>
                    </div>
 </div> */
+
+
+
+// Navigator State
+
+//  const location = useLocation();
+//   console.log(location.state.greetings);
+
+//  navigate("/food" , {
+//         state : {greetings : "Heyyy Bro"}
+//       });

@@ -8,6 +8,7 @@ type scrolling = {
 
 export type Recipe = {
   id: number;
+  amount:number;
   name: string;
   ingredients: string[];
   instructions: string[];
@@ -39,6 +40,10 @@ export type initial = {
   hasMore: boolean
 }
 
+const generateAmount = (id:number):number=>{
+     return (id * 73 ) % 1000
+}
+
 const initialState: initial = {
   loading: false,
   recipes: [],
@@ -68,7 +73,15 @@ const recipesReducer = createSlice({
           state.hasMore = false
           return
         }
-        state.recipes = [...state.recipes, ...action.payload]
+
+
+        const updateRecipes = action.payload.map((res:Recipe)=>(
+          {
+            ...res , 
+            amount : generateAmount(res.id)
+          }
+        ))
+        state.recipes = [...state.recipes, ...updateRecipes]
       })
       .addCase(fetchRecipes.rejected, (state, action) => {
         state.loading = false

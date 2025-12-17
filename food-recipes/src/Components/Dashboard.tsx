@@ -8,7 +8,16 @@ import { AnimatePresence, motion } from "framer-motion";
 import { increasePage } from "./Redux/RecipesReducer";
 import { logout } from "./Redux/AuthReducer";
 import RecipeSkeleton from "./RecipeSkeleton";
-import { Box, Button, TextField, Tooltip, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  MenuItem,
+  Select,
+  TextField,
+  Tooltip,
+  Typography,
+  type SelectChangeEvent,
+} from "@mui/material";
 import { debounce } from "lodash";
 import { toast } from "react-toastify";
 
@@ -25,8 +34,9 @@ const Dashboard = () => {
   const { isLogin } = useAuthSelector((state) => state.foodAuth);
   const { count } = useAppSelector((state) => state.foodCart);
   const itemsPerPage: number = 8;
-  const [hasSearched, setHasSearched] = useState<Boolean>(false);
-  const [isSearching, setIsSearching] = useState<Boolean>(false);
+  const [hasSearched, setHasSearched] = useState<boolean>(false);
+  const [isSearching, setIsSearching] = useState<boolean>(false);
+  const [filterByAmount, setFilterByAmount] = useState([]);
 
   const debouncing = useRef<
     (((value: Recipe[]) => void) & { cancel: () => void }) | null
@@ -67,6 +77,15 @@ const Dashboard = () => {
     dispatch(addCart(foodItem));
   }
 
+  function SortingChange(event: SelectChangeEvent) {
+    if (event.target.value === "") {
+      setFilterByAmount([]);
+    } else {
+      const amount = JSON.parse(event.target.value);
+      setFilterByAmount(amount);
+    }
+  }
+
   function handleLogout() {
     dispatch(logout());
     toast.success("Logout Successful");
@@ -90,7 +109,7 @@ const Dashboard = () => {
     dispatch(fetchRecipes({ page, limit: itemsPerPage }));
   }, [page]);
 
-   useEffect(() => {
+  useEffect(() => {
     const handleScroll = () => {
       if (isSearching) return;
 
@@ -104,9 +123,24 @@ const Dashboard = () => {
       }
     };
 
-   window.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, [loading, isSearching, hasMore]);
+
+  useEffect(() => {
+    if (filterByAmount.length > 0) {
+      const sortAmt: Recipe[] = recipes.filter(
+        (food) =>
+          food.amount > filterByAmount[0] && food.amount <= filterByAmount[1]
+      );
+
+      setFilteredData(sortAmt);
+    }
+
+    if (filterByAmount.length == 0) {
+      setFilteredData(recipes);
+    }
+  }, [filterByAmount]);
 
   if (error) {
     return (
@@ -135,6 +169,7 @@ const Dashboard = () => {
             display: { xs: "grid", sm: "grid", md: "flex" },
             justifyContent: { xs: "space-evenly", sm: "space-evenly" },
             alignItems: "center",
+            gap: { xs: "1rem", sm: "1rem" },
           }}
         >
           <TextField
@@ -146,7 +181,54 @@ const Dashboard = () => {
             onChange={handleChange}
             placeholder="Which Type of meal you want"
           />
-          <Box sx={{ display: "flex", gap: isLogin ? "0.5rem" : "1rem" }}>
+
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              gap: isLogin ? "0.5rem" : "1rem",
+            }}
+          >
+            <Box>
+              {isLogin && (
+                <Select
+                  value={JSON.stringify(filterByAmount)}
+                  onChange={SortingChange}
+                  renderValue={(selected) => {
+                    if (selected === "[]") {
+                      return <em>Filter By Amt</em>;
+                    }
+                    return selected;
+                  }}
+                  sx={{
+                    width: "12rem",
+
+                    "& .MuiSelect-select": {
+                      padding: "0.4rem 1.5rem",
+                      color: "#ff6f00",
+                    },
+
+                    "& .MuiOutlinedInput-root": {
+                      borderRadius: "10px",
+                    },
+
+                    "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline":
+                      {
+                        borderColor: "lightgray",
+                      },
+                  }}
+                >
+                  <MenuItem value="">
+                    <em>Filter By Amt</em>
+                  </MenuItem>
+                  <MenuItem value={"[0 , 200]"}>Up to 300</MenuItem>
+                  <MenuItem value={"[301 , 600]"}>301 to 600</MenuItem>
+                  <MenuItem value={"[601 , 900]"}>600 to 900</MenuItem>
+                  <MenuItem value={"[901 , 1000]"}>901 to 1000</MenuItem>
+                </Select>
+              )}
+            </Box>
+
             <MotionBox whileHover={hoverEffect}>
               <Button
                 component={NavLink}
@@ -246,6 +328,7 @@ const Dashboard = () => {
                     src={food.image}
                     alt={food.name}
                   ></MotionImg>
+
                   <Box
                     sx={{
                       color: "white",
@@ -253,7 +336,8 @@ const Dashboard = () => {
                       fontWeight: "bold",
                       display: "flex",
                       flexDirection: "column",
-                      alignItems: "center",
+                      alignItems: "left",
+                      textAlign: "left",
                     }}
                   >
                     <Tooltip
@@ -288,6 +372,21 @@ const Dashboard = () => {
                       </Typography>
                     </Tooltip>
 
+                    {isLogin && (
+                      <Typography
+                        variant="body1"
+                        sx={{
+                          color: "black",
+                          maxWidth: "150px",
+                          whiteSpace: "nowrap",
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                        }}
+                      >
+                        Amount: {food.amount}
+                      </Typography>
+                    )}
+
                     <Typography
                       variant="body1"
                       sx={{ marginBottom: "1rem", color: "black" }}
@@ -303,6 +402,7 @@ const Dashboard = () => {
                         </Typography>
                       ))}
                     </Typography>
+
                     <Box
                       sx={{
                         display: "flex",
@@ -395,3 +495,12 @@ export default Dashboard;
                     <button  disabled={currentPage === totalPages} className='pagination-btn' onClick={handleNext}>Next</button>
                    </div>
 </div> */
+
+// Navigator State
+
+//  const location = useLocation();
+//   console.log(location.state.greetings);
+
+//  navigate("/food" , {
+//         state : {greetings : "Heyyy Bro"}
+//       });

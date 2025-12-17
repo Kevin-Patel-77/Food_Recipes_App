@@ -28,7 +28,7 @@ const authReducer = createSlice({
         addUser(state, action: PayloadAction<Users>) {
 
             state.credentials.push(action.payload)
-
+            console.log(state.credentials)
             localStorage.setItem("users", JSON.stringify(state.credentials))
         },
         login(state, action:PayloadAction<{ email: string; password: string }>) {

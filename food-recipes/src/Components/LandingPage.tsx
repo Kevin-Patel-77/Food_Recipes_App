@@ -11,7 +11,7 @@ import bowl1 from "../assets/bowl1.png";
 import bowl2 from "../assets/bowl2.png";
 import bowl3 from "../assets/bowl3.png";
 import bowl4 from "../assets/bowl4.png";
-import { useAppDispatch, useAppSelector, useAuthSelector } from "./hooks";
+import { useAppDispatch, useAuthSelector } from "./hooks";
 import { logout } from "./Redux/AuthReducer";
 import { toast } from "react-toastify";
 
@@ -26,7 +26,7 @@ let MotionBox = motion(Box);
 const LandingPage = () => {
   const [currentIndex, setCurrentIndex] = useState<number>(1);
   const navigate = useNavigate();
-  const {recipes , loading , error} = useAppSelector((state)=> state.foodrecipes)
+  // const {recipes , loading , error} = useAppSelector((state)=> state.foodrecipes)
   const { isLogin } = useAuthSelector((state) => state.foodAuth);
   const dispatch = useAppDispatch();
 
@@ -353,7 +353,7 @@ const LandingPage = () => {
       <Box>
 
         <Box>
-          
+
         </Box>
 
       </Box>

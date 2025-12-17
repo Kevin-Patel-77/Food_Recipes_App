@@ -42,7 +42,7 @@ const Login = () => {
 
     if (isLogin) {
       toast.success("Login Successful");
-      navigate("/food");
+      navigate("/home");
     } else {
       toast.error("Invalid Credentials");
     }
@@ -75,7 +75,7 @@ const Login = () => {
             mb: "3rem",
             fontSize: "2.5rem",
             fontWeight: "bold",
-            color: "#ff6f00",
+            color: "#333333",
           }}
         >
           Log In
@@ -87,7 +87,7 @@ const Login = () => {
           onSubmit={handleSubmit(onSubmit)}
           sx={{ width: "50%", margin: "auto" }}
         >
-          <InputLabel htmlFor="email" sx={{ color: "#ff6f00" }}>
+          <InputLabel htmlFor="email" sx={{ color: "#333333" }}>
             Email
           </InputLabel>
           <TextField
@@ -103,7 +103,7 @@ const Login = () => {
             fullWidth
           />
 
-          <InputLabel htmlFor="password" sx={{ color: "#ff6f00" }}>
+          <InputLabel htmlFor="password" sx={{ color: "#333333"}}>
             Password
           </InputLabel>
           <TextField

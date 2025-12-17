@@ -4,48 +4,27 @@ import type { Recipe } from "./Redux/RecipesReducer";
 import { useAppDispatch, useAppSelector, useAuthSelector } from "./hooks";
 import { NavLink, useNavigate } from "react-router-dom";
 import { addCart } from "./Redux/CartReducers";
-import { AnimatePresence, motion } from "framer-motion";
 import { increasePage } from "./Redux/RecipesReducer";
 import { logout } from "./Redux/AuthReducer";
 import RecipeSkeleton from "./RecipeSkeleton";
-import {
-  Box,
-  Button,
-  MenuItem,
-  Select,
-  TextField,
-  Tooltip,
-  Typography,
-  type SelectChangeEvent,
-} from "@mui/material";
+import { Box, Button, InputLabel, MenuItem, Select, TextField, Tooltip, Typography, type SelectChangeEvent } from "@mui/material";
 import { debounce } from "lodash";
 import { toast } from "react-toastify";
-
-const MotionBox = motion.create(Box);
-const MotionImg = motion("img");
 
 const Dashboard = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const [filteredData, setFilteredData] = useState<Recipe[]>([]);
-  const { recipes, loading, error, page, hasMore } = useAppSelector(
-    (state) => state.foodrecipes
-  );
+  const { recipes, loading, error, page, hasMore } = useAppSelector((state) => state.foodrecipes);
   const { isLogin } = useAuthSelector((state) => state.foodAuth);
   const { count } = useAppSelector((state) => state.foodCart);
   const itemsPerPage: number = 8;
   const [hasSearched, setHasSearched] = useState<boolean>(false);
   const [isSearching, setIsSearching] = useState<boolean>(false);
+  const [isFiltering, setIsFiltering] = useState<boolean>(false);
   const [filterByAmount, setFilterByAmount] = useState([]);
 
-  const debouncing = useRef<
-    (((value: Recipe[]) => void) & { cancel: () => void }) | null
-  >(null);
-
-  const hoverEffect = {
-    scale: 1.1,
-    transition: { type: "spring" as const, stiffness: 500, mass: 2 },
-  };
+  const debouncing = useRef<(((value: Recipe[]) => void) & { cancel: () => void }) | null>(null);
 
   function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
     let value = event.target.value.trim();
@@ -61,9 +40,8 @@ const Dashboard = () => {
 
     let filterData = recipes.filter(
       (meal) =>
-        meal.mealType.some((type) =>
-          type.toLowerCase().includes(value.toLowerCase())
-        ) || meal.name.toLowerCase().includes(value.toLowerCase())
+        meal.mealType.some((type) => type.toLowerCase().includes(value.toLowerCase())) ||
+        meal.name.toLowerCase().includes(value.toLowerCase())
     );
 
     if (filterData.length === 0) {
@@ -72,6 +50,20 @@ const Dashboard = () => {
       debouncing.current?.(filterData);
     }
   }
+
+  useEffect(() => {
+    debouncing.current = debounce((value: Recipe[]) => {
+      setFilteredData(value);
+    }, 500);
+
+    return () => debouncing.current?.cancel();
+  }, []);
+
+  useEffect(() => {
+    if (recipes.length > 0) {
+      setFilteredData(recipes);
+    }
+  }, [recipes]);
 
   function handleCart(foodItem: Recipe) {
     dispatch(addCart(foodItem));
@@ -92,20 +84,6 @@ const Dashboard = () => {
   }
 
   useEffect(() => {
-    debouncing.current = debounce((value: Recipe[]) => {
-      setFilteredData(value);
-    }, 500);
-
-    return () => debouncing.current?.cancel();
-  }, []);
-
-  useEffect(() => {
-    if (recipes.length > 0) {
-      setFilteredData(recipes);
-    }
-  }, [recipes]);
-
-  useEffect(() => {
     dispatch(fetchRecipes({ page, limit: itemsPerPage }));
   }, [page]);
 
@@ -113,12 +91,7 @@ const Dashboard = () => {
     const handleScroll = () => {
       if (isSearching) return;
 
-      if (
-        window.innerHeight + window.scrollY >=
-          document.body.offsetHeight - 10 &&
-        !loading &&
-        hasMore
-      ) {
+      if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 10 && !loading && hasMore) {
         dispatch(increasePage());
       }
     };
@@ -129,10 +102,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     if (filterByAmount.length > 0) {
-      const sortAmt: Recipe[] = recipes.filter(
-        (food) =>
-          food.amount > filterByAmount[0] && food.amount <= filterByAmount[1]
-      );
+      const sortAmt: Recipe[] = recipes.filter((food) => food.amount > filterByAmount[0] && food.amount <= filterByAmount[1]);
 
       setFilteredData(sortAmt);
     }
@@ -161,7 +131,7 @@ const Dashboard = () => {
 
   return (
     <Box>
-      <Box>
+      <Box sx={{ margin: "1rem" }}>
         <Box
           sx={{
             marginTop: "3rem",
@@ -190,95 +160,89 @@ const Dashboard = () => {
             }}
           >
             <Box>
-              {isLogin && (
-                <Select
-                  value={JSON.stringify(filterByAmount)}
-                  onChange={SortingChange}
-                  renderValue={(selected) => {
-                    if (selected === "[]") {
-                      return <em>Filter By Amt</em>;
-                    }
-                    return selected;
-                  }}
-                  sx={{
-                    width: "12rem",
-
-                    "& .MuiSelect-select": {
-                      padding: "0.4rem 1.5rem",
-                      color: "#ff6f00",
-                    },
-
-                    "& .MuiOutlinedInput-root": {
-                      borderRadius: "10px",
-                    },
-
-                    "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline":
-                      {
-                        borderColor: "lightgray",
-                      },
-                  }}
-                >
-                  <MenuItem value="">
-                    <em>Filter By Amt</em>
-                  </MenuItem>
-                  <MenuItem value={"[0 , 200]"}>Up to 300</MenuItem>
-                  <MenuItem value={"[301 , 600]"}>301 to 600</MenuItem>
-                  <MenuItem value={"[601 , 900]"}>600 to 900</MenuItem>
-                  <MenuItem value={"[901 , 1000]"}>901 to 1000</MenuItem>
-                </Select>
-              )}
+              <Button variant="contained" onClick={() => setIsFiltering(!isFiltering)} sx={{ padding: "0.4rem 1.5rem" }}>
+                Filter
+              </Button>
             </Box>
 
-            <MotionBox whileHover={hoverEffect}>
-              <Button
-                component={NavLink}
-                to="/cart"
-                variant="contained"
-                sx={{ backgroundColor: "ff8c00", color: "#fff" }}
-              >
+            <Box>
+              <Button component={NavLink} to="/cart" variant="contained" sx={{ padding: "0.4rem 1.5rem" }}>
                 Cart{count > 0 ? `(${count})` : ""}
               </Button>
-            </MotionBox>
+            </Box>
 
-            <MotionBox whileHover={hoverEffect}>
+            <Box>
               {!isLogin && (
-                <Button
-                  component={NavLink}
-                  to="/signup"
-                  variant="contained"
-                  sx={{ backgroundColor: "ff8c00", color: "#fff" }}
-                >
+                <Button component={NavLink} to="/signup" variant="contained" sx={{ padding: "0.4rem 1.5rem" }}>
                   Signup
                 </Button>
               )}
-            </MotionBox>
+            </Box>
 
-            <MotionBox whileHover={hoverEffect}>
+            <Box>
               {!isLogin && (
-                <Button
-                  component={NavLink}
-                  to="/login"
-                  variant="contained"
-                  sx={{ backgroundColor: "ff8c00", color: "#fff" }}
-                >
+                <Button component={NavLink} to="/login" variant="contained" sx={{ padding: "0.4rem 1.5rem" }}>
                   Login
                 </Button>
               )}
-            </MotionBox>
+            </Box>
 
-            <MotionBox whileHover={hoverEffect}>
+            <Box>
               {isLogin && (
-                <Button
-                  variant="contained"
-                  onClick={handleLogout}
-                  sx={{ backgroundColor: "ff8c00", color: "#fff" }}
-                >
+                <Button variant="contained" onClick={handleLogout} sx={{ padding: "0.4rem 1.5rem" }}>
                   Logout
                 </Button>
               )}
-            </MotionBox>
+            </Box>
           </Box>
         </Box>
+
+        {isFiltering && (
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-around",
+              marginBottom: "2rem",
+            }}
+          >
+            <Box>
+              <InputLabel id="amount" sx={{ color: "black" }}>
+                Amount
+              </InputLabel>
+              <Select
+                id="amount"
+                value={JSON.stringify(filterByAmount)}
+                onChange={SortingChange}
+                sx={{
+                  width: "40rem",
+
+                  "& .MuiSelect-select": {
+                    padding: "0.4rem 1.5rem",
+                    color: "#ff6f00",
+                  },
+
+                  "& .MuiOutlinedInput-root": {
+                    borderRadius: "10px",
+                  },
+
+                  "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                    borderColor: "lightgray",
+                  },
+                }}
+              >
+                <MenuItem value="">
+                  <em>Filter By Amt</em>
+                </MenuItem>
+                <MenuItem value={"[0 , 200]"}>Up to 300</MenuItem>
+                <MenuItem value={"[301 , 600]"}>301 to 600</MenuItem>
+                <MenuItem value={"[601 , 900]"}>600 to 900</MenuItem>
+                <MenuItem value={"[901 , 1000]"}>901 to 1000</MenuItem>
+              </Select>
+            </Box>
+
+            <Box>Hello</Box>
+          </Box>
+        )}
 
         <Box
           sx={{
@@ -290,164 +254,142 @@ const Dashboard = () => {
             alignItems: "center",
           }}
         >
-          <AnimatePresence>
-            {filteredData.length === 0 && !loading && hasSearched ? (
-              <Typography
-                variant="h4"
-                sx={{ textAlign: "center", color: "black", padding: "2rem" }}
+          {filteredData.length === 0 && !loading && hasSearched ? (
+            <Typography
+              variant="h4"
+              sx={{
+                textAlign: "center",
+                color: "black",
+                padding: "2rem",
+              }}
+            >
+              No Data Found
+            </Typography>
+          ) : (
+            filteredData.map((food) => (
+              <Box
+                sx={{
+                  width: "90%",
+                  margin: "auto",
+                  border: "2px solid black",
+                  borderRadius: "10px",
+                  textAlign: "center",
+                  padding: "1rem",
+                }}
+                key={food.id}
               >
-                No Data Found
-              </Typography>
-            ) : (
-              filteredData.map((food) => (
-                <MotionBox
-                  initial={{ opacity: 0, scale: 0.5 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.5 }}
+                <Box
+                  component="img"
                   sx={{
-                    width: "90%",
-                    margin: "auto",
-                    border: "2px solid black",
+                    width: "100%",
+                    height: "20rem",
+                    border: "1px solid black",
                     borderRadius: "10px",
-                    textAlign: "center",
-                    padding: "1rem",
+                    marginTop: "0.8rem",
+                    marginBottom: "1rem",
                   }}
-                  key={food.id}
+                  onClick={() => navigate(`/food/${food.id}`)}
+                  src={food.image}
+                  alt={food.name}
+                ></Box>
+
+                <Box
+                  sx={{
+                    color: "white",
+                    fontSize: "large",
+                    fontWeight: "bold",
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "left",
+                    textAlign: "left",
+                  }}
                 >
-                  <MotionImg
-                    style={{
-                      width: "100%",
-                      height: "20rem",
-                      border: "1px solid black",
-                      borderRadius: "10px",
-                      marginTop: "0.8rem",
-                      marginBottom: "1rem",
+                  <Tooltip
+                    title={food.name}
+                    placement="right"
+                    arrow
+                    slotProps={{
+                      tooltip: {
+                        sx: {
+                          backgroundColor: "#ff6f00",
+                          fontSize: "small",
+                        },
+                      },
+                      arrow: {
+                        sx: {
+                          color: "#ff6f00",
+                        },
+                      },
                     }}
-                    onClick={() => navigate(`/food/${food.id}`)}
-                    whileHover={hoverEffect}
-                    src={food.image}
-                    alt={food.name}
-                  ></MotionImg>
+                  >
+                    <Typography
+                      variant="body1"
+                      sx={{
+                        color: "black",
+                        maxWidth: "150px",
+                        whiteSpace: "nowrap",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                      }}
+                    >
+                      Name: {food.name}
+                    </Typography>
+                  </Tooltip>
+
+                  {isLogin && (
+                    <Typography
+                      variant="body1"
+                      sx={{
+                        color: "black",
+                        maxWidth: "150px",
+                        whiteSpace: "nowrap",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                      }}
+                    >
+                      Amount: {food.amount}
+                    </Typography>
+                  )}
+
+                  <Typography variant="body1" sx={{ marginBottom: "1rem", color: "black" }}>
+                    Meal Type:{" "}
+                    {food.mealType.map((meal, index) => (
+                      <Typography key={index} component="span" sx={{ marginRight: "0.5rem" }}>
+                        {meal}
+                      </Typography>
+                    ))}
+                  </Typography>
 
                   <Box
                     sx={{
-                      color: "white",
-                      fontSize: "large",
-                      fontWeight: "bold",
                       display: "flex",
-                      flexDirection: "column",
-                      alignItems: "left",
-                      textAlign: "left",
+                      gap: "1rem",
+                      justifyContent: "center",
+                      marginBottom: "1rem",
                     }}
                   >
-                    <Tooltip
-                      title={food.name}
-                      placement="right"
-                      arrow
-                      slotProps={{
-                        tooltip: {
-                          sx: {
-                            backgroundColor: "#ff6f00",
-                            fontSize: "small",
-                          },
-                        },
-                        arrow: {
-                          sx: {
-                            color: "#ff6f00",
-                          },
-                        },
-                      }}
-                    >
-                      <Typography
-                        variant="body1"
-                        sx={{
-                          color: "black",
-                          maxWidth: "150px",
-                          whiteSpace: "nowrap",
-                          overflow: "hidden",
-                          textOverflow: "ellipsis",
-                        }}
-                      >
-                        Name: {food.name}
-                      </Typography>
-                    </Tooltip>
+                    <Box>
+                      <Button component={NavLink} to={`/food/${food.id}`} variant="contained">
+                        View Details
+                      </Button>
+                    </Box>
 
-                    {isLogin && (
-                      <Typography
-                        variant="body1"
-                        sx={{
-                          color: "black",
-                          maxWidth: "150px",
-                          whiteSpace: "nowrap",
-                          overflow: "hidden",
-                          textOverflow: "ellipsis",
-                        }}
-                      >
-                        Amount: {food.amount}
-                      </Typography>
-                    )}
-
-                    <Typography
-                      variant="body1"
-                      sx={{ marginBottom: "1rem", color: "black" }}
-                    >
-                      Meal Type:{" "}
-                      {food.mealType.map((meal, index) => (
-                        <Typography
-                          key={index}
-                          component="span"
-                          sx={{ marginRight: "0.5rem" }}
-                        >
-                          {meal}
-                        </Typography>
-                      ))}
-                    </Typography>
-
-                    <Box
-                      sx={{
-                        display: "flex",
-                        gap: "1rem",
-                        justifyContent: "center",
-                        marginBottom: "1rem",
-                      }}
-                    >
-                      <MotionBox whileHover={hoverEffect}>
-                        <Button
-                          component={NavLink}
-                          to={`/food/${food.id}`}
-                          variant="contained"
-                        >
-                          View Details
-                        </Button>
-                      </MotionBox>
-
-                      <MotionBox whileHover={hoverEffect}>
-                        <Button
-                          type="button"
-                          onClick={() => handleCart(food)}
-                          variant="contained"
-                        >
-                          Add to Cart
-                        </Button>
-                      </MotionBox>
+                    <Box>
+                      <Button type="button" onClick={() => handleCart(food)} variant="contained">
+                        Add to Cart
+                      </Button>
                     </Box>
                   </Box>
-                </MotionBox>
-              ))
-            )}
-          </AnimatePresence>
+                </Box>
+              </Box>
+            ))
+          )}
 
           {loading &&
             Array.from({ length: itemsPerPage }).map((_, i) => (
-              <MotionBox
-                key={`skeleton-${i}`}
-                initial={{ opacity: 0, scale: 0.5 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.5 }}
-              >
+              <Box key={`skeleton-${i}`}>
                 <RecipeSkeleton />
-              </MotionBox>
+              </Box>
             ))}
         </Box>
       </Box>
@@ -483,14 +425,14 @@ export default Dashboard;
 
                      <div>
                         {Array.from({length:totalPages} , (_,i) => (
-                            <button 
+                            <button
                             style={{ border:"1px solid black" , borderRadius:"10px" ,margin: "0rem 0.5rem", padding:"0.5rem 1rem" , color:currentPage == i+1 ? "black" : "gold" , backgroundColor:currentPage == i+1 ? "gold" : "black"} }
                             onClick={()=>setCurrentPage(i+1)}>
                                 {i + 1}
                             </button>
                         ))}
                      </div>
-                     
+
                    <div>
                     <button  disabled={currentPage === totalPages} className='pagination-btn' onClick={handleNext}>Next</button>
                    </div>

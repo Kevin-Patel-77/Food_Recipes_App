@@ -2,12 +2,11 @@ import { addUser } from "./Redux/AuthReducer";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch } from "./hooks";
 import type { Users } from "./Redux/AuthReducer";
-import { Eye , EyeOff } from 'lucide-react';
-import { Box, Button, InputLabel, TextField, Typography, IconButton,InputAdornment,} from "@mui/material";
+import { Eye, EyeOff } from "lucide-react";
+import { Box, Button, InputLabel, TextField, Typography, IconButton, InputAdornment } from "@mui/material";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { useState } from "react";
 import { toast } from "react-toastify";
-
 
 const Signup = () => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
@@ -45,22 +44,12 @@ const Signup = () => {
           backdropFilter: "blur(10px)",
         }}
       >
-        <Typography
-          variant="h4"
-          mb="3rem"
-          fontWeight="bold"
-          sx={{ color: "#ff6f00" }}
-        >
+        <Typography variant="h4" mb="3rem" fontWeight="bold" sx={{ color: "#333333"}}>
           Create Account
         </Typography>
 
-        <Box
-          component="form"
-          noValidate
-          onSubmit={handleSubmit(onSubmit)}
-          sx={{ width: "50%", margin: "auto" }}
-        >
-          <InputLabel htmlFor="username" sx={{ color: "#ff6f00" }}>
+        <Box component="form" noValidate onSubmit={handleSubmit(onSubmit)} sx={{ width: "50%", margin: "auto" }}>
+          <InputLabel htmlFor="username" sx={{ color: "#333333"}}>
             UserName:
           </InputLabel>
           <TextField
@@ -72,16 +61,15 @@ const Signup = () => {
             sx={{ marginBottom: "1rem" }}
           />
 
-          <InputLabel htmlFor="email" sx={{ color: "#ff6f00" }}>
+          <InputLabel htmlFor="email" sx={{ color: "#333333"}}>
             Email:
           </InputLabel>
           <TextField
-          
             id="email"
             type="email"
             {...register("email", {
               required: "Email is required",
-              pattern: { value:/^[a-z0-9]+(\.[a-z0-9]+)*@[a-z0-9]+\.[a-z]{2,}$/ , message: "Invalid email format" },
+              pattern: { value: /^[a-z0-9]+(\.[a-z0-9]+)*@[a-z0-9]+\.[a-z]{2,}$/, message: "Invalid email format" },
             })}
             error={!!errors.email}
             helperText={errors.email?.message}
@@ -89,7 +77,7 @@ const Signup = () => {
             sx={{ marginBottom: "1rem" }}
           />
 
-          <InputLabel htmlFor="password" sx={{ color: "#ff6f00" }}>
+          <InputLabel htmlFor="password" sx={{ color: "#333333"}}>
             Password:
           </InputLabel>
           <TextField
@@ -102,10 +90,8 @@ const Signup = () => {
                 message: "Password must be at least 8 characters",
               },
               pattern: {
-                value:
-                  /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
-                message:
-                  "Password must contain uppercase, lowercase, number & special character",
+                value: /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+                message: "Password must contain uppercase, lowercase, number & special character",
               },
             })}
             error={!!errors.password}
@@ -115,10 +101,7 @@ const Signup = () => {
             InputProps={{
               endAdornment: (
                 <InputAdornment position="end">
-                  <IconButton
-                    onClick={() => setShowPassword((prev) => !prev)}
-                    edge="end"
-                  >
+                  <IconButton onClick={() => setShowPassword((prev) => !prev)} edge="end">
                     {showPassword ? <Eye /> : <EyeOff />}
                   </IconButton>
                 </InputAdornment>
@@ -126,11 +109,7 @@ const Signup = () => {
             }}
           />
 
-          <Button
-            variant="contained"
-            sx={{ p: "0.5rem 3rem", marginTop: "1.5rem", marginBottom: "1rem" }}
-            type="submit"
-          >
+          <Button variant="contained" sx={{ p: "0.5rem 3rem", marginTop: "1.5rem", marginBottom: "1rem" }} type="submit">
             Sign Up
           </Button>
         </Box>

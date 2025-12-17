@@ -1,6 +1,6 @@
 import { Route, Routes } from "react-router-dom";
 import "./App.css";
-import Dashboard from "./Components/Dashboard";
+// import Dashboard from "./Components/Dashboard";
 import AddToCart from "./Components/AddToCart";
 import Signup from "./Components/Signup";
 import RecipesDetails from "./Components/RecipesDetails";
@@ -10,8 +10,9 @@ import { CssBaseline, ThemeProvider } from "@mui/material";
 import { theme } from "./Components/theme";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
-import GuestRoutes from "./Components/GuestRoutes";
 import NotFound from "./Components/NotFound";
+import LandingPage from "./Components/LandingPage";
+import GuestRoutes from "./Components/GuestRoutes";
 
 function App() {
   console.log(localStorage.getItem("users"));
@@ -21,10 +22,10 @@ function App() {
       <ThemeProvider theme={theme}>
         <CssBaseline />
         <Routes>
-          <Route path="/" element={<Dashboard />}></Route>
-          <Route path="/food" element={<Dashboard />}></Route>
+          <Route path="/" element={<LandingPage />}></Route>
+          <Route path="/home" element={<LandingPage />}></Route>
           <Route
-            path="/food/:id"
+            path="/home/:id"
             element={
               <ProtectedRoutes>
                 <RecipesDetails />
@@ -33,19 +34,24 @@ function App() {
           ></Route>
           <Route path="/cart" element={<AddToCart />}></Route>
 
-          <Route path="/signup" element={ 
-            <GuestRoutes> 
-              <Signup /> 
-            </GuestRoutes>
-          }
+          <Route
+            path="/signup"
+            element={
+              <GuestRoutes>
+                <Signup />
+              </GuestRoutes>
+            }
           ></Route>
-          <Route path="/login" element={
-            <GuestRoutes>
-            <Login />
-            </GuestRoutes>
-          }
+
+          <Route
+            path="/login"
+            element={
+              <GuestRoutes>
+                <Login />
+              </GuestRoutes>
+            }
           ></Route>
-          <Route path="*" element={<NotFound/>}></Route>
+          <Route path="*" element={<NotFound />}></Route>
         </Routes>
       </ThemeProvider>
       <ToastContainer

@@ -246,7 +246,6 @@ const Dashboard = () => {
 
         <Box
           sx={{
-            width: "96%",
             display: "grid",
             gridTemplateColumns: "repeat(auto-fit , minmax(350px , 1fr))",
             gap: "1rem",

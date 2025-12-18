@@ -11,7 +11,7 @@ import bowl1 from "../assets/bowl1.png";
 import bowl2 from "../assets/bowl2.png";
 import bowl3 from "../assets/bowl3.png";
 import bowl4 from "../assets/bowl4.png";
-import { useAppDispatch, useAuthSelector } from "./hooks";
+import { useAppDispatch, useAppSelector, useAuthSelector } from "./hooks";
 import { logout } from "./Redux/AuthReducer";
 import { toast } from "react-toastify";
 
@@ -29,6 +29,7 @@ const LandingPage = () => {
   // const {recipes , loading , error} = useAppSelector((state)=> state.foodrecipes)
   const { isLogin } = useAuthSelector((state) => state.foodAuth);
   const dispatch = useAppDispatch();
+  const { count } = useAppSelector((state) => state.foodCart);
 
   const sliderData: slider[] = [
     {
@@ -47,7 +48,7 @@ const LandingPage = () => {
       image: image3,
     },
   ];
-  
+
   // LogOut
   function handleLogout() {
     dispatch(logout());
@@ -101,7 +102,10 @@ const LandingPage = () => {
         </Box>
 
         <Box sx={{ display: "flex", alignItems: "center", gap: { xs: "2rem", sm: "4rem", md: "1rem", lg: "2rem" } }}>
-          <Box component="img" src={cart} alt="cart" sx={{ width: "25px", height: "3vh" }}></Box>
+          <Box sx={{display:'flex' , justifyContent:'center' , alignItems:'center'}}>
+            <Box component="img" src={cart} alt="cart" onClick={()=> navigate("/cart")} sx={{ width: "25px", height: "3vh" , cursor:"pointer" }}></Box>
+            <Typography variant="body1" sx={{color:"#E53935"}}>{count > 0 ? count : ""}</Typography>
+          </Box>
 
           {!isLogin && (
             <Button variant="contained" onClick={() => navigate("/signup")} sx={{ padding: "0.4rem 1.5rem" }}>
@@ -158,6 +162,7 @@ const LandingPage = () => {
                 <Button
                   variant="contained"
                   sx={{ marginTop: "3rem", padding: { sm: "0.5rem 2rem", md: "0.5rem 5rem", lg: "0.5rem 7rem" } }}
+                  onClick={()=> navigate("/menu")}
                 >
                   View Menu
                 </Button>
@@ -348,16 +353,6 @@ const LandingPage = () => {
           </Box>
         </Box>
       </Box>
-
-
-      <Box>
-
-        <Box>
-
-        </Box>
-
-      </Box>
-
     </Box>
   );
 };

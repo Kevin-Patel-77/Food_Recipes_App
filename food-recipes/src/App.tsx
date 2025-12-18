@@ -13,6 +13,7 @@ import { ToastContainer } from "react-toastify";
 import NotFound from "./Components/NotFound";
 import LandingPage from "./Components/LandingPage";
 import GuestRoutes from "./Components/GuestRoutes";
+import Menu from "./Components/Menu";
 
 function App() {
   console.log(localStorage.getItem("users"));
@@ -24,6 +25,14 @@ function App() {
         <Routes>
           <Route path="/" element={<LandingPage />}></Route>
           <Route path="/home" element={<LandingPage />}></Route>
+          <Route
+            path="/menu"
+            element={
+              <ProtectedRoutes>
+                <Menu />
+              </ProtectedRoutes>
+            }
+          ></Route>
           <Route
             path="/home/:id"
             element={

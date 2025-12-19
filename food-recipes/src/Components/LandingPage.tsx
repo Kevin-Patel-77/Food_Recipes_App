@@ -137,7 +137,7 @@ const LandingPage = () => {
         }}
       >
         <AnimatePresence mode="wait">
-          <motion.div
+          <MotionBox
             key={currentIndex}
             initial={{ opacity: 0, x: 80 }}
             animate={{ opacity: 1, x: 0 }}
@@ -158,17 +158,17 @@ const LandingPage = () => {
                 {currentSlider.title2}
               </Typography>
 
-              <Box sx={{ textAlign: "center" }}>
+              <Box sx={{ textAlign: "left" }}>
                 <Button
                   variant="contained"
-                  sx={{ marginTop: "3rem", padding: { sm: "0.5rem 2rem", md: "0.5rem 5rem", lg: "0.5rem 7rem" } }}
+                  sx={{ marginTop: "3rem",  padding: { sm: "0.5rem 2rem", md: "0.5rem 5rem", lg: "0.5rem 7rem" } }}
                   onClick={()=> navigate("/menu")}
                 >
                   View Menu
                 </Button>
               </Box>
             </Box>
-          </motion.div>
+          </MotionBox>
         </AnimatePresence>
 
         <Box
@@ -193,42 +193,7 @@ const LandingPage = () => {
                 height: "100%",
               }}
             />
-          </AnimatePresence>
-
-          <AnimatePresence mode="wait">
-            <MotionBox
-              key={currentIndex}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 20 }}
-              transition={{ duration: 0.4, ease: "easeOut" }}
-              sx={{
-                position: "absolute",
-                top: "1%",
-                left: "1%",
-                border: "1px solid rgba(255,255,255,0.4)",
-                width: { xs: "100%", sm: "75%", md: "60%", lg: "35%" },
-                backgroundColor: "rgba(255,255,255,0.35)",
-                backdropFilter: "blur(20px)",
-                borderRadius: "12px",
-                padding: "0.5rem",
-                zIndex: "2",
-              }}
-            >
-              <Typography variant="body2" sx={{ fontWeight: "bold", fontSize: { xs: "0.4", sm: "0.5rem", md: "0.8rem", lg: "0.8rem" } }}>
-                5%
-              </Typography>
-              <Typography variant="body2" sx={{ fontWeight: "bold", fontSize: { xs: "0.4", sm: "0.5rem", md: "0.8rem", lg: "0.8rem" } }}>
-                <Box
-                  component="span"
-                  sx={{ color: "#E53935", fontWeight: "bold", fontSize: { xs: "0.4", sm: "0.5rem", md: "0.8rem", lg: "0.8rem" } }}
-                >
-                  Discount
-                </Box>{" "}
-                on 2 Orders
-              </Typography>
-            </MotionBox>
-          </AnimatePresence>
+          </AnimatePresence>  
         </Box>
       </Box>
 

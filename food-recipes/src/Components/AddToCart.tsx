@@ -42,14 +42,14 @@ const AddToCart = () => {
 
                 <Box sx={{display:"flex" , justifyContent:"center" , marginBottom:"1rem" , gap:"1rem"}}>
                   <Box>
-                    <Button variant='contained' component={NavLink} to={`/food/${food.id}`} sx={{padding:"0.5rem 2rem"}}>View Details</Button>
+                    <Button variant='contained' component={NavLink} to={`/home/${food.id}`} sx={{padding:"0.5rem 2rem"}}>View Details</Button>
                   </Box>
 
                   <Box sx={{width:"30%" , display:"flex" , 
                     justifyContent:"space-evenly" , alignItems:"center" , 
                     borderRadius:"10px" , 
-                    backgroundColor:"#E53935" , color:"white" , marginBottom:"1rem" , 
-                    padding:"0.4rem 1rem" , cursor:"pointer" , fontWeight:"bolder" , 
+                    backgroundColor:"#EF4444" , color:"white" , marginBottom:"1rem" , 
+                    padding:"0.4rem 1rem" , cursor:"pointer" , 
                     fontSize:"medium" , textDecoration:"none", gap:"0.5rem" }} >
 
                     <CookingPot onClick={() => handleDelete(food.id)} />

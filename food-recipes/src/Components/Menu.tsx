@@ -1,12 +1,15 @@
-import { Box, Button, InputAdornment, TextField, Tooltip, Typography } from "@mui/material";
-import { useAppDispatch, useAppSelector, useDebounce } from "./hooks";
-import { useEffect, useState } from "react";
+import { Box, Button, Checkbox, Chip, FormControlLabel, FormGroup, InputAdornment, Slider, TextField, Tooltip, Typography } from "@mui/material";
+import { useAppDispatch, useAppSelector } from "./hooks";
+import { useEffect, useRef, useState } from "react";
 import { fetchRecipes, increasePage, type Recipe } from "./Redux/RecipesReducer";
 import RecipeSkeleton from "./RecipeSkeleton";
 import { NavLink, useNavigate, useSearchParams } from "react-router-dom";
 import { addCart } from "./Redux/CartReducers";
 import search from "../assets/search.png";
 import rupee from "../assets/rupee.png";
+import { debounce } from "lodash";
+import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
+import GridViewIcon from '@mui/icons-material/GridView';
 
 const Menu = () => {
   const dispatch = useAppDispatch();
@@ -16,9 +19,16 @@ const Menu = () => {
   const itemsPerPage = 6;
   const [params, setParams] = useSearchParams();
   const [searchItem, setSearchItem] = useState(params.get("searchquery") || "");
-  const debounceSearch = useDebounce(searchItem, 500);
+  const [cuisine, setCuisine] = useState<string[]>([]);
+  const [priceRange, setPriceRange] = useState<number[]>([]);
+
   const [hasSearched, setHasSearched] = useState<boolean>(false);
   const [isSearching, setIsSearching] = useState<boolean>(false);
+  const [isListView, setIsListView] = useState<boolean>(false);
+
+  const debouncing = useRef<(((value: string, cuisineArr: string[], amountRange: number[]) => void) & { cancel: () => void }) | null>(null);
+
+  const cuisines = ["Indian", "Italian", "Mexican", "Mediterranean", "Pakistani", "Japanese", "Russian", "Korean", "Greek"];
 
   function handleSearchChange(event: React.ChangeEvent<HTMLInputElement>) {
     setSearchItem(event.target.value);
@@ -31,6 +41,34 @@ const Menu = () => {
     }
   }
 
+  // Checkbox
+
+  function handleCuisineChange(value: string, checked: boolean) {
+    if (checked) {
+      setCuisine((prev) => [...prev, value]);
+    } else {
+      setCuisine((prev) => prev.filter((item) => item !== value));
+    }
+  }
+
+  function handleChipDelete(cuis: string) {
+    setCuisine((prev) => prev.filter((item) => item !== cuis));
+  }
+
+  // Price Range
+
+  function handlePriceChange(event: Event, newValue: number | number[]) {
+    setPriceRange(newValue as number[]);
+  }
+
+  // Clear All
+
+  function handleClearAll() {
+    setSearchItem("");
+    setCuisine([]);
+    setPriceRange([]);
+  }
+
   //   Add To Cart
   function handleCart(foodItem: Recipe) {
     dispatch(addCart(foodItem));
@@ -41,33 +79,85 @@ const Menu = () => {
   }, [page]);
 
   useEffect(() => {
-    if (searchItem) {
-      setParams({ searchquery: searchItem });
-    } else {
-      setParams({});
+    if (recipes.length > 0 && !searchItem.trim()) {
+      setFiltereddata(recipes);
     }
-  }, [searchItem]);
+  }, [recipes]);
 
   useEffect(() => {
-    if (recipes.length === 0) return;
+    if (!debouncing.current) return;
+    debouncing.current(searchItem, cuisine, priceRange);
+  }, [searchItem, cuisine, priceRange]);
 
-    if (!debounceSearch.trim()) {
-      setFiltereddata(recipes);
+  useEffect(() => {
+    setIsSearching(searchItem.trim() !== "" || cuisine.length > 0 || priceRange.length > 0);
+  }, [searchItem, cuisine, priceRange]);
 
-      setHasSearched(false);
-      setIsSearching(false);
-      return;
+  useEffect(() => {
+    const cuisineFromUrl = params.get("cuisine");
+
+    if (cuisineFromUrl) {
+      setCuisine(cuisineFromUrl.split(","));
+    }
+  }, []);
+
+  useEffect(() => {
+    const priceFromUrl = params.get("price");
+
+    if (priceFromUrl) {
+      const [min, max] = priceFromUrl.split("-").map(Number);
+      setPriceRange([min, max]);
+    }
+  }, []);
+
+  useEffect(() => {
+    const newParams: any = {};
+
+    if (searchItem.trim()) {
+      newParams.searchquery = searchItem;
+    }
+    if (cuisine.length > 0) {
+      newParams.cuisine = cuisine.join(",");
     }
 
-    const filtered = recipes.filter(
-      (meal) =>
-        meal.mealType.some((type) => type.toLowerCase().includes(debounceSearch.toLowerCase())) ||
-        meal.name.toLowerCase().includes(debounceSearch.toLowerCase())
-    );
+    if (priceRange.length > 0) {
+      newParams.price = `${priceRange[0]}-${priceRange[1]}`;
+    }
 
-    setFiltereddata(filtered);
-    setHasSearched(true);
-  }, [debounceSearch, recipes]);
+    setParams(newParams);
+  }, [cuisine, searchItem, priceRange]);
+
+  useEffect(() => {
+    debouncing.current = debounce((value: string, cuisineArr: string[], amountRange: number[]) => {
+      const [min, max] = amountRange;
+
+      if (!value.trim() && cuisineArr.length === 0 && amountRange.length === 0) {
+        setFiltereddata(recipes);
+        setHasSearched(false);
+        return;
+      }
+
+      const filtered = recipes.filter((meal) => {
+        const searchMatch =
+          !value.trim() ||
+          meal.name.toLowerCase().includes(value.toLowerCase()) ||
+          meal.mealType.some((type) => type.toLowerCase().includes(value.toLowerCase()));
+
+        const cuisineMatch = cuisineArr.length === 0 || cuisineArr.includes(meal.cuisine);
+
+        const priceMatch = amountRange.length === 0 || (meal.amount >= min && meal.amount <= max);
+
+        return searchMatch && cuisineMatch && priceMatch;
+      });
+
+      setFiltereddata(filtered);
+      setHasSearched(searchItem.trim() !== "" || cuisineArr.length > 0 || amountRange.length > 0);
+    }, 500);
+
+    return () => {
+      debouncing.current?.cancel();
+    };
+  }, [recipes, cuisine, searchItem, priceRange]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -80,7 +170,7 @@ const Menu = () => {
 
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [loading, isSearching ,  hasMore , dispatch]);
+  }, [loading, isSearching, hasMore, dispatch]);
 
   // Error
   if (error) {
@@ -103,7 +193,7 @@ const Menu = () => {
   return (
     <Box sx={{ padding: "2rem" }}>
       <Box sx={{ display: "flex" }}>
-        <Box sx={{ width: "20%", height: "80vh", border: "1px solid #333333", borderRadius: "12px", padding: "1rem" }}>
+        <Box sx={{ width: "20%", height: "90vh", border: "1px solid #333333", borderRadius: "12px", padding: "1rem" }}>
           <Typography variant="h4" color="primary" sx={{ fontWeight: "bold", textAlign: "center" }}>
             Menu
           </Typography>
@@ -140,13 +230,92 @@ const Menu = () => {
               }}
             ></TextField>
           </Box>
+
+          <Box sx={{ marginTop: "20px" }}>
+            {cuisine.length > 0 && cuisine.map((item) => <Chip key={item} label={item} variant="outlined" onDelete={() => handleChipDelete(item)} />)}
+          </Box>
+
+          <Box>
+            <Box sx={{ display: "flex", alignItems: "end", justifyContent: "space-between" }}>
+              <Typography variant="h5" color="primary" sx={{ marginTop: "30px" , fontWeight:"bold" }}>
+                Cuisine
+              </Typography>
+
+              {searchItem.trim() || cuisine.length > 0 || priceRange.length > 0 ? (
+                <Button variant="text" onClick={handleClearAll}>
+                  Clear All
+                </Button>
+              ) : (
+                ""
+              )}
+            </Box>
+            <hr />
+
+            <Box>
+              <FormGroup>
+                {cuisines.map((cuis) => (
+                  <FormControlLabel
+                    key={cuis}
+                    label={cuis}
+                    control={<Checkbox size="small" checked={cuisine.includes(cuis)} onChange={(e) => handleCuisineChange(cuis, e.target.checked)} />}
+                  />
+                ))}
+              </FormGroup>
+            </Box>
+          </Box>
+
+          <Box>
+            <Typography variant="h5" color="primary" sx={{ marginTop: "20px" , fontWeight:"bold" }}>
+              Price
+            </Typography>
+            <hr />
+
+            <Box>
+              <Typography gutterBottom>{priceRange.length > 0 ? `Amount: ₹${priceRange[0]} - ₹${priceRange[1]}` : `Amount: ₹0 - ₹1000`}</Typography>
+              <Slider
+                value={priceRange.length ? priceRange : [0, 1000]}
+                onChange={handlePriceChange}
+                min={0}
+                max={1000}
+                step={10}
+                valueLabelDisplay="auto"
+              />
+            </Box>
+          </Box>
+
+          <Box>
+            <Typography variant="h5" color="primary" sx={{ marginTop: "20px" , fontWeight:"bold" }}>
+              Layout
+            </Typography>
+            <hr />
+
+            {isListView ? (
+              <Button
+                variant="contained"
+                onClick={() => setIsListView((prev) => !prev)}
+                sx={{ gap: "10px",border: "1px solid red",borderRadius: "100px", padding:"5px 30px"}}>
+                <FormatListBulletedIcon/>
+                <Typography variant="h6">List</Typography>
+              </Button>
+            ) : (
+              <Button
+                variant="contained"
+                onClick={() => setIsListView((prev) => !prev)}
+                sx={{ gap: "10px",  border: "1px solid red",   borderRadius: "100px" , padding:"5px 30px"}}>
+                <GridViewIcon/>
+                <Typography variant="h6">
+                  Grid
+                </Typography>
+              </Button>
+            )}
+          </Box>
         </Box>
 
         <Box
           sx={{
             width: "80%",
             display: "grid",
-            gridTemplateColumns: "repeat(auto-fit , minmax(400px , 1fr))",
+            gridTemplateColumns: "repeat(auto-fill, 450px)",
             gap: "1rem",
             justifyContent: "center",
             alignItems: "center",
@@ -159,7 +328,9 @@ const Menu = () => {
               </Box>
             ))}
 
-          {!loading && filteredData.length === 0 && hasSearched ? (
+          {isListView ? (
+            "Hello"
+          ) : !loading && filteredData.length === 0 && hasSearched ? (
             <Typography
               variant="h4"
               sx={{
@@ -185,15 +356,8 @@ const Menu = () => {
               >
                 <Box
                   component="img"
-                  sx={{
-                    width: "100%",
-                    height: "20rem",
-                    border: "1px solid black",
-                    borderRadius: "10px",
-                    marginTop: "0.8rem",
-                    marginBottom: "1rem",
-                  }}
-                  onClick={() => navigate(`/food/${food.id}`)}
+                  sx={{ width: "100%", height: "20rem", border: "1px solid black", borderRadius: "10px", marginTop: "0.8rem", marginBottom: "1rem" }}
+                  onClick={() => navigate(`/home/${food.id}`)}
                   src={food.image}
                   alt={food.name}
                 ></Box>
@@ -295,3 +459,25 @@ const Menu = () => {
 };
 
 export default Menu;
+
+// Italian
+// Asian
+// American
+// Mexican
+// Mediterranean
+// Pakistani
+// Japanese
+// Korean
+// Greek
+// Thai
+// Turkish
+// Smoothie
+// Russian
+// Indian
+// Lebanese
+// Brazilian
+// Hawaiian
+// Cocktail
+// Moroccan
+// Vietnamese
+// Spanish

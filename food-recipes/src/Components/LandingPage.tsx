@@ -1,10 +1,10 @@
 import { Box, Button, Typography } from "@mui/material";
 import { NavLink, useNavigate } from "react-router-dom";
 import cart from "../assets/cart.png";
-import image1 from "../assets/image1.png";
-import image2 from "../assets/image2.png";
+import image1 from "../assets/image1.png"
+import image2 from "../assets/image2.png"
 import image3 from "../assets/image3.png";
-import Toast from "../assets/Toast.png"
+// import Toast from "../assets/Toast.png"
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import rupee from "../assets/rupee.png";
@@ -22,15 +22,14 @@ type slider = {
   image: string;
 };
 
-let MotionBox = motion(Box);
+const MotionBox = motion(Box);
 
 const LandingPage = () => {
   const [currentIndex, setCurrentIndex] = useState<number>(1);
   const navigate = useNavigate();
-  // const {recipes , loading , error} = useAppSelector((state)=> state.foodrecipes)
-  const { isLogin } = useAuthSelector((state) => state.foodAuth);
+  const { isAuthenticated } = useAuthSelector((state) => state.foodAuth);
   const dispatch = useAppDispatch();
-  const { count } = useAppSelector((state) => state.foodCart);
+  const { items } = useAppSelector((state) => state.foodCart);
 
   const sliderData: slider[] = [
     {
@@ -62,7 +61,7 @@ const LandingPage = () => {
     }, 3000);
 
     return () => clearInterval(interval);
-  }, []);
+  },[sliderData.length]);
 
   const currentSlider = sliderData[currentIndex];
 
@@ -104,23 +103,23 @@ const LandingPage = () => {
 
         <Box sx={{ display: "flex", alignItems: "center", gap: { xs: "32px", sm: "64px", md: "16px", lg: "32px" } }}>
           <Box sx={{display:'flex' , justifyContent:'center' , alignItems:'center'}}>
-            <Box component="img" src={cart} alt="cart" onClick={()=> navigate("/cart")} sx={{ width: "25px", height: "35px" , cursor:"pointer" }}></Box>
-            <Typography variant="body1" sx={{color:"#E53935"}}>{count > 0 ? count : ""}</Typography>
+            <Box component="img" src={cart} alt="cart" onClick={()=> navigate("/cart")} sx={{ position:"relative" ,  width: "25px", height: "25px" , cursor:"pointer" }}></Box>
+            <Typography variant="body1" sx={{color:"white" ,fontSize:"10px" ,    backgroundColor:items.length!== 0 ? "#EF4444" : "transparent" , padding:"3px 6px" , borderRadius:"100px" , position: "absolute" , right:"17.4%" ,  top:"5%" , }}>{ items.length > 0   ? items.reduce((sum , acc)=> sum + acc.quantity , 0) : ""}</Typography>
           </Box>
 
-          {!isLogin && (
+          {!isAuthenticated && ( 
             <Button variant="contained" onClick={() => navigate("/signup")} sx={{ padding: "8px 24px" }}>
               Sign Up
             </Button>
           )}
 
-          {!isLogin && (
+          {!isAuthenticated && (
             <Button variant="contained" onClick={() => navigate("/login")} sx={{ padding: "8px 24px"}}>
               Log In
             </Button>
           )}
 
-          {isLogin && (
+          {isAuthenticated && (
             <Button variant="contained" onClick={handleLogout} sx={{ padding: "8px 24px" }}>
               Log out
             </Button>
@@ -333,12 +332,12 @@ const LandingPage = () => {
           </Box>
         </Box>
 
-        <Box sx={{marginTop:"32px"}}>
-            <Box sx={{border:"1px solid red" , borderRadius:"20px" , width:"25%" , height:"300px" , position:"relative"}}>
+        {/* <Box sx={{marginTop:"32px"}}>
+            <Box sx={{border:"1px solid red" , borderRadius:"20px" , width:"30%" , height:"350px" , position:"relative"}}>
               <Box sx={{ backgroundImage:`url(${Toast})` , backgroundSize:"cover", backgroundRepeat:"no-repeat" , width:"100%" , height:"100%"}}></Box>
-              <Button sx={{position:"absolute" , left:'30%' , bottom:""}}>French Toast</Button>
+              <Button sx={{position:"absolute" , top:"82.7%" , width:"100%" , height:"60px" , borderRadius:"12px" , backdropFilter:"blur(100px)"}}>French Toast</Button>
             </Box>
-        </Box>
+        </Box> */}
       </Box>
     </Box>
   );

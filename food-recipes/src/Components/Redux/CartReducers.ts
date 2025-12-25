@@ -5,13 +5,13 @@ import type { Recipe } from "./RecipesReducer";
 export type CartItem = Recipe & {quantity : number}
 
 type initial = {
-    count : number
     items : CartItem[]
 }
 
+const MyCartItem : CartItem[] = JSON.parse(localStorage.getItem("CartDetails") || "[]")
+
 const initialState: initial = {
-    count : 0,
-    items : []
+    items : MyCartItem
 } 
 
 const cartReducer = createSlice({
@@ -27,19 +27,21 @@ const cartReducer = createSlice({
             state.items.push({...action.payload , quantity : 1 })
            }
 
-           state.count +=1
+           localStorage.setItem("CartDetails" , JSON.stringify(state.items))
         },
         deleteCart(state , action){
           const deleteItem = state.items.find((i)=> i.id == action.payload)
 
           if(deleteItem){
             deleteItem.quantity -=1
-
+  
             if(deleteItem.quantity <= 0){
                 state.items = state.items.filter((item)=> item.id !== action.payload)
+                
             }
           }
-           state.count -=1
+
+          localStorage.setItem("CartDetails" , JSON.stringify(state.items))
         }
     }
 })

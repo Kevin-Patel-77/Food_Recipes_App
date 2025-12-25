@@ -1,16 +1,8 @@
 import { useEffect, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "./hooks";
-import { login } from "./Redux/AuthReducer";
-import {
-  Box,
-  Button,
-  IconButton,
-  InputAdornment,
-  InputLabel,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { login, resetLoginStatus } from "./Redux/AuthReducer";
+import { Box, Button, IconButton, InputAdornment, InputLabel, TextField, Typography } from "@mui/material";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { Eye, EyeOff } from "lucide-react";
 import { toast } from "react-toastify";
@@ -23,32 +15,29 @@ type login = {
 const Login = () => {
   const disptach = useAppDispatch();
   const navigate = useNavigate();
-  const [submitted, setSubmitted] = useState<boolean>(false);
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<login>();
-  const { isLogin } = useAppSelector((state) => state.foodAuth);
+  const { loginStatus } = useAppSelector((state) => state.foodAuth);
 
   const onSubmit: SubmitHandler<login> = (data) => {
-    setSubmitted(true);
     disptach(login(data));
   };
 
   useEffect(() => {
-    if (!submitted) return;
-
-    if (isLogin) {
-      toast.success("Login Successful");
+    if (loginStatus === "success") {
+      toast.success("Login Successful!");
       navigate("/home");
-    } else {
-      toast.error("Invalid Credentials");
     }
 
-    setSubmitted(false);
-  }, [isLogin, submitted]);
+    if (loginStatus === "error") {
+      toast.error("Invalid Credentials");
+      disptach(resetLoginStatus());
+    }
+  },[loginStatus , disptach , navigate]);
 
   return (
     <Box
@@ -81,12 +70,7 @@ const Login = () => {
           Log In
         </Typography>
 
-        <Box
-          component="form"
-          noValidate
-          onSubmit={handleSubmit(onSubmit)}
-          sx={{ width: "50%", margin: "auto" }}
-        >
+        <Box component="form" noValidate onSubmit={handleSubmit(onSubmit)} sx={{ width: "50%", margin: "auto" }}>
           <InputLabel htmlFor="email" sx={{ color: "#333333" }}>
             Email
           </InputLabel>
@@ -103,7 +87,7 @@ const Login = () => {
             fullWidth
           />
 
-          <InputLabel htmlFor="password" sx={{ color: "#333333"}}>
+          <InputLabel htmlFor="password" sx={{ color: "#333333" }}>
             Password
           </InputLabel>
           <TextField
@@ -123,10 +107,7 @@ const Login = () => {
             InputProps={{
               endAdornment: (
                 <InputAdornment position="end">
-                  <IconButton
-                    onClick={() => setShowPassword((prev) => !prev)}
-                    edge="end"
-                  >
+                  <IconButton onClick={() => setShowPassword((prev) => !prev)} edge="end">
                     {showPassword ? <Eye /> : <EyeOff />}
                   </IconButton>
                 </InputAdornment>

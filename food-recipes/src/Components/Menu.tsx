@@ -18,7 +18,7 @@ import {
   Typography,
 } from "@mui/material";
 import { useAppDispatch, useAppSelector } from "./hooks";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { fetchRecipes, increasePage, type Recipe } from "./Redux/RecipesReducer";
 import RecipeSkeleton from "./RecipeSkeleton";
 import { NavLink, useNavigate, useSearchParams } from "react-router-dom";
@@ -28,19 +28,40 @@ import rupee from "../assets/rupee.png";
 import { debounce } from "lodash";
 import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
 import GridViewIcon from "@mui/icons-material/GridView";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import { toast } from "react-toastify";
 
 const Menu = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const [filteredData, setFiltereddata] = useState<Recipe[]>([]);
   const { recipes, loading, error, page, hasMore } = useAppSelector((state) => state.foodrecipes);
   const [params, setParams] = useSearchParams();
   const [searchItem, setSearchItem] = useState(params.get("searchquery") || "");
-  const [cuisine, setCuisine] = useState<string[]>([]);
-  const [priceRange, setPriceRange] = useState<number[]>([]);
+  const [debouncedValue, setDebouncedValue] = useState(searchItem);
 
-  const [hasSearched, setHasSearched] = useState<boolean>(false);
-  const [isSearching, setIsSearching] = useState<boolean>(false);
+  const [cuisine, setCuisine] = useState<string[]>(() => {
+    const cuisineFromUrl = params.get("cuisine");
+    return cuisineFromUrl ? cuisineFromUrl.split(",") : [];
+  });
+
+  const [priceRange, setPriceRange] = useState<number[]>(() => {
+    const priceFromUrl = params.get("price");
+    if (!priceFromUrl) return [];
+    const [min, max] = priceFromUrl.split("-").map(Number);
+    return [min, max];
+  });
+
+  const debouncedSearch = useRef(
+    debounce((value: string) => {
+      setDebouncedValue(value);
+    }, 500)
+  );
+
+  const hasSearched = debouncedValue.trim() !== "" || cuisine.length > 0 || priceRange.length > 0;
+
+  const isSearching = debouncedValue.trim() !== "" || cuisine.length > 0 || priceRange.length > 0;
+
+  const { items } = useAppSelector((state) => state.foodCart);
 
   const [isListView, setIsListView] = useState<boolean>(() => {
     const saved = localStorage.getItem("listToggle");
@@ -53,19 +74,13 @@ const Menu = () => {
 
   const itemsPerPage = 10;
 
-  const debouncing = useRef<(((value: string, cuisineArr: string[], amountRange: number[]) => void) & { cancel: () => void }) | null>(null);
-
   const cuisines = ["Indian", "Italian", "Mexican", "Mediterranean", "Pakistani", "Japanese", "Russian", "Korean", "Greek"];
 
   function handleSearchChange(event: React.ChangeEvent<HTMLInputElement>) {
-    setSearchItem(event.target.value);
+    const value = event.target.value;
+    setSearchItem(value);
 
-    if (event.target.value.trim() === "") {
-      setIsSearching(false);
-      setHasSearched(false);
-    } else {
-      setIsSearching(true);
-    }
+    debouncedSearch.current(value);
   }
 
   // Checkbox
@@ -99,6 +114,7 @@ const Menu = () => {
   //   Add To Cart
   function handleCart(foodItem: Recipe) {
     dispatch(addCart(foodItem));
+    toast.success("Cart Added");
   }
 
   // List and Grid View
@@ -113,42 +129,10 @@ const Menu = () => {
 
   useEffect(() => {
     dispatch(fetchRecipes({ page, limit: itemsPerPage }));
-  }, [page]);
-
+  }, [page, dispatch]);
+  
   useEffect(() => {
-    if (recipes.length > 0 && !searchItem.trim()) {
-      setFiltereddata(recipes);
-    }
-  }, [recipes]);
-
-  useEffect(() => {
-    if (!debouncing.current) return;
-    debouncing.current(searchItem, cuisine, priceRange);
-  }, [searchItem, cuisine, priceRange]);
-
-  useEffect(() => {
-    setIsSearching(searchItem.trim() !== "" || cuisine.length > 0 || priceRange.length > 0);
-  }, [searchItem, cuisine, priceRange]);
-
-  useEffect(() => {
-    const cuisineFromUrl = params.get("cuisine");
-
-    if (cuisineFromUrl) {
-      setCuisine(cuisineFromUrl.split(","));
-    }
-  }, []);
-
-  useEffect(() => {
-    const priceFromUrl = params.get("price");
-
-    if (priceFromUrl) {
-      const [min, max] = priceFromUrl.split("-").map(Number);
-      setPriceRange([min, max]);
-    }
-  }, []);
-
-  useEffect(() => {
-    const newParams: any = {};
+    const newParams: { searchquery?: string; cuisine?: string; price?: string } = {};
 
     if (searchItem.trim()) {
       newParams.searchquery = searchItem;
@@ -162,39 +146,24 @@ const Menu = () => {
     }
 
     setParams(newParams);
-  }, [cuisine, searchItem, priceRange]);
+  }, [cuisine, searchItem, priceRange , setParams]);
 
-  useEffect(() => {
-    debouncing.current = debounce((value: string, cuisineArr: string[], amountRange: number[]) => {
-      const [min, max] = amountRange;
+  const filteredData = useMemo(() => {
+    if (recipes.length === 0) return [];
 
-      if (!value.trim() && cuisineArr.length === 0 && amountRange.length === 0) {
-        setFiltereddata(recipes);
-        setHasSearched(false);
-        return;
-      }
+    return recipes.filter((meal) => {
+      const searchMatch =
+        !debouncedValue.trim() ||
+        meal.name.toLowerCase().includes(debouncedValue.toLowerCase()) ||
+        meal.mealType.some((type) => type.toLowerCase().includes(debouncedValue.toLowerCase()));
 
-      const filtered = recipes.filter((meal) => {
-        const searchMatch =
-          !value.trim() ||
-          meal.name.toLowerCase().includes(value.toLowerCase()) ||
-          meal.mealType.some((type) => type.toLowerCase().includes(value.toLowerCase()));
+      const cuisineMatch = cuisine.length === 0 || cuisine.includes(meal.cuisine);
 
-        const cuisineMatch = cuisineArr.length === 0 || cuisineArr.includes(meal.cuisine);
+      const priceMatch = priceRange.length === 0 || (meal.amount >= priceRange[0] && meal.amount <= priceRange[1]);
 
-        const priceMatch = amountRange.length === 0 || (meal.amount >= min && meal.amount <= max);
-
-        return searchMatch && cuisineMatch && priceMatch;
-      });
-
-      setFiltereddata(filtered);
-      setHasSearched(searchItem.trim() !== "" || cuisineArr.length > 0 || amountRange.length > 0);
-    }, 500);
-
-    return () => {
-      debouncing.current?.cancel();
-    };
-  }, [recipes, cuisine, searchItem, priceRange]);
+      return searchMatch && cuisineMatch && priceMatch;
+    });
+  }, [recipes, debouncedValue, cuisine, priceRange]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -228,10 +197,10 @@ const Menu = () => {
   }
 
   return (
-    <Box sx={{ padding: "35px" }}>
+    <Box sx={{ padding: "30px" }}>
       <Box sx={{ display: { sm: "grid", md: "flex", lg: "flex" }, gap: "20px" }}>
         <Box
-          sx={{ width: { sm: "100%", md: "50%", lg: "20%" }, height: "1100px", border: "1px solid #333333", borderRadius: "12px", padding: "1rem" }}
+          sx={{ width: { sm: "100%", md: "50%", lg: "20%" }, height: "1100px", border: "1px solid #333333", borderRadius: "12px", padding: "16px" }}
         >
           <Typography variant="h4" color="primary" sx={{ fontWeight: "bold", textAlign: "center" }}>
             Menu
@@ -320,6 +289,22 @@ const Menu = () => {
                 valueLabelDisplay="auto"
               />
             </Box>
+          </Box>
+
+          <Box>
+            <Typography variant="h5" color="primary" sx={{ marginTop: "20px", fontWeight: "bold" }}>
+              Shopping Cart
+            </Typography>
+            <hr />
+
+            <Button
+              variant="contained"
+              onClick={() => navigate("/cart")}
+              sx={{ gap: "10px", border: "1px solid red", borderRadius: "100px", padding: "5px 20px" }}
+            >
+              <ShoppingCartIcon />
+              <Typography variant="h6">My Cart</Typography>
+            </Button>
           </Box>
 
           <Box>
@@ -420,9 +405,15 @@ const Menu = () => {
                           </TableCell>
 
                           <TableCell align="right">
-                            <Button type="button" onClick={() => handleCart(food)} variant="contained" size="small" sx={{ padding: "5px 10px" }}>
-                              Add to Cart
-                            </Button>
+                            {items.find((item) => item.id === food.id) ? (
+                              <Button onClick={() => navigate("/cart")} variant="contained">
+                                GO TO BAG
+                              </Button>
+                            ) : (
+                              <Button onClick={() => handleCart(food)} variant="contained">
+                                ADD TO CART
+                              </Button>
+                            )}
                           </TableCell>
                         </TableRow>
                       ))}
@@ -443,10 +434,10 @@ const Menu = () => {
               width: { xs: "100%", sm: "100%", md: "80%", lg: "80%" },
               display: "grid",
               gridTemplateColumns: { sm: "repeat(2 , 1fr)", md: "repeat(auto-fill, 450px)", lg: "repeat(auto-fill, 450px)" },
-              gap: "1rem",
+              gap: "16px",
               justifyContent: "center",
               alignItems: "center",
-              marginTop: { xs: "20px", sm: "20px" },
+              marginTop: { xs: "20px", sm: "20px", md: "0px", lg: "0px" },
             }}
           >
             {/* Loading Data */}
@@ -566,15 +557,21 @@ const Menu = () => {
                       }}
                     >
                       <Box>
-                        <Button component={NavLink} to={`/home/${food.id}`} variant="contained">
-                          View Details
+                        <Button onClick={() => navigate(`/home/${food.id}`)} sx={{ padding: "10px 20px" }} variant="contained">
+                          VIEW DETAILS
                         </Button>
                       </Box>
 
                       <Box>
-                        <Button type="button" onClick={() => handleCart(food)} variant="contained">
-                          Add to Cart
-                        </Button>
+                        {items.find((item) => item.id === food.id) ? (
+                          <Button onClick={() => navigate("/cart")} sx={{ padding: "10px 25px" }} variant="contained">
+                            GO TO BAG
+                          </Button>
+                        ) : (
+                          <Button onClick={() => handleCart(food)} sx={{ padding: "10px 20px" }} variant="contained">
+                            ADD TO CART
+                          </Button>
+                        )}
                       </Box>
                     </Box>
                   </Box>
@@ -594,25 +591,3 @@ const Menu = () => {
 };
 
 export default Menu;
-
-// Italian
-// Asian
-// American
-// Mexican
-// Mediterranean
-// Pakistani
-// Japanese
-// Korean
-// Greek
-// Thai
-// Turkish
-// Smoothie
-// Russian
-// Indian
-// Lebanese
-// Brazilian
-// Hawaiian
-// Cocktail
-// Moroccan
-// Vietnamese
-// Spanish

@@ -1,10 +1,11 @@
 import { NavLink } from 'react-router-dom'
 import { CookingPot} from 'lucide-react';
 import { Plus } from 'lucide-react';
-import { addCart, deleteCart } from './Redux/CartReducers';
+import { addCart, deleteCart} from './Redux/CartReducers';
 import { useAppDispatch, useAppSelector } from './hooks';
 import type { Recipe } from './Redux/RecipesReducer';
 import { Box, Button, Typography } from '@mui/material';
+
 
 const AddToCart = () => {
   const { items } = useAppSelector((state) => state.foodCart)
@@ -18,6 +19,7 @@ const AddToCart = () => {
     dispatch(addCart(foodItem))
   }
 
+
   return (
     <Box sx={{padding:"1rem"}} >
       <Box sx={{ width: "96%", display: "grid", gridTemplateColumns: "repeat(auto-fit , minmax(300px , 1fr))", gap: "1rem", justifyContent: "center", alignItems: "center" }}>
@@ -29,7 +31,7 @@ const AddToCart = () => {
               <Box component="img" style={{ width: "100%", height: "20rem", border: "1px solid black", borderRadius: "10px", marginTop: "0.8rem" }}  src={food.image} alt={food.name} />
               <Box sx={{ color: "#333333", fontSize: "large", fontWeight: "bold" }}>
                 <Typography variant='body1' sx={{ marginTop: "1rem" }}>Name: {food.name}</Typography>
-                <Typography variant='body1' sx={{ marginBottom: "1rem" }}>Meal Type: {food.mealType.map((meal, index) => (
+                <Typography variant='body1' sx={{ marginBottom: "16px" }}>Meal Type: {food.mealType.map((meal, index) => (
                   <Box
                     key={index}
                     component="span"
@@ -60,7 +62,7 @@ const AddToCart = () => {
                 </Box>
               </Box>
             </Box>
-          )) : <Box sx={{ textAlign: "center", color: "white", backgroundColor: "#E53935", borderRadius: "10px" }} >
+          )) : <Box sx={{ height:"90vh" , display:"flex" , justifyContent:'center' , alignItems:"center",  color: "black" , borderRadius: "10px" }} >
             <Typography  variant='h4'>Your Recipes Cart is empty</Typography>
           </Box>}
       </Box>

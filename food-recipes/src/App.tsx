@@ -16,7 +16,6 @@ import GuestRoutes from "./Components/GuestRoutes";
 import Menu from "./Components/Menu";
 
 function App() {
-  console.log(localStorage.getItem("users"));
 
   return (
     <>

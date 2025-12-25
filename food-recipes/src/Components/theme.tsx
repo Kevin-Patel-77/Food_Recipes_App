@@ -1,6 +1,16 @@
 import { createTheme } from "@mui/material";
 
 export const theme = createTheme({
+  typography: {
+     fontFamily: `"Poppins", "Noto Serif", sans-serif`,
+  },
+
+  palette:{
+      primary:{
+        main:"#EF4444"
+      }, 
+  },
+
   components: {
     MuiCssBaseline: {
       styleOverrides: {
@@ -8,7 +18,7 @@ export const theme = createTheme({
           margin: 0,
           padding: 0,
           boxSizing: "border-box",
-          background: "linear-gradient(135deg, #fff9c4, #ffe0b2)",
+          backgroundColor: " #EFE7E2",
         },
       },
     },
@@ -16,10 +26,9 @@ export const theme = createTheme({
     MuiButton: {
       styleOverrides: {
         root: {
-          backgroundColor: "#ff8c00",
-          color: "#fff",
           "&:hover": {
-            backgroundColor: "#ff6f00",
+            backgroundColor: "#E53935",
+            color:"white"
           },
           borderRadius: "10px",
           fontWeight: "bold",
@@ -49,15 +58,13 @@ export const theme = createTheme({
             borderColor: "white",
           },
 
-          "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline":
-            {
-              borderColor: "white",
-            },
+          "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
+            borderColor: "white",
+          },
 
-          "& .MuiOutlinedInput-root.Mui-error .MuiOutlinedInput-notchedOutline":
-            {
-              borderColor: "#ff6f00",
-            },
+          "& .MuiOutlinedInput-root.Mui-error .MuiOutlinedInput-notchedOutline": {
+            borderColor: "#EF4444",
+          },
         },
       },
     },
@@ -82,7 +89,7 @@ export const theme = createTheme({
           marginBottom: "0.5rem",
 
           "&.Mui-error": {
-            color: "#ff6f00",
+            color: "#EF4444",
           },
         },
       },

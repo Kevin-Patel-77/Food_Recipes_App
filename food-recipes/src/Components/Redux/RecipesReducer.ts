@@ -27,8 +27,8 @@ export type Recipe = {
 };
 
 export const fetchRecipes = createAsyncThunk("recipes/fetchRecipes", async ({ page, limit }: scrolling) => {
-  let skip = (page - 1) * limit;
-  let res = await axios.get(`/api/recipes?limit=${limit}&skip=${skip}`);
+  const  skip = (page - 1) * limit;
+  const  res = await axios.get(`/api/recipes?limit=${limit}&skip=${skip}`);
   return res.data.recipes;
 });
 

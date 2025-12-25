@@ -1,20 +1,15 @@
-import { AnimatePresence, motion } from 'framer-motion'
 import { NavLink } from 'react-router-dom'
 import { CookingPot} from 'lucide-react';
 import { Plus } from 'lucide-react';
-import { addCart, deleteCart } from './Redux/CartReducers';
+import { addCart, deleteCart} from './Redux/CartReducers';
 import { useAppDispatch, useAppSelector } from './hooks';
 import type { Recipe } from './Redux/RecipesReducer';
+import { Box, Button, Typography } from '@mui/material';
 
 
 const AddToCart = () => {
   const { items } = useAppSelector((state) => state.foodCart)
   const dispatch = useAppDispatch()
-
-  const hoverEffect = {
-    scale: 1.1,
-    transition: { type: "spring" as const, stiffness: 500, mass: 2 }
-  };
 
   function handleDelete(id:number) {
     dispatch(deleteCart(id))
@@ -24,43 +19,54 @@ const AddToCart = () => {
     dispatch(addCart(foodItem))
   }
 
-  return (
-    <div className='food-recipes'>
-      <div className='food-info'>
-        <AnimatePresence>
-          {items.length > 0 ? items.map((food) => (
-            <motion.div
-              initial={{ opacity: 0, scale: 0.5 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 1, scale: 0.8 }}
-              transition={{ duration: 0.5 }}
-              className='Cart-food-box'
-              key={food.id}>
-              <motion.img whileHover={hoverEffect} src={food.image} alt={food.name} />
-              <div className='food-names'>
-                <p>Name: {food.name}</p>
-                <p>Meal Type: {food.mealType.map((meal , index ) => <span key={index} style={{ marginRight: "0.5rem" }}>{meal}</span>)}</p>
-                <div className='details'>
-                  <motion.div whileHover={hoverEffect} >
-                    <NavLink to={`/food/${food.id}`} className="btn">View Details</NavLink>
-                  </motion.div>
 
-                  <motion.div className='cartCount' whileHover={hoverEffect} >
+  return (
+    <Box sx={{padding:"1rem"}} >
+      <Box sx={{ width: "96%", display: "grid", gridTemplateColumns: "repeat(auto-fit , minmax(300px , 1fr))", gap: "1rem", justifyContent: "center", alignItems: "center" }}>
+     
+          {items.length > 0 ? items.map((food) => (
+            <Box
+              sx={{ margin: "auto", border: "2px solid black", borderRadius: "10px", textAlign: "center", padding: "1rem" }}
+              key={food.id}>
+              <Box component="img" style={{ width: "100%", height: "20rem", border: "1px solid black", borderRadius: "10px", marginTop: "0.8rem" }}  src={food.image} alt={food.name} />
+              <Box sx={{ color: "#333333", fontSize: "large", fontWeight: "bold" }}>
+                <Typography variant='body1' sx={{ marginTop: "1rem" }}>Name: {food.name}</Typography>
+                <Typography variant='body1' sx={{ marginBottom: "16px" }}>Meal Type: {food.mealType.map((meal, index) => (
+                  <Box
+                    key={index}
+                    component="span"
+                    sx={{ marginRight: "0.5rem" }}
+                  >
+                    {meal}
+                  </Box>
+                ))}</Typography>
+
+
+                <Box sx={{display:"flex" , justifyContent:"center" , marginBottom:"1rem" , gap:"1rem"}}>
+                  <Box>
+                    <Button variant='contained' component={NavLink} to={`/home/${food.id}`} sx={{padding:"0.5rem 2rem"}}>View Details</Button>
+                  </Box>
+
+                  <Box sx={{width:"30%" , display:"flex" , 
+                    justifyContent:"space-evenly" , alignItems:"center" , 
+                    borderRadius:"10px" , 
+                    backgroundColor:"#EF4444" , color:"white" , marginBottom:"1rem" , 
+                    padding:"0.4rem 1rem" , cursor:"pointer" , 
+                    fontSize:"medium" , textDecoration:"none", gap:"0.5rem" }} >
+
                     <CookingPot onClick={() => handleDelete(food.id)} />
                     {food.quantity}
-                    <Plus onClick={() => handleAdd(food)} />
-                  </motion.div>
-                </div>
-              </div>
-            </motion.div>
-          )) : <motion.div style={{textAlign:"center" ,  border:"2px solid black", color:"gold" , backgroundColor:"black" , borderRadius:"10px"}} initial={{ opacity: 0, scale: 0.5 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 1 }}>
-            <h1>Your Recipes Cart is empty</h1>
-          </motion.div>}
-        </AnimatePresence>
-      </div>
-    </div>
+                    <Plus onClick={() => handleAdd(food)} />   
+                  </Box>
+
+                </Box>
+              </Box>
+            </Box>
+          )) : <Box sx={{ height:"90vh" , display:"flex" , justifyContent:'center' , alignItems:"center",  color: "black" , borderRadius: "10px" }} >
+            <Typography  variant='h4'>Your Recipes Cart is empty</Typography>
+          </Box>}
+      </Box>
+    </Box>
   )
 }
 

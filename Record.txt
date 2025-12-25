@@ -1,0 +1,14 @@
+Topics i had covered till now
+
+Pagination 
+Infinite Scrolling
+Skeleton Loading 
+Responsive Design 
+Debounce 
+Material UI
+IFrame 
+Query Param
+Path Param
+
+
+

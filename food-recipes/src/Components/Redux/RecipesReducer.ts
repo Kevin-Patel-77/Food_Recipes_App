@@ -1,15 +1,14 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import axios from 'axios'
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import axios from "axios";
 
-export const fetchRecipes = createAsyncThunk('recipes/fetchRecipes', async (page:number) => {
-  let limit = 6;
-  let skip = ((page - 1) * limit)
-  let res = await axios.get(`/api/recipes?limit=${limit}&skip=${skip}`)
-  return res.data.recipes
-})
+type scrolling = {
+  page: number;
+  limit: number;
+};
 
 export type Recipe = {
   id: number;
+  amount: number;
   name: string;
   ingredients: string[];
   instructions: string[];
@@ -25,55 +24,68 @@ export type Recipe = {
   rating: number;
   reviewCount: number;
   mealType: string[];
-}
+};
 
+export const fetchRecipes = createAsyncThunk("recipes/fetchRecipes", async ({ page, limit }: scrolling) => {
+  let skip = (page - 1) * limit;
+  let res = await axios.get(`/api/recipes?limit=${limit}&skip=${skip}`);
+  return res.data.recipes;
+});
 
 export type initial = {
-  loading: boolean,
-  recipes: Recipe[],
-  page: number,
-  error: string | null,
-  hasMore: boolean
-}
+  loading: boolean;
+  recipes: Recipe[];
+  page: number;
+  error: string | null;
+  hasMore: boolean;
+};
 
- const initialState: initial = {
+const generateAmount = (id: number): number => {
+  return (id * 73) % 1000;
+};
+
+const initialState: initial = {
   loading: false,
   recipes: [],
   page: 1,
   error: null,
-  hasMore: true
-}
-
+  hasMore: true,
+};
 
 const recipesReducer = createSlice({
   name: "recipes",
   initialState,
   reducers: {
     increasePage(state) {
-      state.page += 1
-    }
+      state.page += 1;
+    },
   },
   extraReducers: (builder) => {
     builder
       .addCase(fetchRecipes.pending, (state) => {
-        state.loading = true
+        state.loading = true;
         state.error = null;
       })
       .addCase(fetchRecipes.fulfilled, (state, action) => {
-        state.loading = false
+        state.loading = false;
         if (action.payload.length === 0) {
-          state.hasMore = false
-          return
+          state.hasMore = false;
+          return;
         }
-        state.recipes = [...state.recipes, ...action.payload]
+
+        const updateRecipes = action.payload.map((res: Recipe) => ({
+          ...res,
+          amount: generateAmount(res.id),
+        }));
+        state.recipes = [...state.recipes, ...updateRecipes];
       })
       .addCase(fetchRecipes.rejected, (state, action) => {
-        state.loading = false
-        state.error = action.error.message || "Something went wrong"
-      })
-  }
-})
+        state.loading = false;
+        state.error = action.error.message || "Something went wrong";
+      });
+  },
+});
 
-export const { increasePage } = recipesReducer.actions
+export const { increasePage } = recipesReducer.actions;
 
-export default recipesReducer.reducer
+export default recipesReducer.reducer;

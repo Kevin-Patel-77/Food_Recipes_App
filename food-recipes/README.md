@@ -30,6 +30,13 @@ and state management.
 - Skeleton Loaders
 - Animations using Framer Motion
 - Tooltip, Chips, Sliders, Tables
+- Lighthouse Performance Report
+- Error Boundaries
+- Tag Based Filters
+- List / Grid View Toggle
+- IFrame Integration
+
+
 
 ## 🚀 Getting Started
 npm install  

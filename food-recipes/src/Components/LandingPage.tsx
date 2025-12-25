@@ -1,8 +1,8 @@
 import { Box, Button, Typography } from "@mui/material";
 import { NavLink, useNavigate } from "react-router-dom";
 import cart from "../assets/cart.png";
-import image1 from "../assets/image1.png"
-import image2 from "../assets/image2.png"
+import image1 from "../assets/image1.png";
+import image2 from "../assets/image2.png";
 import image3 from "../assets/image3.png";
 // import Toast from "../assets/Toast.png"
 import { useEffect, useState } from "react";
@@ -61,7 +61,7 @@ const LandingPage = () => {
     }, 3000);
 
     return () => clearInterval(interval);
-  },[sliderData.length]);
+  }, [sliderData.length]);
 
   const currentSlider = sliderData[currentIndex];
 
@@ -102,19 +102,39 @@ const LandingPage = () => {
         </Box>
 
         <Box sx={{ display: "flex", alignItems: "center", gap: { xs: "32px", sm: "64px", md: "16px", lg: "32px" } }}>
-          <Box sx={{display:'flex' , justifyContent:'center' , alignItems:'center'}}>
-            <Box component="img" src={cart} alt="cart" onClick={()=> navigate("/cart")} sx={{ position:"relative" ,  width: "25px", height: "25px" , cursor:"pointer" }}></Box>
-            <Typography variant="body1" sx={{color:"white" ,fontSize:"10px" ,    backgroundColor:items.length!== 0 ? "#EF4444" : "transparent" , padding:"3px 6px" , borderRadius:"100px" , position: "absolute" , right:"17.4%" ,  top:"5%" , }}>{ items.length > 0   ? items.reduce((sum , acc)=> sum + acc.quantity , 0) : ""}</Typography>
+          <Box sx={{  position: "relative" , display: "flex", justifyContent: "center", alignItems: "center" }}>
+            <Box
+              component="img"
+              src={cart}
+              alt="cart"
+              onClick={() => navigate("/cart")}
+              sx={{ width: "25px", height: "25px", cursor: "pointer" }}
+            ></Box>
+            <Typography
+              variant="body1"
+              sx={{
+                color: "white",
+                fontSize: "10px",
+                backgroundColor: items.length !== 0 ? "#EF4444" : "transparent",
+                padding: "3px 6px",
+                borderRadius: "100px",
+                position: "absolute",
+                right: "-30%",
+                top: "-40%",
+              }}
+            >
+              {items.length > 0 ? items.reduce((sum, acc) => sum + acc.quantity, 0) : ""}
+            </Typography>
           </Box>
 
-          {!isAuthenticated && ( 
+          {!isAuthenticated && (
             <Button variant="contained" onClick={() => navigate("/signup")} sx={{ padding: "8px 24px" }}>
               Sign Up
             </Button>
           )}
 
           {!isAuthenticated && (
-            <Button variant="contained" onClick={() => navigate("/login")} sx={{ padding: "8px 24px"}}>
+            <Button variant="contained" onClick={() => navigate("/login")} sx={{ padding: "8px 24px" }}>
               Log In
             </Button>
           )}
@@ -161,8 +181,8 @@ const LandingPage = () => {
               <Box sx={{ textAlign: "left" }}>
                 <Button
                   variant="contained"
-                  sx={{ marginTop: "3rem",  padding: { sm: "8px 32pxrem", md: "8px 80px", lg: "8px 112px" } }}
-                  onClick={()=> navigate("/menu")}
+                  sx={{ marginTop: "3rem", padding: { sm: "8px 32pxrem", md: "8px 80px", lg: "8px 112px" } }}
+                  onClick={() => navigate("/menu")}
                 >
                   View Menu
                 </Button>
@@ -193,18 +213,18 @@ const LandingPage = () => {
                 height: "100%",
               }}
             />
-          </AnimatePresence>  
+          </AnimatePresence>
         </Box>
       </Box>
 
-      <Box sx={{ marginTop: { xs:"140px" , sm:"160px" , md:"180px" , lg:"208px"}, display: "flex", justifyContent: "space-evenly" }}>
+      <Box sx={{ marginTop: { xs: "140px", sm: "160px", md: "180px", lg: "208px" }, display: "flex", justifyContent: "space-evenly" }}>
         <Box
           sx={{
             position: "relative",
             boxShadow:
               "rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px",
             border: "1px solid gray",
-            width: { xs:'20%' , sm:"19%" , md:"18%", lg:"17%"},
+            width: { xs: "20%", sm: "19%", md: "18%", lg: "17%" },
             height: "350px",
             padding: "32px",
             borderRadius: "50px",
@@ -212,19 +232,36 @@ const LandingPage = () => {
         >
           <Box sx={{ display: "flex", flexDirection: "column", justifyContent: "space-between", alignItems: "center", height: "300px" }}>
             <Box sx={{ marginTop: "80px" }}>
-              <Typography variant="h5" sx={{fontSize:{xs:"20px" , sm:"25px" , md:"30px" , lg:"35px"}}}>Cocoa Fusion</Typography>
-              <Typography sx={{ marginTop: "8px"  ,fontSize:{xs:"12px" , sm:"13px" , md:"14px" , lg:"16px"} }}>with Natural Ingredients </Typography>
+              <Typography variant="h5" sx={{ fontSize: { xs: "20px", sm: "25px", md: "30px", lg: "35px" } }}>
+                Cocoa Fusion
+              </Typography>
+              <Typography sx={{ marginTop: "8px", fontSize: { xs: "12px", sm: "13px", md: "14px", lg: "16px" } }}>
+                with Natural Ingredients{" "}
+              </Typography>
             </Box>
 
-            <Box >
-              <Typography variant="h6" sx={{ display: "flex", alignItems: "center" , fontSize:{xs:"15px"} }}>
+            <Box>
+              <Typography variant="h6" sx={{ display: "flex", alignItems: "center", fontSize: { xs: "15px" } }}>
                 <Box component="img" src={rupee} width="15px" height="10x"></Box>749
               </Typography>
             </Box>
           </Box>
 
-          <Box sx={{ position: "absolute", left:{ xs:"18%" , sm:"12%"  , md:"5%" , lg:"3%"}, top: { xs:"-20%" , sm:"-30%"  , md:"-40%" ,  lg:"-50%"}, zIndex: 1 }}>
-            <Box component="img" src={bowl4} alt="bowl4" width={{ xs:"80%" , sm:"90%" ,  md:"95%" , lg:"100%"}} height={{ xs:"180px" , sm:"220px" , md:"240px" , lg:"280px"}}></Box>
+          <Box
+            sx={{
+              position: "absolute",
+              left: { xs: "18%", sm: "12%", md: "5%", lg: "3%" },
+              top: { xs: "-20%", sm: "-30%", md: "-40%", lg: "-50%" },
+              zIndex: 1,
+            }}
+          >
+            <Box
+              component="img"
+              src={bowl4}
+              alt="bowl4"
+              width={{ xs: "80%", sm: "90%", md: "95%", lg: "100%" }}
+              height={{ xs: "180px", sm: "220px", md: "240px", lg: "280px" }}
+            ></Box>
           </Box>
         </Box>
 
@@ -234,27 +271,42 @@ const LandingPage = () => {
             boxShadow:
               "rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px",
             border: "1px solid gray",
-            width:  { xs:'20%' , sm:"19%" , md:"18%", lg:"17%"},
+            width: { xs: "20%", sm: "19%", md: "18%", lg: "17%" },
             height: "350px",
-            padding:  "32px",
+            padding: "32px",
             borderRadius: "50px",
           }}
         >
           <Box sx={{ display: "flex", flexDirection: "column", justifyContent: "space-between", alignItems: "center", height: "300px" }}>
             <Box sx={{ marginTop: "80px" }}>
-              <Typography variant="h5" sx={{fontSize:{xs:"20px" , sm:"25px" , md:"30px" , lg:"35px"}}}>Veggie Medley</Typography>
-              <Typography sx={{ marginTop: "8px"  ,fontSize:{xs:"12px" , sm:"13px" , md:"14px" , lg:"16px"} }}>with Fresh Veggies</Typography>
+              <Typography variant="h5" sx={{ fontSize: { xs: "20px", sm: "25px", md: "30px", lg: "35px" } }}>
+                Veggie Medley
+              </Typography>
+              <Typography sx={{ marginTop: "8px", fontSize: { xs: "12px", sm: "13px", md: "14px", lg: "16px" } }}>with Fresh Veggies</Typography>
             </Box>
 
             <Box>
-               <Typography variant="h6" sx={{ display: "flex", alignItems: "center" , fontSize:{xs:"15px"} }}>
+              <Typography variant="h6" sx={{ display: "flex", alignItems: "center", fontSize: { xs: "15px" } }}>
                 <Box component="img" src={rupee} width="15px" height="10x"></Box>449
               </Typography>
             </Box>
           </Box>
 
-          <Box sx={{ position: "absolute", left:{ xs:"18%" , sm:"12%"  , md:"5%" , lg:"3%"}, top: { xs:"-20%" , sm:"-30%"  , md:"-40%" ,  lg:"-50%"}, zIndex: 1 }}>
-            <Box component="img" src={bowl2} alt="bowl1" width={{ xs:"80%" , sm:"90%" ,  md:"95%" , lg:"100%"}} height={{ xs:"180px" , sm:"220px" , md:"240px" , lg:"280px"}}></Box>
+          <Box
+            sx={{
+              position: "absolute",
+              left: { xs: "18%", sm: "12%", md: "5%", lg: "3%" },
+              top: { xs: "-20%", sm: "-30%", md: "-40%", lg: "-50%" },
+              zIndex: 1,
+            }}
+          >
+            <Box
+              component="img"
+              src={bowl2}
+              alt="bowl1"
+              width={{ xs: "80%", sm: "90%", md: "95%", lg: "100%" }}
+              height={{ xs: "180px", sm: "220px", md: "240px", lg: "280px" }}
+            ></Box>
           </Box>
         </Box>
 
@@ -264,27 +316,42 @@ const LandingPage = () => {
             boxShadow:
               "rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px",
             border: "1px solid gray",
-            width:  { xs:'20%' , sm:"19%" , md:"18%", lg:"17%"},
+            width: { xs: "20%", sm: "19%", md: "18%", lg: "17%" },
             height: "350px",
-            padding:  "32px",
+            padding: "32px",
             borderRadius: "50px",
           }}
         >
           <Box sx={{ display: "flex", flexDirection: "column", justifyContent: "space-between", alignItems: "center", height: "300px" }}>
             <Box sx={{ marginTop: "80px" }}>
-              <Typography variant="h5" sx={{fontSize:{xs:"20px" , sm:"25px" , md:"30px" , lg:"35px"}}}>Saalmon Bowl</Typography>
-              <Typography sx={{ marginTop: "8px"  ,fontSize:{xs:"12px" , sm:"13px" , md:"14px" , lg:"16px"} }}>with Fresh Salmon</Typography>
+              <Typography variant="h5" sx={{ fontSize: { xs: "20px", sm: "25px", md: "30px", lg: "35px" } }}>
+                Saalmon Bowl
+              </Typography>
+              <Typography sx={{ marginTop: "8px", fontSize: { xs: "12px", sm: "13px", md: "14px", lg: "16px" } }}>with Fresh Salmon</Typography>
             </Box>
 
             <Box>
-              <Typography variant="h6" sx={{ display: "flex", alignItems: "center" , fontSize:{xs:"15px"} }}>
+              <Typography variant="h6" sx={{ display: "flex", alignItems: "center", fontSize: { xs: "15px" } }}>
                 <Box component="img" src={rupee} width="15px" height="10x"></Box>349
               </Typography>
             </Box>
           </Box>
 
-          <Box sx={{ position: "absolute", left:{ xs:"18%" , sm:"12%"  , md:"5%" , lg:"3%"}, top: { xs:"-20%" , sm:"-30%"  , md:"-40%" ,  lg:"-50%"}, zIndex: 1 }}>
-            <Box component="img" src={bowl3} alt="bowl1" width={{ xs:"80%" , sm:"90%" ,  md:"95%" , lg:"100%"}} height={{ xs:"180px" , sm:"220px" , md:"240px" , lg:"280px"}}></Box>
+          <Box
+            sx={{
+              position: "absolute",
+              left: { xs: "18%", sm: "12%", md: "5%", lg: "3%" },
+              top: { xs: "-20%", sm: "-30%", md: "-40%", lg: "-50%" },
+              zIndex: 1,
+            }}
+          >
+            <Box
+              component="img"
+              src={bowl3}
+              alt="bowl1"
+              width={{ xs: "80%", sm: "90%", md: "95%", lg: "100%" }}
+              height={{ xs: "180px", sm: "220px", md: "240px", lg: "280px" }}
+            ></Box>
           </Box>
         </Box>
 
@@ -294,36 +361,55 @@ const LandingPage = () => {
             boxShadow:
               "rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px",
             border: "1px solid gray",
-            width:  { xs:'20%' , sm:"19%" , md:"18%", lg:"17%"},
+            width: { xs: "20%", sm: "19%", md: "18%", lg: "17%" },
             height: "350px",
-            padding:  "32px",
+            padding: "32px",
             borderRadius: "50px",
           }}
         >
           <Box sx={{ display: "flex", flexDirection: "column", justifyContent: "space-between", alignItems: "center", height: "300px" }}>
             <Box sx={{ marginTop: "80px" }}>
-              <Typography variant="h5" sx={{fontSize:{xs:"20px" , sm:"25px" , md:"30px" , lg:"35px"}}}>Tokyo Teriyaki</Typography>
-              <Typography sx={{ marginTop: "8px"  ,fontSize:{xs:"12px" , sm:"13px" , md:"14px" , lg:"16px"} }}>with Glazed Chicken</Typography>
+              <Typography variant="h5" sx={{ fontSize: { xs: "20px", sm: "25px", md: "30px", lg: "35px" } }}>
+                Tokyo Teriyaki
+              </Typography>
+              <Typography sx={{ marginTop: "8px", fontSize: { xs: "12px", sm: "13px", md: "14px", lg: "16px" } }}>with Glazed Chicken</Typography>
             </Box>
 
             <Box>
-               <Typography variant="h6" sx={{ display: "flex", alignItems: "center" , fontSize:{xs:"15px"} }}>
+              <Typography variant="h6" sx={{ display: "flex", alignItems: "center", fontSize: { xs: "15px" } }}>
                 <Box component="img" src={rupee} width="15px" height="10x"></Box>949
               </Typography>
             </Box>
           </Box>
 
-          <Box sx={{ position: "absolute", left:{ xs:"18%" , sm:"12%"  , md:"5%" , lg:"3%"}, top: { xs:"-20%" , sm:"-30%"  , md:"-40%" ,  lg:"-50%"}, zIndex: 1 }}>
-            <Box component="img" src={bowl1} alt="bowl1" width={{ xs:"80%" , sm:"90%" ,  md:"95%" , lg:"100%"}} height={{ xs:"180px" , sm:"220px" , md:"240px" , lg:"280px"}}></Box>
+          <Box
+            sx={{
+              position: "absolute",
+              left: { xs: "18%", sm: "12%", md: "5%", lg: "3%" },
+              top: { xs: "-20%", sm: "-30%", md: "-40%", lg: "-50%" },
+              zIndex: 1,
+            }}
+          >
+            <Box
+              component="img"
+              src={bowl1}
+              alt="bowl1"
+              width={{ xs: "80%", sm: "90%", md: "95%", lg: "100%" }}
+              height={{ xs: "180px", sm: "220px", md: "240px", lg: "280px" }}
+            ></Box>
           </Box>
         </Box>
       </Box>
 
-      <Box sx={{marginTop:"80px" , padding:"10px 112px"}}>
-        <Box sx={{display:"flex" , justifyContent:"space-between" , alignItems:"center"}}>
+      <Box sx={{ marginTop: "80px", padding: "10px 112px" }}>
+        <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
           <Box>
-            <Typography variant="h3" sx={{fontWeight:'bold'}}>Crave-Worthy Dishes</Typography>
-            <Typography variant="h3" sx={{fontWeight:'bold'}}>You'll Love</Typography>
+            <Typography variant="h3" sx={{ fontWeight: "bold" }}>
+              Crave-Worthy Dishes
+            </Typography>
+            <Typography variant="h3" sx={{ fontWeight: "bold" }}>
+              You'll Love
+            </Typography>
           </Box>
 
           <Box>

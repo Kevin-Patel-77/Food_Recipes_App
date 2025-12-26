@@ -17,11 +17,12 @@ import { logout, resetLoginStatus } from "../Redux/AuthSlice";
 import { toast } from "react-toastify";
 import { AccountCircle, Language, Logout } from "@mui/icons-material";
 import { Trans } from "@lingui/react";
+import { msg } from "@lingui/macro";
 
 
 type slider = {
-  title1: string;
-  title2: string;
+  title1Id: string;
+  title2Id: string;
   image: string;
 };
 
@@ -39,23 +40,54 @@ const LandingPage = () => {
 
   const [isPopup , setIsPopup] = useState<boolean>(false)
 
-  const sliderData: slider[] = [
-    {
-      title1: "The essence of India,",
-      title2: "plated perfectly.",
-      image: image1,
-    },
-    {
-      title1: "Where tradition",
-      title2: "meets taste.",
-      image: image2,
-    },
-    {
-      title1: "Desserts that steal",
-      title2: "the show.",
-      image: image3,
-    },
-  ];
+  // const sliderData: slider[] = [
+  //   {
+  //     title1: "The essence of India,",
+  //     title2: "plated perfectly.",
+  //     image: image1,
+  //   },
+  //   {
+  //     title1: "Where tradition",
+  //     title2: "meets taste.",
+  //     image: image2,
+  //   },
+  //   {
+  //     title1: "Desserts that steal",
+  //     title2: "the show.",
+  //     image: image3,
+  //   },
+  // ];
+
+
+const sliderMessages = {
+  essence: msg`The essence of India,`,
+  plated: msg`plated perfectly.`,
+  tradition: msg`Where tradition`,
+  taste: msg`meets taste.`,
+  desserts: msg`Desserts that steal`,
+  show: msg`the show.`,
+};
+
+
+const sliderData:slider[] = [
+  {
+    title1Id: "slider.essence",
+    title2Id: "slider.plated",
+    image: image1,
+  },
+  {
+    title1Id: "slider.tradition",
+    title2Id: "slider.taste",
+    image: image2,
+  },
+  {
+    title1Id: "slider.desserts",
+    title2Id: "slider.show",
+    image: image3,
+  },
+];
+
+
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -111,16 +143,16 @@ const LandingPage = () => {
 
         <Box sx={{ display: "flex", gap: { xs: "24px", sm: "48px", md: "32px", lg: "48px" } }}>
           <Button component={NavLink} to="/home" variant="text" sx={{ color: "#333333" }}>
-            Home
+            <Trans id="Home" message="Home"></Trans>
           </Button>
           <Button component={NavLink} to="/menu" variant="text" sx={{ color: "#333333" }}>
-            Menu
+           <Trans id="Menu" message="Menu"></Trans>
           </Button>
           <Button component={NavLink} to="/about" variant="text" sx={{ color: "#333333" }}>
-            About Us
+            <Trans id="About Us" message="About Us"></Trans>
           </Button>
           <Button component={NavLink} to="/contact" variant="text" sx={{ color: "#333333" }}>
-            Contact
+            <Trans id="Contact" message="Contact"></Trans>
           </Button>
         </Box>
 
@@ -152,13 +184,13 @@ const LandingPage = () => {
 
           {!isAuthenticated && (
             <Button variant="contained" onClick={() => navigate("/signup")} sx={{ padding: "8px 24px" }}>
-              Sign Up
+              <Trans id="Sign Up" message="Sign Up"></Trans>
             </Button>
           )}
 
           {!isAuthenticated && (
             <Button variant="contained" onClick={() => navigate("/login")} sx={{ padding: "8px 24px" }}>
-              Log In
+              <Trans id="Log In" message="Log In"></Trans>
             </Button>
           )}
 
@@ -173,7 +205,9 @@ const LandingPage = () => {
                   <ListItemIcon>
                     <Language fontSize="small" />
                   </ListItemIcon>
-                  <Typography variant="body2">Language</Typography>
+                  <Typography variant="body2">
+                    <Trans id="Language" message="Language"></Trans>
+                    </Typography>
                 </MenuItem>
 
                 <Divider />
@@ -183,7 +217,9 @@ const LandingPage = () => {
                   <ListItemIcon>
                     <Logout fontSize="small" />
                   </ListItemIcon>
-                  <Typography variant="body2">Logout</Typography>
+                  <Typography variant="body2">
+                    <Trans id="Logout" message="Logout"></Trans>
+                    </Typography>
                 </MenuItem>
               </Menu>
             </Box>
@@ -220,10 +256,10 @@ const LandingPage = () => {
               }}
             >
               <Typography variant="h3" sx={{ fontSize: { xs: "24px", sm: "32px", md: "32px", lg: "48px" } }}>
-                {currentSlider.title1}
+               <Trans id={currentSlider.title1Id} />
               </Typography>
               <Typography variant="h3" sx={{ fontSize: { xs: "24px", sm: "32px", md: "32px", lg: "48px" } }}>
-                {currentSlider.title2}
+                <Trans id={currentSlider.title2Id} />
               </Typography>
 
               <Box sx={{ textAlign: "left" }}>
@@ -232,7 +268,7 @@ const LandingPage = () => {
                   sx={{ marginTop: "3rem", padding: { sm: "8px 32pxrem", md: "8px 80px", lg: "8px 112px" } }}
                   onClick={() => navigate("/menu")}
                 >
-                  View Menu
+                  <Trans id="View Menu" message="View Menu"></Trans>
                 </Button>
               </Box>
             </Box>
@@ -281,10 +317,10 @@ const LandingPage = () => {
           <Box sx={{ display: "flex", flexDirection: "column", justifyContent: "space-between", alignItems: "center", height: "300px" }}>
             <Box sx={{ marginTop: "80px" }}>
               <Typography variant="h5" sx={{ fontSize: { xs: "20px", sm: "25px", md: "30px", lg: "35px" } }}>
-                Cocoa Fusion
+                <Trans id="Cocoa Fusion" message="Cocoa Fusion"></Trans>
               </Typography>
               <Typography sx={{ marginTop: "8px", fontSize: { xs: "12px", sm: "13px", md: "14px", lg: "16px" } }}>
-                with Natural Ingredients{" "}
+                <Trans id="with Natural Ingredients" message="with Natural Ingredients"></Trans>
               </Typography>
             </Box>
 
@@ -328,9 +364,11 @@ const LandingPage = () => {
           <Box sx={{ display: "flex", flexDirection: "column", justifyContent: "space-between", alignItems: "center", height: "300px" }}>
             <Box sx={{ marginTop: "80px" }}>
               <Typography variant="h5" sx={{ fontSize: { xs: "20px", sm: "25px", md: "30px", lg: "35px" } }}>
-                Veggie Medley
+                <Trans id="Veggie Medley" message="Veggie Medley"></Trans>
               </Typography>
-              <Typography sx={{ marginTop: "8px", fontSize: { xs: "12px", sm: "13px", md: "14px", lg: "16px" } }}>with Fresh Veggies</Typography>
+              <Typography sx={{ marginTop: "8px", fontSize: { xs: "12px", sm: "13px", md: "14px", lg: "16px" } }}>
+                <Trans id="with Fresh Veggies" message="with Fresh Veggies"></Trans>
+              </Typography>
             </Box>
 
             <Box>
@@ -373,9 +411,11 @@ const LandingPage = () => {
           <Box sx={{ display: "flex", flexDirection: "column", justifyContent: "space-between", alignItems: "center", height: "300px" }}>
             <Box sx={{ marginTop: "80px" }}>
               <Typography variant="h5" sx={{ fontSize: { xs: "20px", sm: "25px", md: "30px", lg: "35px" } }}>
-                Saalmon Bowl
+                <Trans id="Saalmon Bowl" message="Saalmon Bowl"></Trans>
               </Typography>
-              <Typography sx={{ marginTop: "8px", fontSize: { xs: "12px", sm: "13px", md: "14px", lg: "16px" } }}>with Fresh Salmon</Typography>
+              <Typography sx={{ marginTop: "8px", fontSize: { xs: "12px", sm: "13px", md: "14px", lg: "16px" } }}>
+                <Trans id="with Fresh Salmon" message="with Fresh Salmon"></Trans>
+              </Typography>
             </Box>
 
             <Box>
@@ -418,9 +458,11 @@ const LandingPage = () => {
           <Box sx={{ display: "flex", flexDirection: "column", justifyContent: "space-between", alignItems: "center", height: "300px" }}>
             <Box sx={{ marginTop: "80px" }}>
               <Typography variant="h5" sx={{ fontSize: { xs: "20px", sm: "25px", md: "30px", lg: "35px" } }}>
-                Tokyo Teriyaki
+                <Trans id="Tokyo Teriyaki" message="Tokyo Teriyaki"></Trans>
               </Typography>
-              <Typography sx={{ marginTop: "8px", fontSize: { xs: "12px", sm: "13px", md: "14px", lg: "16px" } }}>with Glazed Chicken</Typography>
+              <Typography sx={{ marginTop: "8px", fontSize: { xs: "12px", sm: "13px", md: "14px", lg: "16px" } }}>
+                <Trans id="with Glazed Chicken" message="with Glazed Chicken"></Trans>
+              </Typography>
             </Box>
 
             <Box>
@@ -453,16 +495,20 @@ const LandingPage = () => {
         <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
           <Box>
             <Typography variant="h3" sx={{ fontWeight: "bold" }}>
-              Crave-Worthy Dishes
+              <Trans id="Crave-Worthy Dishes" message="Crave-Worthy Dishes"></Trans>
             </Typography>
             <Typography variant="h3" sx={{ fontWeight: "bold" }}>
-              You'll Love
+              <Trans id="You'll Love" message="You'll Love"></Trans>
             </Typography>
           </Box>
 
           <Box>
-            <Typography variant="body1">Discover crave-worthy dishes you'll love--easy to make,</Typography>
-            <Typography variant="body1">full of flavor , and always satisfying</Typography>
+            <Typography variant="body1">
+              <Trans id="Discover crave-worthy dishes you'll love--easy to make," message="Discover crave-worthy dishes you'll love--easy to make,"></Trans>
+            </Typography>
+            <Typography variant="body1">
+              <Trans id="full of flavor , and always satisfying" message="full of flavor , and always satisfying"></Trans>
+            </Typography>
           </Box>
         </Box>
 

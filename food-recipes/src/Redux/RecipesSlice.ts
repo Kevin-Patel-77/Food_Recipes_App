@@ -26,6 +26,7 @@ export type Recipe = {
   mealType: string[];
 };
 
+
 export const fetchRecipes = createAsyncThunk("recipes/fetchRecipes", async ({ page, limit }: scrolling) => {
   const  skip = (page - 1) * limit;
   const  res = await axios.get(`/api/recipes?limit=${limit}&skip=${skip}`);
@@ -52,7 +53,7 @@ const initialState: initial = {
   hasMore: true,
 };
 
-const recipesReducer = createSlice({
+const recipesSlice = createSlice({
   name: "recipes",
   initialState,
   reducers: {
@@ -86,6 +87,6 @@ const recipesReducer = createSlice({
   },
 });
 
-export const { increasePage } = recipesReducer.actions;
+export const { increasePage } = recipesSlice.actions;
 
-export default recipesReducer.reducer;
+export default recipesSlice.reducer;

@@ -1,7 +1,7 @@
-import { addUser } from "./Redux/AuthReducer";
+import { addUser } from "../Redux/AuthSlice";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch } from "./hooks";
-import type { Users } from "./Redux/AuthReducer";
+import type { Users } from "../Redux/AuthSlice";
 import { Eye, EyeOff } from "lucide-react";
 import { Box, Button, InputLabel, TextField, Typography, IconButton, InputAdornment } from "@mui/material";
 import { useForm, type SubmitHandler } from "react-hook-form";

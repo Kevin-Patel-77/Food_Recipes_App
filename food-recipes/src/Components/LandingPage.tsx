@@ -1,10 +1,10 @@
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Button, Divider, IconButton, ListItemIcon, Menu, MenuItem, Typography } from "@mui/material";
 import { NavLink, useNavigate } from "react-router-dom";
 import cart from "../assets/cart.png";
 import image1 from "../assets/image1.png";
 import image2 from "../assets/image2.png";
 import image3 from "../assets/image3.png";
-// import Toast from "../assets/Toast.png"
+import ChooseLanguage from "./ChooseLanguage";
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import rupee from "../assets/rupee.png";
@@ -13,8 +13,11 @@ import bowl2 from "../assets/bowl2.png";
 import bowl3 from "../assets/bowl3.png";
 import bowl4 from "../assets/bowl4.png";
 import { useAppDispatch, useAppSelector, useAuthSelector } from "./hooks";
-import { logout } from "./Redux/AuthReducer";
+import { logout, resetLoginStatus } from "../Redux/AuthSlice";
 import { toast } from "react-toastify";
+import { AccountCircle, Language, Logout } from "@mui/icons-material";
+import { Trans } from "@lingui/react";
+
 
 type slider = {
   title1: string;
@@ -27,9 +30,14 @@ const MotionBox = motion(Box);
 const LandingPage = () => {
   const [currentIndex, setCurrentIndex] = useState<number>(1);
   const navigate = useNavigate();
+  const dispatch = useAppDispatch()
   const { isAuthenticated } = useAuthSelector((state) => state.foodAuth);
-  const dispatch = useAppDispatch();
   const { items } = useAppSelector((state) => state.foodCart);
+
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const open = Boolean(anchorEl);
+
+  const [isPopup , setIsPopup] = useState<boolean>(false)
 
   const sliderData: slider[] = [
     {
@@ -49,10 +57,25 @@ const LandingPage = () => {
     },
   ];
 
+  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  function handleLanguageChange() {
+    setIsPopup(true)
+    handleClose();
+  }
+
   // LogOut
   function handleLogout() {
     dispatch(logout());
     toast.success("Logout Successful");
+    dispatch(resetLoginStatus())
+    handleClose();
   }
 
   useEffect(() => {
@@ -78,11 +101,11 @@ const LandingPage = () => {
       >
         <Box>
           <Typography variant="h4">
-            For
+            <Trans id="For" message="For"></Trans>
             <Box component="span" sx={{ color: "primary.main", fontWeight: 700 }}>
-              My
+              <Trans id="My" message="My"></Trans>
             </Box>
-            Foddies
+            <Trans id="Foodies" message="Foodies"></Trans>
           </Typography>
         </Box>
 
@@ -101,8 +124,8 @@ const LandingPage = () => {
           </Button>
         </Box>
 
-        <Box sx={{ display: "flex", alignItems: "center", gap: { xs: "32px", sm: "64px", md: "16px", lg: "32px" } }}>
-          <Box sx={{  position: "relative" , display: "flex", justifyContent: "center", alignItems: "center" }}>
+        <Box sx={{ display: "flex", alignItems: "center", gap: { xs: "32px", sm: "64px", md: "16px", lg: "20px" } }}>
+          <Box sx={{ position: "relative", display: "flex", justifyContent: "center", alignItems: "center" }}>
             <Box
               component="img"
               src={cart}
@@ -140,12 +163,37 @@ const LandingPage = () => {
           )}
 
           {isAuthenticated && (
-            <Button variant="contained" onClick={handleLogout} sx={{ padding: "8px 24px" }}>
-              Log out
-            </Button>
+            <Box>
+              <IconButton onClick={handleClick}>
+                <AccountCircle fontSize="large" />
+              </IconButton>
+
+              <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
+                <MenuItem onClick={handleLanguageChange}>
+                  <ListItemIcon>
+                    <Language fontSize="small" />
+                  </ListItemIcon>
+                  <Typography variant="body2">Language</Typography>
+                </MenuItem>
+
+                <Divider />
+
+                <MenuItem onClick={handleLogout}>
+                
+                  <ListItemIcon>
+                    <Logout fontSize="small" />
+                  </ListItemIcon>
+                  <Typography variant="body2">Logout</Typography>
+                </MenuItem>
+              </Menu>
+            </Box>
           )}
         </Box>
       </Box>
+
+      {isPopup && (
+          <ChooseLanguage setPopup={setIsPopup} />  
+      )}
 
       <Box
         sx={{

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "./hooks";
-import { login, resetLoginStatus } from "./Redux/AuthReducer";
+import { login, resetLoginStatus } from "../Redux/AuthSlice";
 import { Box, Button, IconButton, InputAdornment, InputLabel, TextField, Typography } from "@mui/material";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { Eye, EyeOff } from "lucide-react";

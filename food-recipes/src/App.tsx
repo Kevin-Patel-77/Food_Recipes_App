@@ -14,9 +14,9 @@ import NotFound from "./Components/NotFound";
 import LandingPage from "./Components/LandingPage";
 import GuestRoutes from "./Components/GuestRoutes";
 import Menu from "./Components/Menu";
+import Language from "./Components/ChooseLanguage";
 
 function App() {
-
   return (
     <>
       <ThemeProvider theme={theme}>
@@ -24,6 +24,7 @@ function App() {
         <Routes>
           <Route path="/" element={<LandingPage />}></Route>
           <Route path="/home" element={<LandingPage />}></Route>
+          <Route path="/language" element={<Language/>}></Route>
           <Route
             path="/menu"
             element={

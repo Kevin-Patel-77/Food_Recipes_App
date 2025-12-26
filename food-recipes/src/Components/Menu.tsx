@@ -19,10 +19,10 @@ import {
 } from "@mui/material";
 import { useAppDispatch, useAppSelector } from "./hooks";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { fetchRecipes, increasePage, type Recipe } from "./Redux/RecipesReducer";
+import { fetchRecipes, increasePage, type Recipe } from "../Redux/RecipesSlice";
 import RecipeSkeleton from "./RecipeSkeleton";
 import { NavLink, useNavigate, useSearchParams } from "react-router-dom";
-import { addCart } from "./Redux/CartReducers";
+import { addCart } from "../Redux/CartSlice";
 import search from "../assets/search.png";
 import rupee from "../assets/rupee.png";
 import { debounce } from "lodash";
@@ -173,7 +173,7 @@ const Menu = () => {
         dispatch(increasePage());
       }
     };
-
+ 
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, [loading, isSearching, hasMore, dispatch]);
@@ -251,7 +251,7 @@ const Menu = () => {
 
               {searchItem.trim() || cuisine.length > 0 || priceRange.length > 0 ? (
                 <Button variant="text" onClick={handleClearAll}>
-                  Clear All
+                  langMessages.menu.CLEAR_ALL
                 </Button>
               ) : (
                 ""

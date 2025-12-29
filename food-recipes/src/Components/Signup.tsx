@@ -20,6 +20,10 @@ const Signup = () => {
   } = useForm<Users>();
 
   const onSubmit: SubmitHandler<Users> = (data) => {
+    if (data.checkBot) {
+      return;
+    }
+
     dispatch(addUser(data));
     toast.success("SignUp Successful");
     navigate("/login");
@@ -44,12 +48,12 @@ const Signup = () => {
           backdropFilter: "blur(10px)",
         }}
       >
-        <Typography variant="h4" mb="3rem" fontWeight="bold" sx={{ color: "#333333"}}>
+        <Typography variant="h4" mb="3rem" fontWeight="bold" sx={{ color: "#333333" }}>
           Create Account
         </Typography>
 
         <Box component="form" noValidate onSubmit={handleSubmit(onSubmit)} sx={{ width: "50%", margin: "auto" }}>
-          <InputLabel htmlFor="username" sx={{ color: "#333333"}}>
+          <InputLabel htmlFor="username" sx={{ color: "#333333" }}>
             UserName:
           </InputLabel>
           <TextField
@@ -61,7 +65,7 @@ const Signup = () => {
             sx={{ marginBottom: "1rem" }}
           />
 
-          <InputLabel htmlFor="email" sx={{ color: "#333333"}}>
+          <InputLabel htmlFor="email" sx={{ color: "#333333" }}>
             Email:
           </InputLabel>
           <TextField
@@ -77,7 +81,7 @@ const Signup = () => {
             sx={{ marginBottom: "1rem" }}
           />
 
-          <InputLabel htmlFor="password" sx={{ color: "#333333"}}>
+          <InputLabel htmlFor="password" sx={{ color: "#333333" }}>
             Password:
           </InputLabel>
           <TextField
@@ -108,6 +112,8 @@ const Signup = () => {
               ),
             }}
           />
+
+          <TextField type="hidden" {...register("checkBot")}></TextField>
 
           <Button variant="contained" sx={{ p: "0.5rem 3rem", marginTop: "1.5rem", marginBottom: "1rem" }} type="submit">
             Sign Up

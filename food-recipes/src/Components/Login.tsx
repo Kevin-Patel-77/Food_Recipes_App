@@ -131,9 +131,9 @@ const Login = () => {
               ),
             }}
           />
-          <Box sx={{display:"flex" , gap:"32px" , alignItems:'center' , margin:"16px 0"}}>
+          <Box sx={{display:{xs:"grid" , sm:"flex" , md:"flex" , lg:"flex"} , gap:"32px" , alignItems:'center' , margin:"16px 0"}}>
             <Box>
-             <LoadCanvasTemplate />
+             <LoadCanvasTemplate reloadColor="red"  />
             </Box>
  
             <Box>

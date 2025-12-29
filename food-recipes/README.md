@@ -35,6 +35,9 @@ and state management.
 - Tag Based Filters
 - List / Grid View Toggle
 - IFrame Integration
+- Internationalization 
+- Captcha/reCaptcha
+
 
 
 

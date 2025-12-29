@@ -5,6 +5,7 @@ export type Users = {
   userName: string;
   email: string;
   password: string;
+  checkBot?:string
 };
 
 type initial = {

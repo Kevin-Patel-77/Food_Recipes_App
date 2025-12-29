@@ -14,6 +14,7 @@ import NotFound from "./Components/NotFound";
 import LandingPage from "./Components/LandingPage";
 import GuestRoutes from "./Components/GuestRoutes";
 import Menu from "./Components/Menu";
+import LanguageSync from "./Components/LanguageSync";
 
 function App() {
   return (
@@ -58,8 +59,10 @@ function App() {
               </GuestRoutes>
             }
           ></Route>
+
           <Route path="*" element={<NotFound />}></Route>
         </Routes>
+        <LanguageSync/>
       </ThemeProvider>
       <ToastContainer
         position="top-right"

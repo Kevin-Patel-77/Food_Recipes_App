@@ -11,18 +11,15 @@ import rupee from "../assets/rupee.png";
 import bowl1 from "../assets/bowl1.png";
 import bowl2 from "../assets/bowl2.png";
 import bowl3 from "../assets/bowl3.png";
-import bowl4 from "../assets/bowl4.png";
+import bowl4 from "../assets/bowl4.png"
 import { useAppDispatch, useAppSelector, useAuthSelector } from "./hooks";
 import { logout, resetLoginStatus } from "../Redux/AuthSlice";
 import { toast } from "react-toastify";
 import { AccountCircle, Language, Logout } from "@mui/icons-material";
-import { Trans } from "@lingui/react";
-import { msg } from "@lingui/macro";
-
 
 type slider = {
-  title1Id: string;
-  title2Id: string;
+  title1: string;
+  title2: string;
   image: string;
 };
 
@@ -31,63 +28,32 @@ const MotionBox = motion(Box);
 const LandingPage = () => {
   const [currentIndex, setCurrentIndex] = useState<number>(1);
   const navigate = useNavigate();
-  const dispatch = useAppDispatch()
+  const dispatch = useAppDispatch();
   const { isAuthenticated } = useAuthSelector((state) => state.foodAuth);
   const { items } = useAppSelector((state) => state.foodCart);
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
 
-  const [isPopup , setIsPopup] = useState<boolean>(false)
+  const [isPopup, setIsPopup] = useState<boolean>(false);
 
-  // const sliderData: slider[] = [
-  //   {
-  //     title1: "The essence of India,",
-  //     title2: "plated perfectly.",
-  //     image: image1,
-  //   },
-  //   {
-  //     title1: "Where tradition",
-  //     title2: "meets taste.",
-  //     image: image2,
-  //   },
-  //   {
-  //     title1: "Desserts that steal",
-  //     title2: "the show.",
-  //     image: image3,
-  //   },
-  // ];
-
-
-const sliderMessages = {
-  essence: msg`The essence of India,`,
-  plated: msg`plated perfectly.`,
-  tradition: msg`Where tradition`,
-  taste: msg`meets taste.`,
-  desserts: msg`Desserts that steal`,
-  show: msg`the show.`,
-};
-
-
-const sliderData:slider[] = [
-  {
-    title1Id: "slider.essence",
-    title2Id: "slider.plated",
-    image: image1,
-  },
-  {
-    title1Id: "slider.tradition",
-    title2Id: "slider.taste",
-    image: image2,
-  },
-  {
-    title1Id: "slider.desserts",
-    title2Id: "slider.show",
-    image: image3,
-  },
-];
-
-
+  const sliderData: slider[] = [
+    {
+      title1: "The essence of India,",
+      title2: "plated perfectly.",
+      image: image1,
+    },
+    {
+      title1: "Where tradition",
+      title2: "meets taste.",
+      image: image2,
+    },
+    {
+      title1: "Desserts that steal",
+      title2: "the show.",
+      image: image3,
+    },
+  ];
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -98,7 +64,7 @@ const sliderData:slider[] = [
   };
 
   function handleLanguageChange() {
-    setIsPopup(true)
+    setIsPopup(true);
     handleClose();
   }
 
@@ -106,7 +72,7 @@ const sliderData:slider[] = [
   function handleLogout() {
     dispatch(logout());
     toast.success("Logout Successful");
-    dispatch(resetLoginStatus())
+    dispatch(resetLoginStatus());
     handleClose();
   }
 
@@ -133,26 +99,26 @@ const sliderData:slider[] = [
       >
         <Box>
           <Typography variant="h4">
-            <Trans id="For" message="For"></Trans>
+            For
             <Box component="span" sx={{ color: "primary.main", fontWeight: 700 }}>
-              <Trans id="My" message="My"></Trans>
+              My
             </Box>
-            <Trans id="Foodies" message="Foodies"></Trans>
+            Foodies
           </Typography>
         </Box>
 
         <Box sx={{ display: "flex", gap: { xs: "24px", sm: "48px", md: "32px", lg: "48px" } }}>
           <Button component={NavLink} to="/home" variant="text" sx={{ color: "#333333" }}>
-            <Trans id="Home" message="Home"></Trans>
+            Home
           </Button>
           <Button component={NavLink} to="/menu" variant="text" sx={{ color: "#333333" }}>
-           <Trans id="Menu" message="Menu"></Trans>
+            Menu
           </Button>
           <Button component={NavLink} to="/about" variant="text" sx={{ color: "#333333" }}>
-            <Trans id="About Us" message="About Us"></Trans>
+            About Us
           </Button>
           <Button component={NavLink} to="/contact" variant="text" sx={{ color: "#333333" }}>
-            <Trans id="Contact" message="Contact"></Trans>
+            Contact
           </Button>
         </Box>
 
@@ -184,13 +150,13 @@ const sliderData:slider[] = [
 
           {!isAuthenticated && (
             <Button variant="contained" onClick={() => navigate("/signup")} sx={{ padding: "8px 24px" }}>
-              <Trans id="Sign Up" message="Sign Up"></Trans>
+              Sign Up
             </Button>
           )}
 
           {!isAuthenticated && (
             <Button variant="contained" onClick={() => navigate("/login")} sx={{ padding: "8px 24px" }}>
-              <Trans id="Log In" message="Log In"></Trans>
+              Log In
             </Button>
           )}
 
@@ -205,21 +171,16 @@ const sliderData:slider[] = [
                   <ListItemIcon>
                     <Language fontSize="small" />
                   </ListItemIcon>
-                  <Typography variant="body2">
-                    <Trans id="Language" message="Language"></Trans>
-                    </Typography>
+                  <Typography variant="body2">Language</Typography>
                 </MenuItem>
 
                 <Divider />
 
                 <MenuItem onClick={handleLogout}>
-                
                   <ListItemIcon>
                     <Logout fontSize="small" />
                   </ListItemIcon>
-                  <Typography variant="body2">
-                    <Trans id="Logout" message="Logout"></Trans>
-                    </Typography>
+                  <Typography variant="body2">Logout</Typography>
                 </MenuItem>
               </Menu>
             </Box>
@@ -227,9 +188,7 @@ const sliderData:slider[] = [
         </Box>
       </Box>
 
-      {isPopup && (
-          <ChooseLanguage setPopup={setIsPopup} />  
-      )}
+      {isPopup && <ChooseLanguage setPopup={setIsPopup} />}
 
       <Box
         sx={{
@@ -256,10 +215,10 @@ const sliderData:slider[] = [
               }}
             >
               <Typography variant="h3" sx={{ fontSize: { xs: "24px", sm: "32px", md: "32px", lg: "48px" } }}>
-               <Trans id={currentSlider.title1Id} />
+                {currentSlider.title1}
               </Typography>
               <Typography variant="h3" sx={{ fontSize: { xs: "24px", sm: "32px", md: "32px", lg: "48px" } }}>
-                <Trans id={currentSlider.title2Id} />
+                {currentSlider.title2}
               </Typography>
 
               <Box sx={{ textAlign: "left" }}>
@@ -268,7 +227,7 @@ const sliderData:slider[] = [
                   sx={{ marginTop: "3rem", padding: { sm: "8px 32pxrem", md: "8px 80px", lg: "8px 112px" } }}
                   onClick={() => navigate("/menu")}
                 >
-                  <Trans id="View Menu" message="View Menu"></Trans>
+                  View Menu
                 </Button>
               </Box>
             </Box>
@@ -317,10 +276,10 @@ const sliderData:slider[] = [
           <Box sx={{ display: "flex", flexDirection: "column", justifyContent: "space-between", alignItems: "center", height: "300px" }}>
             <Box sx={{ marginTop: "80px" }}>
               <Typography variant="h5" sx={{ fontSize: { xs: "20px", sm: "25px", md: "30px", lg: "35px" } }}>
-                <Trans id="Cocoa Fusion" message="Cocoa Fusion"></Trans>
+                Cocoa Fusion
               </Typography>
               <Typography sx={{ marginTop: "8px", fontSize: { xs: "12px", sm: "13px", md: "14px", lg: "16px" } }}>
-                <Trans id="with Natural Ingredients" message="with Natural Ingredients"></Trans>
+                with Natural Ingredients
               </Typography>
             </Box>
 
@@ -364,11 +323,9 @@ const sliderData:slider[] = [
           <Box sx={{ display: "flex", flexDirection: "column", justifyContent: "space-between", alignItems: "center", height: "300px" }}>
             <Box sx={{ marginTop: "80px" }}>
               <Typography variant="h5" sx={{ fontSize: { xs: "20px", sm: "25px", md: "30px", lg: "35px" } }}>
-                <Trans id="Veggie Medley" message="Veggie Medley"></Trans>
+                Veggie Medley
               </Typography>
-              <Typography sx={{ marginTop: "8px", fontSize: { xs: "12px", sm: "13px", md: "14px", lg: "16px" } }}>
-                <Trans id="with Fresh Veggies" message="with Fresh Veggies"></Trans>
-              </Typography>
+              <Typography sx={{ marginTop: "8px", fontSize: { xs: "12px", sm: "13px", md: "14px", lg: "16px" } }}>with Fresh Veggies</Typography>
             </Box>
 
             <Box>
@@ -411,11 +368,9 @@ const sliderData:slider[] = [
           <Box sx={{ display: "flex", flexDirection: "column", justifyContent: "space-between", alignItems: "center", height: "300px" }}>
             <Box sx={{ marginTop: "80px" }}>
               <Typography variant="h5" sx={{ fontSize: { xs: "20px", sm: "25px", md: "30px", lg: "35px" } }}>
-                <Trans id="Saalmon Bowl" message="Saalmon Bowl"></Trans>
+                Saalmon Bowl
               </Typography>
-              <Typography sx={{ marginTop: "8px", fontSize: { xs: "12px", sm: "13px", md: "14px", lg: "16px" } }}>
-                <Trans id="with Fresh Salmon" message="with Fresh Salmon"></Trans>
-              </Typography>
+              <Typography sx={{ marginTop: "8px", fontSize: { xs: "12px", sm: "13px", md: "14px", lg: "16px" } }}>with Fresh Salmon</Typography>
             </Box>
 
             <Box>
@@ -458,11 +413,9 @@ const sliderData:slider[] = [
           <Box sx={{ display: "flex", flexDirection: "column", justifyContent: "space-between", alignItems: "center", height: "300px" }}>
             <Box sx={{ marginTop: "80px" }}>
               <Typography variant="h5" sx={{ fontSize: { xs: "20px", sm: "25px", md: "30px", lg: "35px" } }}>
-                <Trans id="Tokyo Teriyaki" message="Tokyo Teriyaki"></Trans>
+                Tokyo Teriyaki
               </Typography>
-              <Typography sx={{ marginTop: "8px", fontSize: { xs: "12px", sm: "13px", md: "14px", lg: "16px" } }}>
-                <Trans id="with Glazed Chicken" message="with Glazed Chicken"></Trans>
-              </Typography>
+              <Typography sx={{ marginTop: "8px", fontSize: { xs: "12px", sm: "13px", md: "14px", lg: "16px" } }}>with Glazed Chicken</Typography>
             </Box>
 
             <Box>
@@ -495,20 +448,16 @@ const sliderData:slider[] = [
         <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
           <Box>
             <Typography variant="h3" sx={{ fontWeight: "bold" }}>
-              <Trans id="Crave-Worthy Dishes" message="Crave-Worthy Dishes"></Trans>
+              Crave-Worthy Dishes
             </Typography>
             <Typography variant="h3" sx={{ fontWeight: "bold" }}>
-              <Trans id="You'll Love" message="You'll Love"></Trans>
+              You'll Love
             </Typography>
           </Box>
 
           <Box>
-            <Typography variant="body1">
-              <Trans id="Discover crave-worthy dishes you'll love--easy to make," message="Discover crave-worthy dishes you'll love--easy to make,"></Trans>
-            </Typography>
-            <Typography variant="body1">
-              <Trans id="full of flavor , and always satisfying" message="full of flavor , and always satisfying"></Trans>
-            </Typography>
+            <Typography variant="body1">Discover crave-worthy dishes you'll love--easy to make,</Typography>
+            <Typography variant="body1">full of flavor , and always satisfying </Typography>
           </Box>
         </Box>
 

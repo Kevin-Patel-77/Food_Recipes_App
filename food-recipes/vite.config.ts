@@ -10,9 +10,6 @@ export default defineConfig({
   define: {
     "process.env": {},
   },
-  optimizeDeps: {
-    exclude: ["@lingui/conf", "@lingui/cli", "jiti"]
-  },
   server: {
     proxy: {
       '/api': {

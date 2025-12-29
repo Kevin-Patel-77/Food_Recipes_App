@@ -251,7 +251,7 @@ const Menu = () => {
 
               {searchItem.trim() || cuisine.length > 0 || priceRange.length > 0 ? (
                 <Button variant="text" onClick={handleClearAll}>
-                  langMessages.menu.CLEAR_ALL
+                  Clear All
                 </Button>
               ) : (
                 ""

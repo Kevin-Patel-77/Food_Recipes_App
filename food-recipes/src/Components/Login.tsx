@@ -6,6 +6,7 @@ import { Box, Button, IconButton, InputAdornment, InputLabel, TextField, Typogra
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { Eye, EyeOff } from "lucide-react";
 import { toast } from "react-toastify";
+import { loadCaptchaEnginge, LoadCanvasTemplate, validateCaptcha } from "react-simple-captcha";
 
 type login = {
   email: string;
@@ -23,7 +24,18 @@ const Login = () => {
   } = useForm<login>();
   const { loginStatus } = useAppSelector((state) => state.foodAuth);
 
+  const [captchaInput, setCaptchaInput] = useState("");
+  const [message, setMessage] = useState("");
+
   const onSubmit: SubmitHandler<login> = (data) => {
+
+    if(!validateCaptcha(captchaInput)){
+      setMessage("Captcha Does not Match")
+      loadCaptchaEnginge(6)
+      return 
+    }
+
+    setMessage("Captcha Matched")
     disptach(login(data));
   };
 
@@ -37,7 +49,11 @@ const Login = () => {
       toast.error("Invalid Credentials");
       disptach(resetLoginStatus());
     }
-  },[loginStatus , disptach , navigate]);
+  }, [loginStatus, disptach, navigate]);
+
+  useEffect(() => {
+     loadCaptchaEnginge(6);
+  }, []);
 
   return (
     <Box
@@ -114,6 +130,17 @@ const Login = () => {
               ),
             }}
           />
+          <Box sx={{display:"flex" , gap:"32px" , alignItems:'center' , margin:"16px 0"}}>
+            <Box>
+             <LoadCanvasTemplate />
+            </Box>
+ 
+            <Box>
+              <InputLabel  sx={{ color: "#333333" }}>Enter Captcha Code</InputLabel>
+              <TextField type="text" onChange={(e)=> setCaptchaInput(e.target.value)} value={captchaInput}></TextField>
+              {message && <Typography sx={{color:message=="Captcha Matched" ? "green" : "red"}}>{message}</Typography>}
+            </Box>
+          </Box>
 
           <Box sx={{ display: "flex", justifyContent: "center", gap: "2rem" }}>
             <Button

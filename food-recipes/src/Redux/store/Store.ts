@@ -2,14 +2,16 @@ import { configureStore } from "@reduxjs/toolkit";
 import recipesSlice from "../RecipesSlice";
 import cartSlice from "../CartSlice";
 import authSlice from "../AuthSlice";
-import languageSlice from "../LanguageSlice" 
+import languageSlice from "../LanguageSlice"
+
+
 
 const recipesStore = configureStore({
   reducer: {
     foodrecipes: recipesSlice,
     foodCart: cartSlice,
-    foodAuth: authSlice,
-    foodLanguage: languageSlice,
+    foodAuth: authSlice ,
+    foodLanguage : languageSlice
   },
 });
 

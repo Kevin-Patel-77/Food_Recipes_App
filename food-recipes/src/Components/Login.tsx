@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "./hooks";
-import { login, resetLoginStatus } from "./Redux/AuthReducer";
+import { login, resetLoginStatus } from "../Redux/AuthSlice";
 import { Box, Button, IconButton, InputAdornment, InputLabel, TextField, Typography } from "@mui/material";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { Eye, EyeOff } from "lucide-react";
 import { toast } from "react-toastify";
+import { loadCaptchaEnginge, LoadCanvasTemplate, validateCaptcha } from "react-simple-captcha";
 
 type login = {
   email: string;
@@ -23,8 +24,20 @@ const Login = () => {
   } = useForm<login>();
   const { loginStatus } = useAppSelector((state) => state.foodAuth);
 
+  const [captchaInput, setCaptchaInput] = useState("");
+  const [message, setMessage] = useState("");
+
   const onSubmit: SubmitHandler<login> = (data) => {
+
+    if(!validateCaptcha(captchaInput)){
+      setMessage("Captcha Does not Match")
+      loadCaptchaEnginge(6)
+      return 
+    }
+
+    setMessage("Captcha Matched")
     disptach(login(data));
+    console.log("hello");
   };
 
   useEffect(() => {
@@ -37,7 +50,11 @@ const Login = () => {
       toast.error("Invalid Credentials");
       disptach(resetLoginStatus());
     }
-  },[loginStatus , disptach , navigate]);
+  }, [loginStatus, disptach, navigate]);
+
+  useEffect(() => {
+     loadCaptchaEnginge(6);
+  }, []);
 
   return (
     <Box
@@ -114,6 +131,17 @@ const Login = () => {
               ),
             }}
           />
+          <Box sx={{display:{xs:"grid" , sm:"flex" , md:"flex" , lg:"flex"} , gap:"32px" , alignItems:'center' , margin:"16px 0"}}>
+            <Box>
+             <LoadCanvasTemplate reloadColor="red"  />
+            </Box>
+ 
+            <Box>
+              <InputLabel  sx={{ color: "#333333" }}>Enter Captcha Code</InputLabel>
+              <TextField type="text" onChange={(e)=> setCaptchaInput(e.target.value)} value={captchaInput}></TextField>
+              {message && <Typography sx={{color:message=="Captcha Matched" ? "green" : "red"}}>{message}</Typography>}
+            </Box>
+          </Box>
 
           <Box sx={{ display: "flex", justifyContent: "center", gap: "2rem" }}>
             <Button

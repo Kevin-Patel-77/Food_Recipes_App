@@ -1,9 +1,9 @@
 import { NavLink } from 'react-router-dom'
 import { CookingPot} from 'lucide-react';
 import { Plus } from 'lucide-react';
-import { addCart, deleteCart} from './Redux/CartReducers';
+import { addCart, deleteCart} from '../Redux/CartSlice';
 import { useAppDispatch, useAppSelector } from './hooks';
-import type { Recipe } from './Redux/RecipesReducer';
+import type { Recipe } from '../Redux/RecipesSlice';
 import { Box, Button, Typography } from '@mui/material';
 
 

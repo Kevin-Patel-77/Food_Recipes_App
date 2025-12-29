@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import type { Recipe } from "./RecipesReducer";
+import type { Recipe } from "./RecipesSlice";
 
 
 export type CartItem = Recipe & {quantity : number}
@@ -14,7 +14,7 @@ const initialState: initial = {
     items : MyCartItem
 } 
 
-const cartReducer = createSlice({
+const cartSlice = createSlice({
     name:"cart",
     initialState,
     reducers:{
@@ -46,6 +46,6 @@ const cartReducer = createSlice({
     }
 })
 
-export const {addCart , deleteCart} = cartReducer.actions
+export const {addCart , deleteCart} = cartSlice.actions
 
-export default cartReducer.reducer
+export default cartSlice.reducer

@@ -130,7 +130,7 @@ const Menu = () => {
   useEffect(() => {
     dispatch(fetchRecipes({ page, limit: itemsPerPage }));
   }, [page, dispatch]);
-  
+
   useEffect(() => {
     const newParams: { searchquery?: string; cuisine?: string; price?: string } = {};
 
@@ -146,7 +146,7 @@ const Menu = () => {
     }
 
     setParams(newParams);
-  }, [cuisine, searchItem, priceRange , setParams]);
+  }, [cuisine, searchItem, priceRange, setParams]);
 
   const filteredData = useMemo(() => {
     if (recipes.length === 0) return [];
@@ -173,7 +173,7 @@ const Menu = () => {
         dispatch(increasePage());
       }
     };
- 
+
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, [loading, isSearching, hasMore, dispatch]);

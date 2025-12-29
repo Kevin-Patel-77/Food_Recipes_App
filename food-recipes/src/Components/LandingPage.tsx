@@ -11,7 +11,7 @@ import rupee from "../assets/rupee.png";
 import bowl1 from "../assets/bowl1.png";
 import bowl2 from "../assets/bowl2.png";
 import bowl3 from "../assets/bowl3.png";
-import bowl4 from "../assets/bowl4.png"
+import bowl4 from "../assets/bowl4.png";
 import { useAppDispatch, useAppSelector, useAuthSelector } from "./hooks";
 import { logout, resetLoginStatus } from "../Redux/AuthSlice";
 import { toast } from "react-toastify";
@@ -87,13 +87,13 @@ const LandingPage = () => {
   const currentSlider = sliderData[currentIndex];
 
   return (
-    <Box sx={{ padding: { xs: "16px", sm: "20px", md: "40px", lg: "48px" } }}>
+    <Box sx={{ padding: { xs: "16px", sm: "32px", md: "40px", lg: "48px" } }}>
       <Box
         sx={{
           display: "flex",
           flexDirection: { xs: "column", sm: "column", md: "row", lg: "row" },
           gap: { xs: "16px", sm: "16px" },
-          justifyContent: "space-around",
+          justifyContent: { lg: "space-around", md: "space-around", sm: "center", xs: "center" },
           alignItems: "center",
         }}
       >
@@ -147,12 +147,6 @@ const LandingPage = () => {
               {items.length > 0 ? items.reduce((sum, acc) => sum + acc.quantity, 0) : ""}
             </Typography>
           </Box>
-
-          {!isAuthenticated && (
-            <Button variant="contained" onClick={() => navigate("/signup")} sx={{ padding: "8px 24px" }}>
-              Sign Up
-            </Button>
-          )}
 
           {!isAuthenticated && (
             <Button variant="contained" onClick={() => navigate("/login")} sx={{ padding: "8px 24px" }}>
@@ -260,15 +254,15 @@ const LandingPage = () => {
         </Box>
       </Box>
 
-      <Box sx={{ marginTop: { xs: "140px", sm: "160px", md: "180px", lg: "208px" }, display: "flex", justifyContent: "space-evenly" }}>
+      <Box sx={{ marginTop: { xs: "140px", sm: "160px", md: "180px", lg: "208px" }, display: "grid" ,  gridTemplateColumns:"repeat(auto-fill , minmax(300px , 1fr) )",  gap: "40px",  justifyContent: "center" }}>
         <Box
           sx={{
             position: "relative",
             boxShadow:
               "rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px",
             border: "1px solid gray",
-            width: { xs: "20%", sm: "19%", md: "18%", lg: "17%" },
-            height: "350px",
+            // width: { xs: "20%", sm: "19%", md: "18%", lg: "17%" },
+            // height: "350px",
             padding: "32px",
             borderRadius: "50px",
           }}
@@ -314,8 +308,8 @@ const LandingPage = () => {
             boxShadow:
               "rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px",
             border: "1px solid gray",
-            width: { xs: "20%", sm: "19%", md: "18%", lg: "17%" },
-            height: "350px",
+            // width: { xs: "20%", sm: "19%", md: "18%", lg: "17%" },
+            // height: "350px",
             padding: "32px",
             borderRadius: "50px",
           }}
@@ -359,8 +353,8 @@ const LandingPage = () => {
             boxShadow:
               "rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px",
             border: "1px solid gray",
-            width: { xs: "20%", sm: "19%", md: "18%", lg: "17%" },
-            height: "350px",
+            // width: { xs: "20%", sm: "19%", md: "18%", lg: "17%" },
+            // height: "350px",
             padding: "32px",
             borderRadius: "50px",
           }}
@@ -404,8 +398,8 @@ const LandingPage = () => {
             boxShadow:
               "rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px",
             border: "1px solid gray",
-            width: { xs: "20%", sm: "19%", md: "18%", lg: "17%" },
-            height: "350px",
+            // width: { xs: "20%", sm: "19%", md: "18%", lg: "17%" },
+            // height: "350px",
             padding: "32px",
             borderRadius: "50px",
           }}

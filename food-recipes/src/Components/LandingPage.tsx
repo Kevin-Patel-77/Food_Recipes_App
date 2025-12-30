@@ -4,7 +4,7 @@ import cart from "../assets/cart.png";
 import image1 from "../assets/image1.png";
 import image2 from "../assets/image2.png";
 import image3 from "../assets/image3.png";
-import Toast from "../assets/Toast.png"
+// import Toast from "../assets/Toast.png"
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import rupee from "../assets/rupee.png";
@@ -456,13 +456,11 @@ const LandingPage = () => {
             <Typography variant="body1">full of flavor , and always satisfying </Typography>
           </Box>
         </Box>
+      </Box>
 
-        <Box sx={{marginTop:"32px"}}>
-            <Box sx={{border:"1px solid red" , borderRadius:"20px" , width:"30%" , height:"350px" , position:"relative"}}>
-              <Box sx={{ backgroundImage:`url(${Toast})` , backgroundSize:"cover", backgroundRepeat:"no-repeat" , width:"100%" , height:"100%"}}></Box>
-              <Button sx={{position:"absolute" , top:"82.7%" , width:"100%" , height:"60px" , borderRadius:"12px" , backdropFilter:"blur(100px)"}}>French Toast</Button>
-            </Box>
-        </Box>
+
+      <Box>
+        
       </Box>
     </Box>
   );

@@ -254,15 +254,16 @@ const LandingPage = () => {
         </Box>
       </Box>
 
-      <Box sx={{ marginTop: { xs: "140px", sm: "160px", md: "180px", lg: "208px" }, display: "grid" ,  gridTemplateColumns:"repeat(auto-fill , minmax(300px , 1fr) )",  gap: "40px",  justifyContent: "center" }}>
+
+<Box sx={{ marginTop: { xs: "140px", sm: "160px", md: "180px", lg: "208px" }, display: "flex",  gap: "40px",  justifyContent: "space-evenly" }}>
         <Box
           sx={{
             position: "relative",
             boxShadow:
               "rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px",
             border: "1px solid gray",
-            // width: { xs: "20%", sm: "19%", md: "18%", lg: "17%" },
-            // height: "350px",
+            width: { xs: "20%", sm: "19%", md: "18%", lg: "17%" },
+            height: "350px",
             padding: "32px",
             borderRadius: "50px",
           }}
@@ -308,8 +309,8 @@ const LandingPage = () => {
             boxShadow:
               "rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px",
             border: "1px solid gray",
-            // width: { xs: "20%", sm: "19%", md: "18%", lg: "17%" },
-            // height: "350px",
+            width: { xs: "20%", sm: "19%", md: "18%", lg: "17%" },
+            height: "350px",
             padding: "32px",
             borderRadius: "50px",
           }}
@@ -353,8 +354,8 @@ const LandingPage = () => {
             boxShadow:
               "rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px",
             border: "1px solid gray",
-            // width: { xs: "20%", sm: "19%", md: "18%", lg: "17%" },
-            // height: "350px",
+            width: { xs: "20%", sm: "19%", md: "18%", lg: "17%" },
+            height: "350px",
             padding: "32px",
             borderRadius: "50px",
           }}
@@ -398,8 +399,8 @@ const LandingPage = () => {
             boxShadow:
               "rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px",
             border: "1px solid gray",
-            // width: { xs: "20%", sm: "19%", md: "18%", lg: "17%" },
-            // height: "350px",
+            width: { xs: "20%", sm: "19%", md: "18%", lg: "17%" },
+            height: "350px",
             padding: "32px",
             borderRadius: "50px",
           }}

@@ -6,7 +6,8 @@ import { Box, Button, IconButton, InputAdornment, InputLabel, TextField, Typogra
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { Eye, EyeOff } from "lucide-react";
 import { toast } from "react-toastify";
-import { loadCaptchaEnginge, LoadCanvasTemplate, validateCaptcha } from "react-simple-captcha";
+import { loadCaptchaEnginge, LoadCanvasTemplate, validateCaptcha }  from 'react-simple-captcha'
+
 
 type login = {
   email: string;

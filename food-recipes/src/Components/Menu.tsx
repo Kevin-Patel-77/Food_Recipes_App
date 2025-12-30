@@ -23,7 +23,7 @@ import { fetchRecipes, increasePage, type Recipe } from "../Redux/RecipesSlice";
 import RecipeSkeleton from "./RecipeSkeleton";
 import { NavLink, useNavigate, useSearchParams } from "react-router-dom";
 import { addCart } from "../Redux/CartSlice";
-import search from "../assets/search.png";
+import search from "../assets/search.png"
 import rupee from "../assets/rupee.png";
 import { debounce } from "lodash";
 import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";

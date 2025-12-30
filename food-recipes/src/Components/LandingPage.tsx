@@ -4,11 +4,7 @@ import cart from "../assets/cart.png";
 import image1 from "../assets/image1.png";
 import image2 from "../assets/image2.png";
 import image3 from "../assets/image3.png";
-<<<<<<< HEAD
 import Toast from "../assets/Toast.png"
-=======
-import ChooseLanguage from "./ChooseLanguage";
->>>>>>> 0e418867c99112a1a9ddc720b1c44bd032ecb767
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import rupee from "../assets/rupee.png";
@@ -20,6 +16,7 @@ import { useAppDispatch, useAppSelector, useAuthSelector } from "./hooks";
 import { logout, resetLoginStatus } from "../Redux/AuthSlice";
 import { toast } from "react-toastify";
 import { AccountCircle, Language, Logout } from "@mui/icons-material";
+import ChooseLanguage from "./ChooseLanguage";
 
 type slider = {
   title1: string;

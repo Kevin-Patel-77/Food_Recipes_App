@@ -1,10 +1,14 @@
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Button, Divider, IconButton, ListItemIcon, Menu, MenuItem, Typography } from "@mui/material";
 import { NavLink, useNavigate } from "react-router-dom";
 import cart from "../assets/cart.png";
 import image1 from "../assets/image1.png";
 import image2 from "../assets/image2.png";
 import image3 from "../assets/image3.png";
+<<<<<<< HEAD
 import Toast from "../assets/Toast.png"
+=======
+import ChooseLanguage from "./ChooseLanguage";
+>>>>>>> 0e418867c99112a1a9ddc720b1c44bd032ecb767
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import rupee from "../assets/rupee.png";
@@ -13,8 +17,9 @@ import bowl2 from "../assets/bowl2.png";
 import bowl3 from "../assets/bowl3.png";
 import bowl4 from "../assets/bowl4.png";
 import { useAppDispatch, useAppSelector, useAuthSelector } from "./hooks";
-import { logout } from "./Redux/AuthReducer";
+import { logout, resetLoginStatus } from "../Redux/AuthSlice";
 import { toast } from "react-toastify";
+import { AccountCircle, Language, Logout } from "@mui/icons-material";
 
 type slider = {
   title1: string;
@@ -27,9 +32,14 @@ const MotionBox = motion(Box);
 const LandingPage = () => {
   const [currentIndex, setCurrentIndex] = useState<number>(1);
   const navigate = useNavigate();
-  const { isAuthenticated } = useAuthSelector((state) => state.foodAuth);
   const dispatch = useAppDispatch();
+  const { isAuthenticated } = useAuthSelector((state) => state.foodAuth);
   const { items } = useAppSelector((state) => state.foodCart);
+
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const open = Boolean(anchorEl);
+
+  const [isPopup, setIsPopup] = useState<boolean>(false);
 
   const sliderData: slider[] = [
     {
@@ -49,10 +59,25 @@ const LandingPage = () => {
     },
   ];
 
+  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  function handleLanguageChange() {
+    setIsPopup(true);
+    handleClose();
+  }
+
   // LogOut
   function handleLogout() {
     dispatch(logout());
     toast.success("Logout Successful");
+    dispatch(resetLoginStatus());
+    handleClose();
   }
 
   useEffect(() => {
@@ -66,13 +91,13 @@ const LandingPage = () => {
   const currentSlider = sliderData[currentIndex];
 
   return (
-    <Box sx={{ padding: { xs: "16px", sm: "20px", md: "40px", lg: "48px" } }}>
+    <Box sx={{ padding: { xs: "16px", sm: "32px", md: "40px", lg: "48px" } }}>
       <Box
         sx={{
           display: "flex",
           flexDirection: { xs: "column", sm: "column", md: "row", lg: "row" },
           gap: { xs: "16px", sm: "16px" },
-          justifyContent: "space-around",
+          justifyContent: { lg: "space-around", md: "space-around", sm: "center", xs: "center" },
           alignItems: "center",
         }}
       >
@@ -82,7 +107,7 @@ const LandingPage = () => {
             <Box component="span" sx={{ color: "primary.main", fontWeight: 700 }}>
               My
             </Box>
-            Foddies
+            Foodies
           </Typography>
         </Box>
 
@@ -101,8 +126,8 @@ const LandingPage = () => {
           </Button>
         </Box>
 
-        <Box sx={{ display: "flex", alignItems: "center", gap: { xs: "32px", sm: "64px", md: "16px", lg: "32px" } }}>
-          <Box sx={{  position: "relative" , display: "flex", justifyContent: "center", alignItems: "center" }}>
+        <Box sx={{ display: "flex", alignItems: "center", gap: { xs: "32px", sm: "64px", md: "16px", lg: "20px" } }}>
+          <Box sx={{ position: "relative", display: "flex", justifyContent: "center", alignItems: "center" }}>
             <Box
               component="img"
               src={cart}
@@ -128,24 +153,40 @@ const LandingPage = () => {
           </Box>
 
           {!isAuthenticated && (
-            <Button variant="contained" onClick={() => navigate("/signup")} sx={{ padding: "8px 24px" }}>
-              Sign Up
-            </Button>
-          )}
-
-          {!isAuthenticated && (
             <Button variant="contained" onClick={() => navigate("/login")} sx={{ padding: "8px 24px" }}>
               Log In
             </Button>
           )}
 
           {isAuthenticated && (
-            <Button variant="contained" onClick={handleLogout} sx={{ padding: "8px 24px" }}>
-              Log out
-            </Button>
+            <Box>
+              <IconButton onClick={handleClick}>
+                <AccountCircle fontSize="large" />
+              </IconButton>
+
+              <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
+                <MenuItem onClick={handleLanguageChange}>
+                  <ListItemIcon>
+                    <Language fontSize="small" />
+                  </ListItemIcon>
+                  <Typography variant="body2">Language</Typography>
+                </MenuItem>
+
+                <Divider />
+
+                <MenuItem onClick={handleLogout}>
+                  <ListItemIcon>
+                    <Logout fontSize="small" />
+                  </ListItemIcon>
+                  <Typography variant="body2">Logout</Typography>
+                </MenuItem>
+              </Menu>
+            </Box>
           )}
         </Box>
       </Box>
+
+      {isPopup && <ChooseLanguage setPopup={setIsPopup} />}
 
       <Box
         sx={{
@@ -217,7 +258,8 @@ const LandingPage = () => {
         </Box>
       </Box>
 
-      <Box sx={{ marginTop: { xs: "140px", sm: "160px", md: "180px", lg: "208px" }, display: "flex", justifyContent: "space-evenly" }}>
+
+<Box sx={{ marginTop: { xs: "140px", sm: "160px", md: "180px", lg: "208px" }, display: "flex",  gap: "40px",  justifyContent: "space-evenly" }}>
         <Box
           sx={{
             position: "relative",
@@ -236,7 +278,7 @@ const LandingPage = () => {
                 Cocoa Fusion
               </Typography>
               <Typography sx={{ marginTop: "8px", fontSize: { xs: "12px", sm: "13px", md: "14px", lg: "16px" } }}>
-                with Natural Ingredients{" "}
+                with Natural Ingredients
               </Typography>
             </Box>
 
@@ -414,7 +456,7 @@ const LandingPage = () => {
 
           <Box>
             <Typography variant="body1">Discover crave-worthy dishes you'll love--easy to make,</Typography>
-            <Typography variant="body1">full of flavor , and always satisfying</Typography>
+            <Typography variant="body1">full of flavor , and always satisfying </Typography>
           </Box>
         </Box>
 

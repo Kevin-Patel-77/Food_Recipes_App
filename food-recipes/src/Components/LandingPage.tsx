@@ -11,7 +11,7 @@ import rupee from "../assets/rupee.png";
 import bowl1 from "../assets/bowl1.png";
 import bowl2 from "../assets/bowl2.png";
 import bowl3 from "../assets/bowl3.png";
-import bowl4 from "../assets/bowl4.png"
+import bowl4 from "../assets/bowl4.png";
 import { useAppDispatch, useAppSelector, useAuthSelector } from "./hooks";
 import { logout, resetLoginStatus } from "../Redux/AuthSlice";
 import { toast } from "react-toastify";
@@ -87,13 +87,13 @@ const LandingPage = () => {
   const currentSlider = sliderData[currentIndex];
 
   return (
-    <Box sx={{ padding: { xs: "16px", sm: "20px", md: "40px", lg: "48px" } }}>
+    <Box sx={{ padding: { xs: "16px", sm: "32px", md: "40px", lg: "48px" } }}>
       <Box
         sx={{
           display: "flex",
           flexDirection: { xs: "column", sm: "column", md: "row", lg: "row" },
           gap: { xs: "16px", sm: "16px" },
-          justifyContent: "space-around",
+          justifyContent: { lg: "space-around", md: "space-around", sm: "center", xs: "center" },
           alignItems: "center",
         }}
       >
@@ -147,12 +147,6 @@ const LandingPage = () => {
               {items.length > 0 ? items.reduce((sum, acc) => sum + acc.quantity, 0) : ""}
             </Typography>
           </Box>
-
-          {!isAuthenticated && (
-            <Button variant="contained" onClick={() => navigate("/signup")} sx={{ padding: "8px 24px" }}>
-              Sign Up
-            </Button>
-          )}
 
           {!isAuthenticated && (
             <Button variant="contained" onClick={() => navigate("/login")} sx={{ padding: "8px 24px" }}>
@@ -260,7 +254,8 @@ const LandingPage = () => {
         </Box>
       </Box>
 
-      <Box sx={{ marginTop: { xs: "140px", sm: "160px", md: "180px", lg: "208px" }, display: "flex", justifyContent: "space-evenly" }}>
+
+<Box sx={{ marginTop: { xs: "140px", sm: "160px", md: "180px", lg: "208px" }, display: "flex",  gap: "40px",  justifyContent: "space-evenly" }}>
         <Box
           sx={{
             position: "relative",

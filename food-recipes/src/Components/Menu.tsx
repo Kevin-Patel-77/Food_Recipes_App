@@ -23,7 +23,7 @@ import { fetchRecipes, increasePage, type Recipe } from "../Redux/RecipesSlice";
 import RecipeSkeleton from "./RecipeSkeleton";
 import { NavLink, useNavigate, useSearchParams } from "react-router-dom";
 import { addCart } from "../Redux/CartSlice";
-import search from "../assets/search.png";
+import search from "../assets/search.png"
 import rupee from "../assets/rupee.png";
 import { debounce } from "lodash";
 import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
@@ -130,7 +130,7 @@ const Menu = () => {
   useEffect(() => {
     dispatch(fetchRecipes({ page, limit: itemsPerPage }));
   }, [page, dispatch]);
-  
+
   useEffect(() => {
     const newParams: { searchquery?: string; cuisine?: string; price?: string } = {};
 
@@ -146,7 +146,7 @@ const Menu = () => {
     }
 
     setParams(newParams);
-  }, [cuisine, searchItem, priceRange , setParams]);
+  }, [cuisine, searchItem, priceRange, setParams]);
 
   const filteredData = useMemo(() => {
     if (recipes.length === 0) return [];
@@ -173,7 +173,7 @@ const Menu = () => {
         dispatch(increasePage());
       }
     };
- 
+
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, [loading, isSearching, hasMore, dispatch]);

@@ -80,7 +80,7 @@ const Login = () => {
               mb: "48px",
               fontSize: "2.5rem",
               fontWeight: "bold",
-              color: "#333333",
+              color: "var(--jetGray)",
             }}
           >
             Log In
@@ -88,7 +88,7 @@ const Login = () => {
         </Box>
 
         <Box component="form" noValidate onSubmit={handleSubmit(onSubmit)} sx={{ width: "50%", margin: "auto" }}>
-          <InputLabel htmlFor="email" sx={{ color: "#333333" }}>
+          <InputLabel htmlFor="email" sx={{ color: "var(--jetGray)" }}>
             Email
           </InputLabel>
           <TextField
@@ -137,7 +137,7 @@ const Login = () => {
             </Box>
 
             <Box>
-              <InputLabel sx={{ color: "#333333" }}>Enter Captcha Code</InputLabel>
+              <InputLabel sx={{ color: "var(--jetGray)" }}>Enter Captcha Code</InputLabel>
               <TextField type="text" onChange={(e) => setCaptchaInput(e.target.value)} value={captchaInput}></TextField>
               {message && <Typography sx={{ color: message == "Captcha Matched" ? "green" : "red" }}>{message}</Typography>}
             </Box>
@@ -152,13 +152,14 @@ const Login = () => {
                 marginTop: "1.5rem",
                 marginBottom: "1rem",
                 width: "90%",
+                backgroundColor:"var(--softCrimson)"
               }}
             >
               Log In
             </Button>
             <Typography>
               Don't have an account?{" "}
-              <Typography sx={{ color: "#E53935" }} component={NavLink} to="/signup">
+              <Typography sx={{ color: "var(--darkCrimson)"}} component={NavLink} to="/signup">
                 Register here
               </Typography>
             </Typography>

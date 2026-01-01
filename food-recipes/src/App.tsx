@@ -6,7 +6,7 @@ import Signup from "./Components/Signup";
 import RecipesDetails from "./Components/RecipesDetails";
 import ProtectedRoutes from "./Components/ProtectedRoutes";
 import Login from "./Components/Login";
-import { CssBaseline, ThemeProvider } from "@mui/material";
+import { CssBaseline, ThemeProvider, } from "@mui/material";
 import { theme } from "./Components/theme";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
@@ -34,11 +34,7 @@ function App() {
           ></Route>
           <Route
             path="/home/:id"
-            element={
-              <ProtectedRoutes>
-                <RecipesDetails />
-              </ProtectedRoutes>
-            }
+            element={<RecipesDetails />}
           ></Route>
           <Route path="/cart" element={<AddToCart />}></Route>
 
@@ -64,6 +60,7 @@ function App() {
         </Routes>
         <LanguageSync/>
       </ThemeProvider>
+      
       <ToastContainer
         position="top-right"
         autoClose={1000}

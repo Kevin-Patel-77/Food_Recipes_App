@@ -25,21 +25,21 @@ const AddToCart = () => {
           width: "96%",
           display: "grid",
           gridTemplateColumns: "repeat(auto-fit , minmax(300px , 1fr))",
-          gap: "1rem",
+          gap: "16px",
           justifyContent: "center",
           alignItems: "center",
         }}
       >
         {items.length > 0 ? (
           items.map((food) => (
-            <Box sx={{ margin: "auto", border: "2px solid black", borderRadius: "10px", textAlign: "center", padding: "1rem" }} key={food.id}>
+            <Box sx={{ margin: "auto", border: "2px solid black", borderRadius: "10px", textAlign: "center", padding: "16px" }} key={food.id}>
               <Box
                 component="img"
-                style={{ width: "100%", height: "20rem", border: "1px solid black", borderRadius: "10px", marginTop: "0.8rem" }}
+                style={{ width: "100%", height: "auto", border: "1px solid black", borderRadius: "10px", marginTop: "0.8rem" }}
                 src={food.image}
                 alt={food.name}
               />
-              <Box sx={{ color: "#333333", fontSize: "large", fontWeight: "bold" }}>
+              <Box sx={{ color: "var(--jetGray)", fontSize: "large", fontWeight: "bold" }}>
                 <Typography variant="body1" sx={{ marginTop: "1rem" }}>
                   Name: {food.name}
                 </Typography>
@@ -66,10 +66,10 @@ const AddToCart = () => {
                       justifyContent: "space-evenly",
                       alignItems: "center",
                       borderRadius: "10px",
-                      backgroundColor: "#EF4444",
+                      backgroundColor: "var(--softCrimson)",
                       color: "white",
-                      marginBottom: "1rem",
-                      padding: "0.4rem 1rem",
+                      marginBottom: "16px",
+                      padding: "6px 16px",
                       cursor: "pointer",
                       fontSize: "medium",
                       textDecoration: "none",

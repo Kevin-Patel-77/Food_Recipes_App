@@ -5,12 +5,6 @@ export const theme = createTheme({
      fontFamily: `"Poppins", "Noto Serif", sans-serif`,
   },
 
-  palette:{
-      primary:{
-        main:"#EF4444"
-      }, 
-  },
-
   components: {
     MuiCssBaseline: {
       styleOverrides: {
@@ -18,7 +12,7 @@ export const theme = createTheme({
           margin: 0,
           padding: 0,
           boxSizing: "border-box",
-          backgroundColor: " #EFE7E2",
+          backgroundColor: " #EFE7E2",   
         },
       },
     },
@@ -27,7 +21,7 @@ export const theme = createTheme({
       styleOverrides: {
         root: {
           "&:hover": {
-            backgroundColor: "#E53935",
+            backgroundColor: "var(--darkCrimson)",
             color:"white"
           },
           borderRadius: "10px",
@@ -41,7 +35,7 @@ export const theme = createTheme({
       styleOverrides: {
         root: {
           "& .MuiInputBase-root": {
-            height: "2rem",
+            height: "32px",
             borderRadius: "10px",
             backgroundColor: "white",
           },
@@ -63,7 +57,7 @@ export const theme = createTheme({
           },
 
           "& .MuiOutlinedInput-root.Mui-error .MuiOutlinedInput-notchedOutline": {
-            borderColor: "#EF4444",
+            borderColor: "var(",
           },
         },
       },
@@ -89,7 +83,7 @@ export const theme = createTheme({
           marginBottom: "0.5rem",
 
           "&.Mui-error": {
-            color: "#EF4444",
+            color: "var(--softCrimson)",
           },
         },
       },

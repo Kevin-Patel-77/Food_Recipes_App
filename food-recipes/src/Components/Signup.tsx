@@ -48,12 +48,12 @@ const Signup = () => {
           backdropFilter: "blur(10px)",
         }}
       >
-        <Typography variant="h4" mb="3rem" fontWeight="bold" sx={{ color: "#333333" }}>
+        <Typography variant="h4" mb="3rem" fontWeight="bold" sx={{ color: "var(--jetGray)"}}>
           Create Account
         </Typography>
 
         <Box component="form" noValidate onSubmit={handleSubmit(onSubmit)} sx={{ width: "50%", margin: "auto" }}>
-          <InputLabel htmlFor="username" sx={{ color: "#333333" }}>
+          <InputLabel htmlFor="username" sx={{ color: "var(--jetGray)" }}>
             UserName:
           </InputLabel>
           <TextField
@@ -65,7 +65,7 @@ const Signup = () => {
             sx={{ marginBottom: "1rem" }}
           />
 
-          <InputLabel htmlFor="email" sx={{ color: "#333333" }}>
+          <InputLabel htmlFor="email" sx={{ color: "var(--jetGray)"}}>
             Email:
           </InputLabel>
           <TextField
@@ -81,7 +81,7 @@ const Signup = () => {
             sx={{ marginBottom: "1rem" }}
           />
 
-          <InputLabel htmlFor="password" sx={{ color: "#333333" }}>
+          <InputLabel htmlFor="password" sx={{ color: "var(--jetGray)" }}>
             Password:
           </InputLabel>
           <TextField
@@ -115,7 +115,7 @@ const Signup = () => {
 
           <TextField type="hidden" {...register("checkBot")}></TextField>
 
-          <Button variant="contained" sx={{ p: "0.5rem 3rem", marginTop: "1.5rem", marginBottom: "1rem" }} type="submit">
+          <Button variant="contained" sx={{ p: "0.5rem 3rem", marginTop: "1.5rem", marginBottom: "1rem" , backgroundColor:"var(--softCrimson)" }} type="submit">
             Sign Up
           </Button>
         </Box>

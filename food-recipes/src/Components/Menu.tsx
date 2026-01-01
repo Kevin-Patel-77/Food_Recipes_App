@@ -23,13 +23,19 @@ import { fetchRecipes, increasePage, type Recipe } from "../Redux/RecipesSlice";
 import RecipeSkeleton from "./RecipeSkeleton";
 import { NavLink, useNavigate, useSearchParams } from "react-router-dom";
 import { addCart } from "../Redux/CartSlice";
-import search from "../assets/search.png"
+import search from "../assets/search.png";
 import rupee from "../assets/rupee.png";
 import { debounce } from "lodash";
 import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
 import GridViewIcon from "@mui/icons-material/GridView";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { toast } from "react-toastify";
+
+const tabelCell = {
+  borderBottom: "1px solid black",
+  fontWeight: "bold",
+  fontSize: "20px",
+};
 
 const Menu = () => {
   const dispatch = useAppDispatch();
@@ -74,7 +80,17 @@ const Menu = () => {
 
   const itemsPerPage = 10;
 
-  const cuisines = ["Indian", "Italian", "Mexican", "Mediterranean", "Pakistani", "Japanese", "Russian", "Korean", "Greek"];
+  const cuisines = [
+    "Indian",
+    "Italian",
+    "Mexican",
+    "Mediterranean",
+    "Pakistani",
+    "Japanese",
+    "Russian",
+    "Korean",
+    "Greek",
+  ];
 
   function handleSearchChange(event: React.ChangeEvent<HTMLInputElement>) {
     const value = event.target.value;
@@ -200,13 +216,19 @@ const Menu = () => {
     <Box sx={{ padding: "30px" }}>
       <Box sx={{ display: { sm: "grid", md: "flex", lg: "flex" }, gap: "20px" }}>
         <Box
-          sx={{ width: { sm: "100%", md: "50%", lg: "20%" }, height: "1100px", border: "1px solid #333333", borderRadius: "12px", padding: "16px" }}
+          sx={{
+            width: { sm: "100%", md: "50%", lg: "20%" },
+            height: "1100px",
+            border: "1px solid var(--jetGray)",
+            borderRadius: "12px",
+            padding: "16px",
+          }}
         >
-          <Typography variant="h4" color="primary" sx={{ fontWeight: "bold", textAlign: "center" }}>
+          <Typography variant="h4" sx={{ fontWeight: "bold", textAlign: "center", color: "var(--softCrimson)" }}>
             Menu
           </Typography>
 
-          <Box sx={{ marginTop: "3rem" }}>
+          <Box sx={{ marginTop: "48px" }}>
             <TextField
               type="search"
               value={searchItem}
@@ -240,17 +262,20 @@ const Menu = () => {
           </Box>
 
           <Box sx={{ marginTop: "20px" }}>
-            {cuisine.length > 0 && cuisine.map((item) => <Chip key={item} label={item} variant="outlined" onDelete={() => handleChipDelete(item)} />)}
+            {cuisine.length > 0 &&
+              cuisine.map((item) => (
+                <Chip key={item} label={item} variant="outlined" onDelete={() => handleChipDelete(item)} />
+              ))}
           </Box>
 
           <Box>
             <Box sx={{ display: "flex", alignItems: "end", justifyContent: "space-between" }}>
-              <Typography variant="h5" color="primary" sx={{ marginTop: "30px", fontWeight: "bold" }}>
+              <Typography variant="h5" sx={{ marginTop: "30px", fontWeight: "bold", color: "var(--softCrimson)" }}>
                 Cuisine
               </Typography>
 
               {searchItem.trim() || cuisine.length > 0 || priceRange.length > 0 ? (
-                <Button variant="text" onClick={handleClearAll}>
+                <Button variant="text" onClick={handleClearAll} sx={{ color: "var(--softCrimson)" }}>
                   Clear All
                 </Button>
               ) : (
@@ -265,7 +290,13 @@ const Menu = () => {
                   <FormControlLabel
                     key={cuis}
                     label={cuis}
-                    control={<Checkbox size="small" checked={cuisine.includes(cuis)} onChange={(e) => handleCuisineChange(cuis, e.target.checked)} />}
+                    control={
+                      <Checkbox
+                        size="small"
+                        checked={cuisine.includes(cuis)}
+                        onChange={(e) => handleCuisineChange(cuis, e.target.checked)}
+                      />
+                    }
                   />
                 ))}
               </FormGroup>
@@ -273,13 +304,15 @@ const Menu = () => {
           </Box>
 
           <Box>
-            <Typography variant="h5" color="primary" sx={{ marginTop: "20px", fontWeight: "bold" }}>
+            <Typography variant="h5" sx={{ marginTop: "20px", fontWeight: "bold", color: "var(--softCrimson)" }}>
               Price
             </Typography>
             <hr />
 
             <Box>
-              <Typography gutterBottom>{priceRange.length > 0 ? `Amount: ₹${priceRange[0]} - ₹${priceRange[1]}` : `Amount: ₹0 - ₹1000`}</Typography>
+              <Typography gutterBottom>
+                {priceRange.length > 0 ? `Amount: ₹${priceRange[0]} - ₹${priceRange[1]}` : `Amount: ₹0 - ₹1000`}
+              </Typography>
               <Slider
                 value={priceRange.length ? priceRange : [0, 1000]}
                 onChange={handlePriceChange}
@@ -287,12 +320,13 @@ const Menu = () => {
                 max={1000}
                 step={10}
                 valueLabelDisplay="auto"
+                sx={{ color: "var(--softCrimson)" }}
               />
             </Box>
           </Box>
 
           <Box>
-            <Typography variant="h5" color="primary" sx={{ marginTop: "20px", fontWeight: "bold" }}>
+            <Typography variant="h5" sx={{ marginTop: "20px", fontWeight: "bold", color: "var(--softCrimson)" }}>
               Shopping Cart
             </Typography>
             <hr />
@@ -300,7 +334,13 @@ const Menu = () => {
             <Button
               variant="contained"
               onClick={() => navigate("/cart")}
-              sx={{ gap: "10px", border: "1px solid red", borderRadius: "100px", padding: "5px 20px" }}
+              sx={{
+                gap: "10px",
+                border: "1px solid red",
+                borderRadius: "100px",
+                padding: "5px 20px",
+                backgroundColor: "var(--softCrimson)",
+              }}
             >
               <ShoppingCartIcon />
               <Typography variant="h6">My Cart</Typography>
@@ -308,7 +348,7 @@ const Menu = () => {
           </Box>
 
           <Box>
-            <Typography variant="h5" color="primary" sx={{ marginTop: "20px", fontWeight: "bold" }}>
+            <Typography variant="h5" sx={{ marginTop: "20px", fontWeight: "bold", color: "var(--softCrimson)" }}>
               Layout
             </Typography>
             <hr />
@@ -317,7 +357,13 @@ const Menu = () => {
               <Button
                 variant="contained"
                 onClick={handleListAndGridView}
-                sx={{ gap: "10px", border: "1px solid red", borderRadius: "100px", padding: "5px 30px" }}
+                sx={{
+                  gap: "10px",
+                  border: "1px solid red",
+                  borderRadius: "100px",
+                  padding: "5px 30px",
+                  backgroundColor: "var(--softCrimson)",
+                }}
               >
                 <FormatListBulletedIcon />
                 <Typography variant="h6">List</Typography>
@@ -326,7 +372,13 @@ const Menu = () => {
               <Button
                 variant="contained"
                 onClick={handleListAndGridView}
-                sx={{ gap: "10px", border: "1px solid red", borderRadius: "100px", padding: "5px 30px" }}
+                sx={{
+                  gap: "10px",
+                  border: "1px solid red",
+                  borderRadius: "100px",
+                  padding: "5px 30px",
+                  backgroundColor: "var(--softCrimson)",
+                }}
               >
                 <GridViewIcon />
                 <Typography variant="h6">Grid</Typography>
@@ -336,9 +388,17 @@ const Menu = () => {
         </Box>
 
         {isListView ? (
-          <Box sx={{ width: { xs: "100%", sm: "100%", md: "80%", lg: "80%" }, border: "1px solid #333333", borderRadius: "12px" }}>
+          <Box
+            sx={{
+              width: { xs: "100%", sm: "100%", md: "80%", lg: "80%" },
+              border: "1px solid #333333",
+              borderRadius: "12px",
+            }}
+          >
             {/* Loading Data */}
-            {loading && filteredData.length === 0 && Array.from({ length: itemsPerPage }).map((_, i) => <RecipeSkeleton key={`init-${i}`} />)}
+            {loading &&
+              filteredData.length === 0 &&
+              Array.from({ length: itemsPerPage }).map((_, i) => <RecipeSkeleton key={`init-${i}`} />)}
 
             {!loading && filteredData.length === 0 && hasSearched ? (
               <Typography
@@ -357,17 +417,17 @@ const Menu = () => {
                   <Table>
                     <TableHead>
                       <TableRow>
-                        <TableCell sx={{ borderBottom: "1px solid black", fontWeight: "bold", fontSize: "20px" }}>Name</TableCell>
-                        <TableCell sx={{ borderBottom: "1px solid black", fontWeight: "bold", fontSize: "20px" }} align="right">
+                        <TableCell sx={tabelCell}>Name</TableCell>
+                        <TableCell sx={tabelCell} align="right">
                           Amount
                         </TableCell>
-                        <TableCell sx={{ borderBottom: "1px solid black", fontWeight: "bold", fontSize: "20px" }} align="right">
+                        <TableCell sx={tabelCell} align="right">
                           Meal Type
                         </TableCell>
-                        <TableCell sx={{ borderBottom: "1px solid black", fontWeight: "bold", fontSize: "20px" }} align="right">
+                        <TableCell sx={tabelCell} align="right">
                           View Details
                         </TableCell>
-                        <TableCell sx={{ borderBottom: "1px solid black", fontWeight: "bold", fontSize: "20px" }} align="right">
+                        <TableCell sx={tabelCell} align="right">
                           Add To Cart
                         </TableCell>
                       </TableRow>
@@ -376,10 +436,24 @@ const Menu = () => {
                     <TableBody>
                       {filteredData.map((food) => (
                         <TableRow key={food.id}>
-                          <TableCell sx={{ padding: "30px 20px", display: "flex", alignItems: "center", gap: "10px", fontSize: "18px" }}>
+                          <TableCell
+                            sx={{
+                              padding: "30px 20px",
+                              display: "flex",
+                              alignItems: "center",
+                              gap: "10px",
+                              fontSize: "18px",
+                            }}
+                          >
                             <Box
                               component="img"
-                              sx={{ width: "48px", height: "48px", borderRadius: "8px", objectFit: "cover", cursor: "pointer" }}
+                              sx={{
+                                width: "48px",
+                                height: "48px",
+                                borderRadius: "8px",
+                                objectFit: "cover",
+                                cursor: "pointer",
+                              }}
                               onClick={() => navigate(`/home/${food.id}`)}
                               src={food.image}
                               alt={food.name}
@@ -399,18 +473,32 @@ const Menu = () => {
                             ))}
                           </TableCell>
                           <TableCell align="right">
-                            <Button component={NavLink} to={`/home/${food.id}`} variant="contained" size="small" sx={{ padding: "5px 10px" }}>
+                            <Button
+                              component={NavLink}
+                              to={`/home/${food.id}`}
+                              variant="contained"
+                              size="small"
+                              sx={{ padding: "5px 10px", backgroundColor: "var(--softCrimson)" }}
+                            >
                               View Details
                             </Button>
                           </TableCell>
 
                           <TableCell align="right">
                             {items.find((item) => item.id === food.id) ? (
-                              <Button onClick={() => navigate("/cart")} variant="contained">
+                              <Button
+                                onClick={() => navigate("/cart")}
+                                variant="contained"
+                                sx={{ backgroundColor: "var(--softCrimson)" }}
+                              >
                                 GO TO BAG
                               </Button>
                             ) : (
-                              <Button onClick={() => handleCart(food)} variant="contained">
+                              <Button
+                                onClick={() => handleCart(food)}
+                                variant="contained"
+                                sx={{ backgroundColor: "var(--softCrimson)" }}
+                              >
                                 ADD TO CART
                               </Button>
                             )}
@@ -433,7 +521,11 @@ const Menu = () => {
             sx={{
               width: { xs: "100%", sm: "100%", md: "80%", lg: "80%" },
               display: "grid",
-              gridTemplateColumns: { sm: "repeat(2 , 1fr)", md: "repeat(auto-fill, 450px)", lg: "repeat(auto-fill, 450px)" },
+              gridTemplateColumns: {
+                sm: "repeat(2 , 1fr)",
+                md: "repeat(auto-fill, 450px)",
+                lg: "repeat(auto-fill, 450px)",
+              },
               gap: "16px",
               justifyContent: "center",
               alignItems: "center",
@@ -441,7 +533,9 @@ const Menu = () => {
             }}
           >
             {/* Loading Data */}
-            {loading && filteredData.length === 0 && Array.from({ length: itemsPerPage }).map((_, i) => <RecipeSkeleton key={`init-${i}`} />)}
+            {loading &&
+              filteredData.length === 0 &&
+              Array.from({ length: itemsPerPage }).map((_, i) => <RecipeSkeleton key={`init-${i}`} />)}
 
             {!loading && filteredData.length === 0 && hasSearched ? (
               <Typography
@@ -460,7 +554,7 @@ const Menu = () => {
                   sx={{
                     width: "90%",
                     margin: "auto",
-                    border: "1px solid #333333",
+                    border: "1px solid var(--jetGray)",
                     borderRadius: "10px",
                     textAlign: "center",
                     padding: "1rem",
@@ -500,13 +594,13 @@ const Menu = () => {
                       slotProps={{
                         tooltip: {
                           sx: {
-                            backgroundColor: "#EF4444",
+                            backgroundColor: "var(--softCrimson)",
                             fontSize: "small",
                           },
                         },
                         arrow: {
                           sx: {
-                            color: "#EF4444",
+                            color: "var(--softCrimson)",
                           },
                         },
                       }}
@@ -557,18 +651,22 @@ const Menu = () => {
                       }}
                     >
                       <Box>
-                        <Button onClick={() => navigate(`/home/${food.id}`)} sx={{ padding: "10px 20px" }} variant="contained">
+                        <Button
+                          onClick={() => navigate(`/home/${food.id}`)}
+                          sx={{ padding: "10px 20px"  ,  backgroundColor:"var(--softCrimson)"}}
+                          variant="contained"
+                        >
                           VIEW DETAILS
                         </Button>
                       </Box>
 
                       <Box>
                         {items.find((item) => item.id === food.id) ? (
-                          <Button onClick={() => navigate("/cart")} sx={{ padding: "10px 25px" }} variant="contained">
+                          <Button onClick={() => navigate("/cart")} sx={{ padding: "10px 25px" ,  backgroundColor:"var(--softCrimson)" }} variant="contained">
                             GO TO BAG
                           </Button>
                         ) : (
-                          <Button onClick={() => handleCart(food)} sx={{ padding: "10px 20px" }} variant="contained">
+                          <Button onClick={() => handleCart(food)} sx={{ padding: "10px 20px" ,  backgroundColor:"var(--softCrimson)" }} variant="contained">
                             ADD TO CART
                           </Button>
                         )}

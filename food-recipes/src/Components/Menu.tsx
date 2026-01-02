@@ -224,7 +224,7 @@ const Menu = () => {
             padding: "16px",
           }}
         >
-          <Typography variant="h4" sx={{ fontWeight: "bold", textAlign: "center", color: "var(--softCrimson)" }}>
+          <Typography variant="h4" sx={{textAlign: "center", color: "var(--softCrimson)" }}>
             Menu
           </Typography>
 
@@ -270,7 +270,7 @@ const Menu = () => {
 
           <Box>
             <Box sx={{ display: "flex", alignItems: "end", justifyContent: "space-between" }}>
-              <Typography variant="h5" sx={{ marginTop: "30px", fontWeight: "bold", color: "var(--softCrimson)" }}>
+              <Typography variant="h5" sx={{ marginTop: "30px", color: "var(--softCrimson)" }}>
                 Cuisine
               </Typography>
 
@@ -304,7 +304,7 @@ const Menu = () => {
           </Box>
 
           <Box>
-            <Typography variant="h5" sx={{ marginTop: "20px", fontWeight: "bold", color: "var(--softCrimson)" }}>
+            <Typography variant="h5" sx={{ marginTop: "20px", color: "var(--softCrimson)" }}>
               Price
             </Typography>
             <hr />
@@ -326,7 +326,7 @@ const Menu = () => {
           </Box>
 
           <Box>
-            <Typography variant="h5" sx={{ marginTop: "20px", fontWeight: "bold", color: "var(--softCrimson)" }}>
+            <Typography variant="h5" sx={{ marginTop: "20px", color: "var(--softCrimson)" }}>
               Shopping Cart
             </Typography>
             <hr />
@@ -348,7 +348,7 @@ const Menu = () => {
           </Box>
 
           <Box>
-            <Typography variant="h5" sx={{ marginTop: "20px", fontWeight: "bold", color: "var(--softCrimson)" }}>
+            <Typography variant="h5" sx={{ marginTop: "20px", color: "var(--softCrimson)" }}>
               Layout
             </Typography>
             <hr />

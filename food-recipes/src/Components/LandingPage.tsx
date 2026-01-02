@@ -204,7 +204,6 @@ const LandingPage = () => {
           </MotionBox>
         </AnimatePresence>
 
-
         <Box
           sx={{
             width: { xs: "45%", sm: "32%", md: "35%", lg: "35%" },
@@ -262,7 +261,7 @@ const LandingPage = () => {
               }}
             >
               <Box>
-                <Typography variant="h4" sx={{ fontWeight: "bold" }}>
+                <Typography variant="h4" >
                   {item.title}
                 </Typography>
                 <Typography>{item.subTitle}</Typography>
@@ -290,21 +289,11 @@ const LandingPage = () => {
             <Box>
               <Typography
                 variant="h3"
-                sx={{
-                  fontWeight: "bold",
-                  color: "var(--jetGray)",
-                  fontSize: { xs: "24px", sm: "32px", md: "40px", lg: "40px", xl: "48px" },
-                }}
               >
                 Ultimate Creamy Mac
               </Typography>
               <Typography
                 variant="h3"
-                sx={{
-                  fontWeight: "bold",
-                  color: "var(--jetGray)",
-                  fontSize: { xs: "24px", sm: "32px", md: "40px", lg: "40px", xl: "48px" },
-                }}
               >
                 and Cheese
               </Typography>
@@ -370,8 +359,8 @@ const LandingPage = () => {
 
 export default LandingPage;
 
-{
-  /* <Box sx={{ marginTop: "80px", padding: "10px 112px" }}>
+
+{/* <Box sx={{ marginTop: "80px", padding: "10px 112px" }}>
         <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
           <Box>
             <Typography variant="h3" sx={{ fontWeight: "bold" , color:"#333333" }}>
@@ -387,5 +376,4 @@ export default LandingPage;
             <Typography variant="body1">full of flavor , and always satisfying </Typography>
           </Box>
         </Box>
-      </Box> */
-}
+      </Box> */}

@@ -2,7 +2,30 @@ import { createTheme } from "@mui/material";
 
 export const theme = createTheme({
   typography: {
-     fontFamily: `"Poppins", "Noto Serif", sans-serif`,
+    fontFamily: `"Poppins", "Noto Serif", sans-serif`,
+    h3: {
+      fontWeight: "bold",
+      color: "var(--jetGray)",
+      fontSize: "24px",
+      "@media (min-width:600px)": {
+        fontSize: "32px",
+      },
+      "@media (min-width:900px)": {
+        fontSize: "40px",
+      },
+      "@media (min-width:1200px)": {
+        fontSize: "40px",
+      },
+      "@media (min-width:1536px)": {
+        fontSize: "48px",
+      },
+    },
+    h4:{
+      fontWeight:"bold"
+    },
+    h5:{
+      fontWeight:"bold"
+    }
   },
 
   components: {
@@ -12,7 +35,7 @@ export const theme = createTheme({
           margin: 0,
           padding: 0,
           boxSizing: "border-box",
-          backgroundColor: " #EFE7E2",   
+          backgroundColor: " #EFE7E2",
         },
       },
     },
@@ -22,7 +45,7 @@ export const theme = createTheme({
         root: {
           "&:hover": {
             backgroundColor: "var(--darkCrimson)",
-            color:"white"
+            color: "white",
           },
           borderRadius: "10px",
           fontWeight: "bold",

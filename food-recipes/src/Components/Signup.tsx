@@ -48,7 +48,7 @@ const Signup = () => {
           backdropFilter: "blur(10px)",
         }}
       >
-        <Typography variant="h4" mb="3rem" fontWeight="bold" sx={{ color: "var(--jetGray)"}}>
+        <Typography variant="h4" mb="48px" sx={{ color: "var(--jetGray)"}}>
           Create Account
         </Typography>
 
@@ -62,7 +62,7 @@ const Signup = () => {
             error={!!errors.userName}
             helperText={errors.userName?.message}
             fullWidth
-            sx={{ marginBottom: "1rem" }}
+            sx={{ marginBottom: "16px" }}
           />
 
           <InputLabel htmlFor="email" sx={{ color: "var(--jetGray)"}}>

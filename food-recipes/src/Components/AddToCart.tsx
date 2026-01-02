@@ -19,23 +19,36 @@ const AddToCart = () => {
   }
 
   return (
-    <Box sx={{ padding: "1rem" }}>
+    <Box sx={{ padding:"32px" }}>
       <Box
         sx={{
           width: "96%",
           display: "grid",
-          gridTemplateColumns: "repeat(auto-fit , minmax(300px , 1fr))",
+          gridTemplateColumns: "repeat(auto-fill , minmax(300px , 1fr))",
           gap: "16px",
-          justifyContent: "center",
-          alignItems: "center",
         }}
       >
-        {items.length > 0 ? (
+        {items.length > 0 && (
           items.map((food) => (
-            <Box sx={{ margin: "auto", border: "2px solid black", borderRadius: "10px", textAlign: "center", padding: "16px" }} key={food.id}>
+            <Box
+              sx={{
+                margin: "auto",
+                border: "2px solid black",
+                borderRadius: "10px",
+                textAlign: "center",
+                padding: "16px",
+              }}
+              key={food.id}
+            >
               <Box
                 component="img"
-                style={{ width: "100%", height: "auto", border: "1px solid black", borderRadius: "10px", marginTop: "0.8rem" }}
+                style={{
+                  width: "100%",
+                  height: "auto",
+                  border: "1px solid black",
+                  borderRadius: "10px",
+                  marginTop: "14px",
+                }}
                 src={food.image}
                 alt={food.name}
               />
@@ -52,9 +65,14 @@ const AddToCart = () => {
                   ))}
                 </Typography>
 
-                <Box sx={{ display: "flex", justifyContent: "center", marginBottom: "1rem", gap: "1rem" }}>
+                <Box sx={{ display: "flex", justifyContent: "center", marginBottom: "16px", gap: "16px" }}>
                   <Box>
-                    <Button variant="contained" component={NavLink} to={`/home/${food.id}`} sx={{ padding: "0.5rem 2rem" }}>
+                    <Button
+                      variant="contained"
+                      component={NavLink}
+                      to={`/home/${food.id}`}
+                      sx={{ padding: "6px 16px" , backgroundColor:"var(--softCrimson)" }}
+                    >
                       View Details
                     </Button>
                   </Box>
@@ -75,7 +93,7 @@ const AddToCart = () => {
                       textDecoration: "none",
                       gap: "0.5rem",
                     }}
-                  >
+                    >
                     <CookingPot onClick={() => handleDelete(food.id)} />
                     {food.quantity}
                     <Plus onClick={() => handleAdd(food)} />
@@ -84,12 +102,24 @@ const AddToCart = () => {
               </Box>
             </Box>
           ))
-        ) : (
-          <Box sx={{ height: "90vh", display: "flex", justifyContent: "center", alignItems: "center", color: "black", borderRadius: "10px" }}>
-            <Typography variant="h4">Your Recipes Cart is empty</Typography>
-          </Box>
         )}
       </Box>
+
+      {items.length <= 0 && (
+        <Box
+            sx={{
+              width:"100%",
+              height: "90vh",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              color: "var(--jetGray)",
+              borderRadius: "10px"
+            }}
+          >
+            <Typography variant="h4">Your Recipes Cart is empty</Typography>
+          </Box>
+      )}
     </Box>
   );
 };

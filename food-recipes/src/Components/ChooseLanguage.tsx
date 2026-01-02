@@ -38,7 +38,7 @@ const ChooseLanguage: React.FC<popUp> = ({ setPopup }) => {
     >
       <Box sx={{ padding: "48px", backgroundColor: "white", width: "38%", height: "38%", borderRadius: "50px" }}>
         <Box>
-          <Typography variant="h5" sx={{ fontWeight: "bold" }}>
+          <Typography variant="h5" >
             Choose a Language
           </Typography>
           <Typography variant="body2">Select your preferred language to use </Typography>

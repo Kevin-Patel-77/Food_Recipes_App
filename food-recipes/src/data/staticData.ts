@@ -5,6 +5,11 @@ import bowl4 from "../assets/bowl4.png"
 import image1 from "../assets/image1.png"
 import image2 from "../assets/image2.png"
 import image3 from "../assets/image3.png"
+import InstagramIcon from '@mui/icons-material/Instagram';
+import FacebookIcon from '@mui/icons-material/Facebook';
+import TwitterIcon from '@mui/icons-material/Twitter';
+import XIcon from '@mui/icons-material/X';
+import { SvgIconComponent } from "@mui/icons-material";
 
 interface header {
   name:string
@@ -22,6 +27,10 @@ interface slider {
   title1 : string;
   title2 : string;
   image : string
+}
+
+interface socialMedia {
+  icons : SvgIconComponent
 }
 
 export const headerItem : header[] = [
@@ -90,3 +99,19 @@ export const sliderData: slider[] = [
       image: image3,
     },
   ];
+
+
+  export const socialMedias : socialMedia[]= [
+    {
+      icons : InstagramIcon
+    }, 
+    {
+      icons : FacebookIcon
+    },
+    {
+      icons : TwitterIcon
+    },
+    {
+      icons : XIcon
+    }
+  ] 

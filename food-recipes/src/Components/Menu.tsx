@@ -194,8 +194,8 @@ const Menu = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [loading, isSearching, hasMore, dispatch]);
 
-  // Error
-  if (error) {
+  // Error (only when no cached data)
+  if (error && recipes.length === 0) {
     return (
       <Box
         sx={{
@@ -207,7 +207,7 @@ const Menu = () => {
           height: "100vh",
         }}
       >
-        {error}
+        No Internet
       </Box>
     );
   }
@@ -224,7 +224,7 @@ const Menu = () => {
             padding: "16px",
           }}
         >
-          <Typography variant="h4" sx={{textAlign: "center", color: "var(--softCrimson)" }}>
+          <Typography variant="h4" sx={{ textAlign: "center", color: "var(--softCrimson)" }}>
             Menu
           </Typography>
 
@@ -653,7 +653,7 @@ const Menu = () => {
                       <Box>
                         <Button
                           onClick={() => navigate(`/home/${food.id}`)}
-                          sx={{ padding: "10px 20px"  ,  backgroundColor:"var(--softCrimson)"}}
+                          sx={{ padding: "10px 20px", backgroundColor: "var(--softCrimson)" }}
                           variant="contained"
                         >
                           VIEW DETAILS
@@ -662,11 +662,19 @@ const Menu = () => {
 
                       <Box>
                         {items.find((item) => item.id === food.id) ? (
-                          <Button onClick={() => navigate("/cart")} sx={{ padding: "10px 25px" ,  backgroundColor:"var(--softCrimson)" }} variant="contained">
+                          <Button
+                            onClick={() => navigate("/cart")}
+                            sx={{ padding: "10px 25px", backgroundColor: "var(--softCrimson)" }}
+                            variant="contained"
+                          >
                             GO TO BAG
                           </Button>
                         ) : (
-                          <Button onClick={() => handleCart(food)} sx={{ padding: "10px 20px" ,  backgroundColor:"var(--softCrimson)" }} variant="contained">
+                          <Button
+                            onClick={() => handleCart(food)}
+                            sx={{ padding: "10px 20px", backgroundColor: "var(--softCrimson)" }}
+                            variant="contained"
+                          >
                             ADD TO CART
                           </Button>
                         )}

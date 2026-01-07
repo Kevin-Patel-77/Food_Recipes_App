@@ -1,4 +1,4 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { CookingPot } from "lucide-react";
 import { Plus } from "lucide-react";
 import { addCart, deleteCart } from "../Redux/CartSlice";
@@ -9,6 +9,7 @@ import { Box, Button, Typography } from "@mui/material";
 const AddToCart = () => {
   const { items } = useAppSelector((state) => state.foodCart);
   const dispatch = useAppDispatch();
+  const navigate = useNavigate()
 
   function handleDelete(id: number) {
     dispatch(deleteCart(id));
@@ -111,6 +112,8 @@ const AddToCart = () => {
               width:"100%",
               height: "90vh",
               display: "flex",
+              flexDirection:"column",
+              gap:"20px",
               justifyContent: "center",
               alignItems: "center",
               color: "var(--jetGray)",
@@ -118,6 +121,7 @@ const AddToCart = () => {
             }}
           >
             <Typography variant="h4">Your Recipes Cart is empty</Typography>
+            <Button variant="contained" onClick={()=> navigate("/menu")}   sx={{backgroundColor:"var(--softCrimson)"}}>Explore Recipes</Button>
           </Box>
       )}
     </Box>

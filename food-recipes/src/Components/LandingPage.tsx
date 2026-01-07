@@ -167,26 +167,26 @@ const LandingPage = () => {
         >
           <AnimatePresence mode="wait">
             <MotionBox
-              key={currentIndex}
+              key={currentIndex}                                        
               initial={{ opacity: 0, x: 80 }}
               animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -80 }}
+              exit={{ opacity: 0, x: -80 }}                                 
               transition={{ duration: 0.6, ease: "easeInOut" }}
-            >
+            >                           
               <Box
                 sx={{
                   display: "flex",
                   flexDirection: "column",
                   justifyContent: "center",
                 }}
-              >
+              >                            
                 <Typography sx={{ fontSize: { xs: "20px", sm: "32px", md: "32px", lg: "48px" } }}>
                   {currentSlider.title1}
                 </Typography>
                 <Typography sx={{ fontSize: { xs: "20px", sm: "32px", md: "32px", lg: "48px" } }}>
-                  {currentSlider.title2}
-                </Typography>
-
+                  {currentSlider.title2}                           
+                </Typography>                                             
+                                                       
                 <Box sx={{ textAlign: "left" }}>
                   <Button
                     variant="contained"
@@ -348,13 +348,12 @@ const LandingPage = () => {
       <Box sx={{ marginTop: "80px", backgroundColor: "#DED2CB" }}>
         <Box
           sx={{
-            display: "flex",
+            display: {xs:"grid" , sm:"grid" , md:"flex" ,lg:"flex"} ,
             justifyContent: "space-around",
-            alignItems: "center",
-            padding: { sm: "24px 48px", md: "32px 112px", lg: "32px 112px" },
+            padding: { xs:"16px 32px" , sm: "24px 48px", md: "32px 112px", lg: "32px 112px" },
           }}
         >
-          <Box sx={{ display: "grid", gap: "20px" }}>
+          <Box sx={{ display: "grid", gap: "20px"}}>
             <Box
               sx={{
                 border: "1px solid black",
@@ -395,10 +394,10 @@ const LandingPage = () => {
             </Box>
           </Box>
 
-          <Box sx={{ display: "flex", justifyContent: "space-between", width: "40%" }}>
+          <Box sx={{ display: "flex", justifyContent: "space-between",  marginTop:{xs:"48px" , sm:"48px" , md:"0px"} ,   width:{ xs:"100%" ,sm:"100%" , md:"40%" , lg:"40%"} }}>
             <Box>
               <Typography variant="h6">Quick links</Typography>
-              <Box sx={{ display: "grid", gap: "10px", marginTop: "15px" }}>
+              <Box sx={{ display: "grid", gap: "10px", marginTop: "15px"  , cursor:"pointer" }}>
                 <Typography variant="body2">All Categories</Typography>
                 <Typography variant="body2">Site Map</Typography>
                 <Typography variant="body2">About Us</Typography>
@@ -409,7 +408,7 @@ const LandingPage = () => {
             <Box>
               <Typography variant="h6">Get In Touch</Typography>
 
-              <Box sx={{ display: "grid", gap: "10px", marginTop: "15px" }}>
+              <Box sx={{ display: "grid", gap: "10px", marginTop: "15px" , cursor:"pointer" }}>
                 <Typography variant="body2">Privacy Policy</Typography>
                 <Typography variant="body2">Terms and Services</Typography>
               </Box>

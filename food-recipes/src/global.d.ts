@@ -5,3 +5,5 @@ declare module "*.jpeg";
 declare module "*.svg";
 
 declare module "react-simple-captcha";
+declare module "localforage";
+

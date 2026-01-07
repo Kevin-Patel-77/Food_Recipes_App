@@ -1,6 +1,8 @@
 import { useParams } from 'react-router-dom'
 import { useAppSelector } from './hooks'
 import { Box, CardMedia, Typography } from '@mui/material'
+import { useTranslation } from "react-i18next";
+
 
 const labelStyle = {
   listStyle: "none",
@@ -25,8 +27,11 @@ const RecipesDetails = () => {
     const { recipes } = useAppSelector((state) => state.foodrecipes)
     const foodInfo = recipes.find((res) => res.id == recipeId)
 
+    const { t } = useTranslation();
+
+
     if (!foodInfo) {
-        return <h1 style={{ textAlign: "center" }}>Loading...</h1>;
+        return <h1 style={{ textAlign: "center" }}>{t("loading")}</h1>;
     }
 
     return (
@@ -41,11 +46,11 @@ const RecipesDetails = () => {
 
           <Box>
             <Typography component={"ul"} sx={{ padding: 0 }}>
-              <Typography sx={labelStyle} component={"li"}>Name: </Typography>
-              <Typography sx={labelStyle} component={"li"}>Cuisine: </Typography>
-              <Typography sx={labelStyle} component={"li"}>PrepTimeMinutes: </Typography>
-              <Typography sx={labelStyle} component={"li"}>CookTimeMinutes: </Typography>
-              <Typography sx={labelStyle} component={"li"}>Food-Ingredients:</Typography>
+              <Typography sx={labelStyle} component={"li"}>{t("name")}:</Typography>
+              <Typography sx={labelStyle} component={"li"}>{t("cuisine")}:</Typography>
+              <Typography sx={labelStyle} component={"li"}>{t("prepTimeMinutes")}:</Typography>
+              <Typography sx={labelStyle} component={"li"}>{t("cookTimeMinutes")}:</Typography>
+              <Typography sx={labelStyle} component={"li"}>{t("ingredients")}:</Typography>
             </Typography>
           </Box>
 
@@ -70,7 +75,7 @@ const RecipesDetails = () => {
       </Box>
 
       <Box sx={{ marginTop: "5rem", textAlign: "center", border: "1px solid black", borderRadius: "10px"  }}>
-        <Typography variant='h4' sx={{ color: "#E53935" }}>INSTRUCTION</Typography>
+        <Typography variant='h4' sx={{ color: "#E53935" }}>{t("instruction")}</Typography>
         <Typography component="ul" sx={{ display:"flex" , justifyContent:'space-evenly', marginTop:"2rem"}}>
           {foodInfo.ingredients.map((ingre, i) => (
             <Typography component="li" sx={{ listStyle: "none", fontSize: "large", marginBottom: "0.5rem" , color:"black" }} key={i}>{ingre}</Typography>

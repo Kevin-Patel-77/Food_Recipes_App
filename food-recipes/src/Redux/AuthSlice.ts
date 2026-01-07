@@ -5,6 +5,7 @@ export type Users = {
   userName: string;
   email: string;
   password: string;
+  checkBot?:string
 };
 
 type initial = {
@@ -22,7 +23,7 @@ const initialState: initial = {
   loginStatus: "idle",
 };
 
-const authReducer = createSlice({
+const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
@@ -49,6 +50,7 @@ const authReducer = createSlice({
     },
     logout(state) {
       state.isAuthenticated = false;
+      state.loginStatus = "error";
       localStorage.setItem("isLogin", JSON.stringify(false));
     },
     resetLoginStatus(state) {
@@ -57,6 +59,6 @@ const authReducer = createSlice({
   },
 });
 
-export const { addUser, login, logout, resetLoginStatus } = authReducer.actions;
+export const { addUser, login, logout, resetLoginStatus } = authSlice.actions;
 
-export default authReducer.reducer;
+export default authSlice.reducer;

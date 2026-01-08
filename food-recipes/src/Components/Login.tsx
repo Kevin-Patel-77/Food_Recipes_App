@@ -6,14 +6,13 @@ import { Box, Button, IconButton, InputAdornment, InputLabel, TextField, Typogra
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { Eye, EyeOff } from "lucide-react";
 import { toast } from "react-toastify";
-import { loadCaptchaEnginge, LoadCanvasTemplate, validateCaptcha }  from 'react-simple-captcha'
-
+import { loadCaptchaEnginge, LoadCanvasTemplate, validateCaptcha } from "react-simple-captcha";
 
 type login = {
   email: string;
   password: string;
 };
-  
+
 const Login = () => {
   const disptach = useAppDispatch();
   const navigate = useNavigate();
@@ -131,15 +130,24 @@ const Login = () => {
               ),
             }}
           />
-          <Box sx={{ display: { xs: "grid", sm: "flex", md: "flex", lg: "flex" }, gap: "32px", alignItems: "center", margin: "32px 0" }}>
+          <Box
+            sx={{
+              display: { xs: "grid", sm: "flex", md: "flex", lg: "flex" },
+              gap: "32px",
+              alignItems: "center",
+              margin: "32px 0",
+            }}
+          >
             <Box>
               <LoadCanvasTemplate reloadColor="red" />
             </Box>
-
+            
             <Box>
               <InputLabel sx={{ color: "var(--jetGray)" }}>Enter Captcha Code</InputLabel>
               <TextField type="text" onChange={(e) => setCaptchaInput(e.target.value)} value={captchaInput}></TextField>
-              {message && <Typography sx={{ color: message == "Captcha Matched" ? "green" : "red" }}>{message}</Typography>}
+              {message && (
+                <Typography sx={{ color: message == "Captcha Matched" ? "green" : "red" }}>{message}</Typography>
+              )}
             </Box>
           </Box>
 
@@ -152,14 +160,14 @@ const Login = () => {
                 marginTop: "1.5rem",
                 marginBottom: "1rem",
                 width: "90%",
-                backgroundColor:"var(--softCrimson)"
+                backgroundColor: "var(--softCrimson)",
               }}
             >
               Log In
             </Button>
             <Typography>
               Don't have an account?{" "}
-              <Typography sx={{ color: "var(--darkCrimson)"}} component={NavLink} to="/signup">
+              <Typography sx={{ color: "var(--darkCrimson)" }} component={NavLink} to="/signup">
                 Register here
               </Typography>
             </Typography>
@@ -169,5 +177,6 @@ const Login = () => {
     </Box>
   );
 };
+
 
 export default Login;

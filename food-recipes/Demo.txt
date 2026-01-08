@@ -1,0 +1,45 @@
+Online  = API -> Service Worker (sirf network detect / retry) -> Thunk (fetchRecipes) -> localForage -> Redux (dispatch data) -> UI
+Offline = Service Worker (detect offline) -> Thunk (fetchRecipes) -> localForage (get, de-duplicate) -> Redux (dispatch data) -> UI
+
+
+import localforage from "localforage";
+
+const lf = localforage.createInstance({
+  name: "recipes-db",
+  storeName: "recipes",
+});
+
+export default lf;
+
+
+export const fetchRecipes = createAsyncThunk("fetchRecipes", async ({ page, limit }: scrolling) => {
+  const skip = (page - 1) * limit;
+
+  if (!navigator.onLine) {
+    const offlineData = (await lf.getItem<Recipe[]>("recipes")) || [];
+
+    
+    const uniqueOfflineData: Recipe[] = offlineData.filter(
+      (recipe, index, self) => index === self.findIndex((r) => r.id === recipe.id)
+    );
+
+    console.log("Offline unique", uniqueOfflineData);
+    return { recipes: uniqueOfflineData, offline: true };
+  }
+
+  
+  const res = await axios.get(`/api/recipes?limit=${limit}&skip=${skip}`);
+  const recipes = res.data.recipes;
+
+  const existing = (await lf.getItem<Recipe[]>("recipes")) || [];
+
+ 
+  const newUniqueRecipes = recipes.filter((r: Recipe) => !existing.some((e) => e.id === r.id));
+
+  const merged = [...existing, ...newUniqueRecipes];
+  await lf.setItem("recipes", merged);
+
+  return { recipes, offline: false };
+});
+
+

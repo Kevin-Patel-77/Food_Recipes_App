@@ -1,23 +1,30 @@
 import { NavLink, useNavigate } from "react-router-dom";
 import { CookingPot } from "lucide-react";
 import { Plus } from "lucide-react";
-import { addCart, deleteCart } from "../Redux/CartSlice";
+import { addCart, CartItem, deleteCart } from "../Redux/Cart/CartSlice"
 import { useAppDispatch, useAppSelector } from "./hooks";
-import type { Recipe } from "../Redux/RecipesSlice";
 import { Box, Button, Typography } from "@mui/material";
+import { addToCartServer, deleteFromCartServer, fetchCartFromServer } from "../Redux/Cart/CartThunk";
+import { useEffect } from "react";
 
 const AddToCart = () => {
   const { items } = useAppSelector((state) => state.foodCart);
   const dispatch = useAppDispatch();
   const navigate = useNavigate()
 
-  function handleDelete(id: number) {
-    dispatch(deleteCart(id));
+  function handleDelete(food:CartItem) {
+    dispatch(deleteCart(food.id));
+    dispatch(deleteFromCartServer(food))
   }
 
-  function handleAdd(foodItem: Recipe) {
+  function handleAdd(foodItem: CartItem) {
     dispatch(addCart(foodItem));
+    dispatch(addToCartServer(foodItem))
   }
+
+  useEffect(() => {
+    dispatch(fetchCartFromServer());
+}, [dispatch]);
 
   return (
     <Box sx={{ padding:"32px" }}>
@@ -80,24 +87,29 @@ const AddToCart = () => {
 
                   <Box
                     sx={{
-                      width: "30%",
+                      width: "40%",
                       display: "flex",
-                      justifyContent: "space-evenly",
+                      justifyContent: "space-around",
                       alignItems: "center",
                       borderRadius: "10px",
                       backgroundColor: "var(--softCrimson)",
                       color: "white",
                       marginBottom: "16px",
-                      padding: "6px 16px",
+                      padding: "3px 10px",
                       cursor: "pointer",
                       fontSize: "medium",
                       textDecoration: "none",
-                      gap: "0.5rem",
                     }}
                     >
-                    <CookingPot onClick={() => handleDelete(food.id)} />
-                    {food.quantity}
-                    <Plus onClick={() => handleAdd(food)} />
+                      <Box>
+                          <CookingPot size={24} onClick={() => handleDelete(food)} />
+                      </Box>
+                      <Box sx={{ width:"24px"}}>
+                        {food.quantity}
+                      </Box> 
+                      <Box>
+                        <Plus size={24} onClick={() => handleAdd(food)} />
+                      </Box>
                   </Box>
                 </Box>
               </Box>

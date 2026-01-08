@@ -318,6 +318,7 @@ const LandingPage = () => {
               <Box sx={{ marginTop: "48px" }}>
                 <Button
                   variant="contained"
+                  onClick={()=> navigate("/menu")}
                   sx={{
                     padding: { xs: "8px 40px", sm: "8px 60px", md: "8px 80px", lg: "8px 80px" },
                     fontWeight: "bold",

@@ -13,18 +13,18 @@ export async function syncPendingOperation() {
 
       if (existing && existing.data) {
         await axios.patch(`/api/cart/${data.item.id}`, {
-          quantity: existing.data.quantity + data.item.quantity,
+          quantity: existing.data.quantity + 1
         });
       } else {
         await axios.post(`/api/cart`, data.item);
       }
     }
-
+         
     if (data.type === "REMOVE") {
       const existing = await axios.get(`/api/cart/${data.item.id}`).catch(() => null);
       if (!existing || !existing.data) continue;
 
-      const newQty = existing.data.quantity - data.item.quantity;
+      const newQty = existing.data.quantity - 1
       if (newQty > 0) {
         await axios.patch(`/api/cart/${data.item.id}`, { quantity: newQty });
       } else {

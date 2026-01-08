@@ -48,7 +48,7 @@ const Signup = () => {
           backdropFilter: "blur(10px)",
         }}
       >
-        <Typography variant="h4" mb="48px" sx={{ color: "var(--jetGray)"}}>
+        <Typography variant="h4" mb="48px" sx={{ color: "var(--jetGray)" }}>
           Create Account
         </Typography>
 
@@ -65,7 +65,7 @@ const Signup = () => {
             sx={{ marginBottom: "16px" }}
           />
 
-          <InputLabel htmlFor="email" sx={{ color: "var(--jetGray)"}}>
+          <InputLabel htmlFor="email" sx={{ color: "var(--jetGray)" }}>
             Email:
           </InputLabel>
           <TextField
@@ -78,7 +78,7 @@ const Signup = () => {
             error={!!errors.email}
             helperText={errors.email?.message}
             fullWidth
-            sx={{ marginBottom: "1rem" }}
+            sx={{ marginBottom: "16px" }}
           />
 
           <InputLabel htmlFor="password" sx={{ color: "var(--jetGray)" }}>
@@ -101,7 +101,7 @@ const Signup = () => {
             error={!!errors.password}
             helperText={errors.password?.message}
             fullWidth
-            sx={{ marginBottom: "1rem" }}
+            sx={{ marginBottom: "16px" }}
             InputProps={{
               endAdornment: (
                 <InputAdornment position="end">
@@ -113,9 +113,15 @@ const Signup = () => {
             }}
           />
 
-          <TextField type="hidden" {...register("checkBot")}></TextField>
+          <Box sx={{ display: "none" }}>
+            <TextField type="text" {...register("checkBot")}></TextField>
+          </Box>
 
-          <Button variant="contained" sx={{ p: "0.5rem 3rem", marginTop: "1.5rem", marginBottom: "1rem" , backgroundColor:"var(--softCrimson)" }} type="submit">
+          <Button
+            variant="contained"
+            sx={{ p: "8px 48px", marginTop: "24px", marginBottom: "16px", backgroundColor: "var(--softCrimson)" }}
+            type="submit"
+          >
             Sign Up
           </Button>
         </Box>

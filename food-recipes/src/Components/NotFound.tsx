@@ -16,7 +16,7 @@ const NotFound = () => {
         </Box>
 
         <Box sx={{marginTop:"80px"}}>
-            <Button variant="contained" onClick={() => navigate("/home")} sx={{padding:"0.5rem 3rem" , fontWeight:"bold"}}>
+            <Button variant="contained" onClick={() => navigate("/home")} sx={{padding:"0.5rem 3rem" , fontWeight:"bold" , backgroundColor:"var(--softCrimson)"}}>
                 Go Home
             </Button>
         </Box>

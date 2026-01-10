@@ -1,3 +1,6 @@
+json-server --watch db.json
+
+
 Online  = API -> Service Worker (sirf network detect / retry) -> Thunk (fetchRecipes) -> localForage -> Redux (dispatch data) -> UI
 Offline = Service Worker (detect offline) -> Thunk (fetchRecipes) -> localForage (get, de-duplicate) -> Redux (dispatch data) -> UI
 
@@ -43,3 +46,51 @@ export const fetchRecipes = createAsyncThunk("fetchRecipes", async ({ page, limi
 });
 
 
+
+
+----------------------------------------------------------------------------------------------------------------------------
+
+Captcha Setup 
+
+ import { loadCaptchaEnginge, LoadCanvasTemplate, validateCaptcha } from "react-simple-captcha";
+
+  // const [captchaInput, setCaptchaInput] = useState("");
+  // const [message, setMessage] = useState("");
+
+   // if (!validateCaptcha(captchaInput)) {
+    //   setMessage("Captcha Does not Match");
+    //   loadCaptchaEnginge(6);
+    //   return;
+    // }
+
+    // setMessage("Captcha Matched");
+
+
+  // useEffect(() => {
+  //   loadCaptchaEnginge(6);
+  // }, []);
+
+
+  {/* <Box
+            sx={{
+              display: { xs: "grid", sm: "flex", md: "flex", lg: "flex" },
+              gap: "32px",
+              alignItems: "center",
+               margin: "32px 0",
+            }}
+          >
+            <Box>
+              <LoadCanvasTemplate reloadColor="red" />
+            </Box>
+            
+            <Box>
+              <InputLabel sx={{ color: "var(--jetGray)" }}>Enter Captcha Code</InputLabel>
+              <TextField type="text" onChange={(e) => setCaptchaInput(e.target.value)} value={captchaInput}></TextField>
+              {message && (
+                <Typography sx={{ color: message == "Captcha Matched" ? "green" : "red" }}>{message}</Typography>
+              )}
+            </Box>
+          </Box> */}
+
+
+-------------------------------------------------------------------------------------------------------------------------------

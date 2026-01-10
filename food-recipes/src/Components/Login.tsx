@@ -1,58 +1,56 @@
 import { useEffect, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "./hooks";
-import { login, resetLoginStatus } from "../Redux/AuthSlice";
 import { Box, Button, IconButton, InputAdornment, InputLabel, TextField, Typography } from "@mui/material";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { Eye, EyeOff } from "lucide-react";
 import { toast } from "react-toastify";
-import { loadCaptchaEnginge, LoadCanvasTemplate, validateCaptcha } from "react-simple-captcha";
+import { LoginPayload } from "../Redux/Auth/AuthSlice";
+import { loginUser } from "../Redux/Auth/AuthThunk";
+import HCaptcha from "@hcaptcha/react-hcaptcha";
 
-type login = {
-  email: string;
-  password: string;
+const topBottomMargin = {
+  marginTop: "32px",
+  marginBottom: "16px",
 };
 
 const Login = () => {
   const disptach = useAppDispatch();
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState<boolean>(false);
+  const { user, error } = useAppSelector((state) => state.foodAuth);
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<login>();
-  const { loginStatus } = useAppSelector((state) => state.foodAuth);
+  } = useForm<LoginPayload>();
 
-  const [captchaInput, setCaptchaInput] = useState("");
-  const [message, setMessage] = useState("");
+  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
 
-  const onSubmit: SubmitHandler<login> = (data) => {
-    if (!validateCaptcha(captchaInput)) {
-      setMessage("Captcha Does not Match");
-      loadCaptchaEnginge(6);
+  const onSubmit: SubmitHandler<LoginPayload> = (data) => {
+    if (!captchaToken) {
+      toast.error("Please verify captcha");
       return;
     }
-
-    setMessage("Captcha Matched");
-    disptach(login(data));
+    disptach(
+      loginUser({
+        email: data.email,
+        password: data.password,
+        hcaptchaToken:captchaToken
+      })
+    );
   };
 
   useEffect(() => {
-    if (loginStatus === "success") {
-      toast.success("Login Successful!");
+    if (user?.success == true) {
+      toast.success(user.message);
       navigate("/home");
     }
 
-    if (loginStatus === "error") {
-      toast.error("Invalid Credentials");
-      disptach(resetLoginStatus());
+    if (error) {
+      toast.error(user?.message);
     }
-  }, [loginStatus, disptach, navigate]);
-
-  useEffect(() => {
-    loadCaptchaEnginge(6);
-  }, []);
+  }, [user, error, navigate]);
 
   return (
     <Box
@@ -87,7 +85,7 @@ const Login = () => {
         </Box>
 
         <Box component="form" noValidate onSubmit={handleSubmit(onSubmit)} sx={{ width: "50%", margin: "auto" }}>
-          <InputLabel htmlFor="email" sx={{ color: "var(--jetGray)" }}>
+          <InputLabel htmlFor="email" sx={{ color: "var(--jetGray)", marginTop: "16px" }}>
             Email
           </InputLabel>
           <TextField
@@ -99,11 +97,10 @@ const Login = () => {
             })}
             error={!!errors.email}
             helperText={errors.email?.message}
-            sx={{ marginBottom: "1rem" }}
             fullWidth
           />
 
-          <InputLabel htmlFor="password" sx={{ color: "#333333" }}>
+          <InputLabel htmlFor="password" sx={{ color: "#333333", marginTop: "16px" }}>
             Password
           </InputLabel>
           <TextField
@@ -119,7 +116,6 @@ const Login = () => {
             error={!!errors.password}
             helperText={errors.password?.message}
             fullWidth
-            sx={{ marginBottom: "1rem" }}
             InputProps={{
               endAdornment: (
                 <InputAdornment position="end">
@@ -130,35 +126,21 @@ const Login = () => {
               ),
             }}
           />
-          <Box
-            sx={{
-              display: { xs: "grid", sm: "flex", md: "flex", lg: "flex" },
-              gap: "32px",
-              alignItems: "center",
-              margin: "32px 0",
-            }}
-          >
-            <Box>
-              <LoadCanvasTemplate reloadColor="red" />
-            </Box>
-            
-            <Box>
-              <InputLabel sx={{ color: "var(--jetGray)" }}>Enter Captcha Code</InputLabel>
-              <TextField type="text" onChange={(e) => setCaptchaInput(e.target.value)} value={captchaInput}></TextField>
-              {message && (
-                <Typography sx={{ color: message == "Captcha Matched" ? "green" : "red" }}>{message}</Typography>
-              )}
-            </Box>
+
+          <Box sx={topBottomMargin}>
+            <HCaptcha
+              sitekey="20000000-ffff-ffff-ffff-000000000002"
+              onVerify={(token) => setCaptchaToken(token)}
+              onExpire={() => setCaptchaToken(null)}
+            />
           </Box>
 
-          <Box>
+          <Box sx={topBottomMargin}>
             <Button
               variant="contained"
               type="submit"
               sx={{
-                p: "0.5rem 3rem",
-                marginTop: "1.5rem",
-                marginBottom: "1rem",
+                p: "8px 48px",
                 width: "90%",
                 backgroundColor: "var(--softCrimson)",
               }}
@@ -177,6 +159,5 @@ const Login = () => {
     </Box>
   );
 };
-
 
 export default Login;

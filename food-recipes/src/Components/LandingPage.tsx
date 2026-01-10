@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import rupee from "../assets/rupee.png";
 import cheese from "../assets/Cheese.jpg";
 import { useAppDispatch, useAppSelector, useAuthSelector } from "./hooks";
-import { logout, resetLoginStatus } from "../Redux/AuthSlice";
+import { logout } from "../Redux/Auth/AuthSlice";
 import { toast } from "react-toastify";
 import { AccountCircle, CheckBox, Language, Logout } from "@mui/icons-material";
 import ChooseLanguage from "./ChooseLanguage";
@@ -45,7 +45,6 @@ const LandingPage = () => {
   function handleLogout() {
     dispatch(logout());
     toast.success("Logout Successful");
-    dispatch(resetLoginStatus());
     handleClose();
   }
 

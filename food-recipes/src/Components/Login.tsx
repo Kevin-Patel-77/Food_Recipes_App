@@ -28,10 +28,12 @@ const Login = () => {
   const [captchaToken, setCaptchaToken] = useState<string | null>(null);
 
   const onSubmit: SubmitHandler<LoginPayload> = (data) => {
+
     if (!captchaToken) {
       toast.error("Please verify captcha");
       return;
     }
+
     disptach(
       loginUser({
         email: data.email,
@@ -42,13 +44,13 @@ const Login = () => {
   };
 
   useEffect(() => {
+     if (error) {
+      toast.error(error);
+    }
+
     if (user?.success == true) {
       toast.success(user.message);
       navigate("/home");
-    }
-
-    if (error) {
-      toast.error(user?.message);
     }
   }, [user, error, navigate]);
 

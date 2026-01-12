@@ -6,13 +6,13 @@ import { motion, AnimatePresence } from "framer-motion";
 import rupee from "../assets/rupee.png";
 import cheese from "../assets/Cheese.jpg";
 import { useAppDispatch, useAppSelector, useAuthSelector } from "./hooks";
-import { logout } from "../Redux/Auth/AuthSlice";
 import { toast } from "react-toastify";
 import { AccountCircle, CheckBox, Language, Logout } from "@mui/icons-material";
 import ChooseLanguage from "./ChooseLanguage";
 import EastIcon from "@mui/icons-material/East";
 import { BowlItems, headerItem, socialMedias } from "../data/staticData";
 import { sliderData } from "../data/staticData";
+import { logoutUser } from "../Redux/Auth/AuthThunk";
 
 const MotionBox = motion(Box);
 
@@ -22,6 +22,7 @@ const LandingPage = () => {
   const dispatch = useAppDispatch();
   const { isAuthenticated } = useAuthSelector((state) => state.foodAuth);
   const { items } = useAppSelector((state) => state.foodCart);
+  const {user , error} = useAppSelector((state) => state.foodAuth)
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -43,10 +44,21 @@ const LandingPage = () => {
 
   // LogOut
   function handleLogout() {
-    dispatch(logout());
-    toast.success("Logout Successful");
+    dispatch(logoutUser());
     handleClose();
   }
+
+  useEffect(()=>{
+
+    if(error){
+      toast.error(error)
+    }
+
+    if(user?.success == true){
+      toast.success(user?.message)
+    }
+
+  },[user , error])
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -81,8 +93,8 @@ const LandingPage = () => {
           </Box>
 
           <Box sx={{ display: "flex", gap: { sm: "48px", md: "32px", lg: "48px", alignItems: "center" } }}>
-            {headerItem.map((item) => (
-              <Button component={NavLink} to={item.to} variant="text" sx={{ color: "var(--jetGray)" }}>
+            {headerItem.map((item , index) => (
+              <Button key={index} component={NavLink} to={item.to} variant="text" sx={{ color: "var(--jetGray)" }}>
                 {item.name}
               </Button>
             ))}
@@ -235,8 +247,8 @@ const LandingPage = () => {
             gap: "24px",
           }}
         >
-          {BowlItems.map((item) => (
-            <Box sx={{ position: "relative", marginTop: "120px" }}>
+          {BowlItems.map((item , index) => (
+            <Box key={index} sx={{ position: "relative", marginTop: "120px" }}>
               <Box sx={{ position: "absolute", top: "0", left: "50%", transform: "translate(-50%, -50%)" }}>
                 <Box
                   component="img"

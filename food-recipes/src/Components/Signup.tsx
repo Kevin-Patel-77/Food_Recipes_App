@@ -26,14 +26,15 @@ const Signup = () => {
   };
 
   useEffect(() => {
+    if (error) {
+      toast.error(error);
+    }
+    
     if (user?.success) {
       toast.success(user.message);
       navigate("/login");
     }
 
-    if (error) {
-      toast.error(error);
-    }
   }, [user , error , navigate]);
 
   return (

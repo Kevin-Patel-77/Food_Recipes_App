@@ -1,33 +1,40 @@
-import { addUser } from "../Redux/AuthSlice";
 import { useNavigate } from "react-router-dom";
-import { useAppDispatch } from "./hooks";
-import type { Users } from "../Redux/AuthSlice";
+import { useAppDispatch, useAppSelector } from "./hooks";
 import { Eye, EyeOff } from "lucide-react";
 import { Box, Button, InputLabel, TextField, Typography, IconButton, InputAdornment } from "@mui/material";
 import { useForm, type SubmitHandler } from "react-hook-form";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import { signUpUser } from "../Redux/Auth/AuthThunk";
+import { SignupPayload } from "../Redux/Auth/AuthSlice";
 
 const Signup = () => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
 
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
+  const { user , error } = useAppSelector((state) => state.foodAuth);
+
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<Users>();
+  } = useForm<SignupPayload>();
 
-  const onSubmit: SubmitHandler<Users> = (data) => {
-    if (data.checkBot) {
-      return;
+  const onSubmit: SubmitHandler<SignupPayload> = (data) => {
+    dispatch(signUpUser(data));
+  };
+
+  useEffect(() => {
+    if (user?.success) {
+      toast.success(user.message);
+      navigate("/login");
     }
 
-    dispatch(addUser(data));
-    toast.success("SignUp Successful");
-    navigate("/login");
-  };
+    if (error) {
+      toast.error(error);
+    }
+  }, [user , error , navigate]);
 
   return (
     <Box
@@ -40,7 +47,7 @@ const Signup = () => {
     >
       <Box
         sx={{
-          padding: "1rem",
+          padding: "16px",
           width: { xs: "98%", sm: "80%", md: "70%", lg: "50%" },
           border: "1px solid black",
           borderRadius: "20px",
@@ -48,24 +55,23 @@ const Signup = () => {
           backdropFilter: "blur(10px)",
         }}
       >
-        <Typography variant="h4" mb="3rem" fontWeight="bold" sx={{ color: "#333333" }}>
+        <Typography variant="h4" mb="48px" sx={{ color: "var(--jetGray)" }}>
           Create Account
         </Typography>
 
         <Box component="form" noValidate onSubmit={handleSubmit(onSubmit)} sx={{ width: "50%", margin: "auto" }}>
-          <InputLabel htmlFor="username" sx={{ color: "#333333" }}>
+          <InputLabel htmlFor="username" sx={{ color: "var(--jetGray)" }}>
             UserName:
           </InputLabel>
           <TextField
             id="username"
-            {...register("userName", { required: "Name is required" })}
-            error={!!errors.userName}
-            helperText={errors.userName?.message}
+            {...register("name", { required: "Name is required" })}
+            error={!!errors.name}
+            helperText={errors.name?.message}
             fullWidth
-            sx={{ marginBottom: "1rem" }}
           />
 
-          <InputLabel htmlFor="email" sx={{ color: "#333333" }}>
+          <InputLabel htmlFor="email" sx={{ color: "var(--jetGray)", marginTop: "16px" }}>
             Email:
           </InputLabel>
           <TextField
@@ -73,15 +79,14 @@ const Signup = () => {
             type="email"
             {...register("email", {
               required: "Email is required",
-              pattern: { value: /^[a-z0-9]+(\.[a-z0-9]+)*@[a-z0-9]+\.[a-z]{2,}$/, message: "Invalid email format" },
+              pattern: { value: /^[a-z0-9]+(\.[a-z0-9]+)*@[a-z0-9]+\.[a-z]{2,}$/i, message: "Invalid email format" },
             })}
             error={!!errors.email}
             helperText={errors.email?.message}
             fullWidth
-            sx={{ marginBottom: "1rem" }}
           />
 
-          <InputLabel htmlFor="password" sx={{ color: "#333333" }}>
+          <InputLabel htmlFor="password" sx={{ color: "var(--jetGray)", marginTop: "16px" }}>
             Password:
           </InputLabel>
           <TextField
@@ -101,7 +106,6 @@ const Signup = () => {
             error={!!errors.password}
             helperText={errors.password?.message}
             fullWidth
-            sx={{ marginBottom: "1rem" }}
             InputProps={{
               endAdornment: (
                 <InputAdornment position="end">
@@ -113,9 +117,11 @@ const Signup = () => {
             }}
           />
 
-          <TextField type="hidden" {...register("checkBot")}></TextField>
-
-          <Button variant="contained" sx={{ p: "0.5rem 3rem", marginTop: "1.5rem", marginBottom: "1rem" }} type="submit">
+          <Button
+            variant="contained"
+            sx={{ p: "8px 48px", marginTop: "24px", marginBottom: "16px", backgroundColor: "var(--softCrimson)" }}
+            type="submit"
+          >
             Sign Up
           </Button>
         </Box>

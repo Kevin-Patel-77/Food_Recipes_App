@@ -2,13 +2,30 @@ import { createTheme } from "@mui/material";
 
 export const theme = createTheme({
   typography: {
-     fontFamily: `"Poppins", "Noto Serif", sans-serif`,
-  },
-
-  palette:{
-      primary:{
-        main:"#EF4444"
-      }, 
+    fontFamily: `"Poppins", "Noto Serif", sans-serif`,
+    h3: {
+      fontWeight: "bold",
+      color: "var(--jetGray)",
+      fontSize: "24px",
+      "@media (min-width:600px)": {
+        fontSize: "32px",
+      },
+      "@media (min-width:900px)": {
+        fontSize: "40px",
+      },
+      "@media (min-width:1200px)": {
+        fontSize: "40px",
+      },
+      "@media (min-width:1536px)": {
+        fontSize: "48px",
+      },
+    },
+    h4:{
+      fontWeight:"bold"
+    },
+    h5:{
+      fontWeight:"bold"
+    }
   },
 
   components: {
@@ -27,8 +44,8 @@ export const theme = createTheme({
       styleOverrides: {
         root: {
           "&:hover": {
-            backgroundColor: "#E53935",
-            color:"white"
+            backgroundColor: "var(--darkCrimson)",
+            color: "white",
           },
           borderRadius: "10px",
           fontWeight: "bold",
@@ -41,7 +58,7 @@ export const theme = createTheme({
       styleOverrides: {
         root: {
           "& .MuiInputBase-root": {
-            height: "2rem",
+            height: "32px",
             borderRadius: "10px",
             backgroundColor: "white",
           },
@@ -63,7 +80,7 @@ export const theme = createTheme({
           },
 
           "& .MuiOutlinedInput-root.Mui-error .MuiOutlinedInput-notchedOutline": {
-            borderColor: "#EF4444",
+            borderColor: "var(",
           },
         },
       },
@@ -89,7 +106,7 @@ export const theme = createTheme({
           marginBottom: "0.5rem",
 
           "&.Mui-error": {
-            color: "#EF4444",
+            color: "var(--softCrimson)",
           },
         },
       },

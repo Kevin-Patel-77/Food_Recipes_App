@@ -26,11 +26,10 @@ export type Recipe = {
   mealType: string[];
 };
 
-
 export const fetchRecipes = createAsyncThunk("recipes/fetchRecipes", async ({ page, limit }: scrolling) => {
-  const  skip = (page - 1) * limit;
-  const  res = await axios.get(`/api/recipes?limit=${limit}&skip=${skip}`);
-  return res.data.recipes;
+  const skip = (page - 1) * limit;
+  const res = await axios.get( `/api/recipes?_start=${skip}&_limit=${limit}`);
+  return res.data;
 });
 
 export type initial = {
@@ -38,7 +37,7 @@ export type initial = {
   recipes: Recipe[];
   page: number;
   error: string | null;
-  hasMore: boolean;
+  hasMore: boolean; 
 };
 
 const generateAmount = (id: number): number => {

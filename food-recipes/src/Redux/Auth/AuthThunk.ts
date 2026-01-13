@@ -37,16 +37,13 @@ export const loginUser = createAsyncThunk<LoginLogoutSignupResponse, LoginWithCa
   }
 );
 
-export const logoutUser = createAsyncThunk<LoginLogoutSignupResponse, void ,  { rejectValue: string }>(
+export const logoutUser = createAsyncThunk<LoginLogoutSignupResponse, void, { rejectValue: string }>(
   "auth/logoutUser",
   async (_, { rejectWithValue }) => {
     try {
-      // const token = localStorage.getItem("accessToken");
+      const res = await api.post("/auth/logout");
 
-      const res = await api.post("/auth/logout")
-
-     return res.data;
-
+      return res.data;
     } catch (error) {
       if (axios.isAxiosError(error)) {
         return rejectWithValue(error.response?.data?.message || "Logout failed");

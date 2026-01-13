@@ -1,4 +1,5 @@
 import axios from "axios"
+import { log } from "node:console"
 
 const api = axios.create({
     baseURL: "http://localhost:3000"
@@ -18,6 +19,7 @@ api.interceptors.response.use(
     (response) => response,
     async (error)=>{
         const originalRequest = error.config
+        console.log(error)
 
         if(error.response?.status == 401 && !originalRequest._retry){
 

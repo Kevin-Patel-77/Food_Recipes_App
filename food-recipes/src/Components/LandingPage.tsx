@@ -72,12 +72,12 @@ const LandingPage = () => {
 
   return (
     <Box>
-      <Box sx={{ margin: { sm: "24px 48px", md: "32px 112px", lg: "32px 112px" } }}>
+      <Box sx={{ margin: { sm: "24px 48px", md: "32px 112px", lg: "48px 112px" } }}>
         <Box
           sx={{
             display: "flex",
             flexDirection: { xs: "column", sm: "column", md: "row", lg: "row" },
-            gap: { xs: "16px", sm: "16px" },
+            gap: { xs: "16px", sm: "16px" , md:"0px" , lg:"0px" },
             justifyContent: { lg: "space-around", md: "space-around", sm: "center", xs: "center" },
             alignItems: "center",
           }}
@@ -92,7 +92,7 @@ const LandingPage = () => {
             </Typography>
           </Box>
 
-          <Box sx={{ display: "flex", gap: { sm: "48px", md: "32px", lg: "48px", alignItems: "center" } }}>
+          <Box sx={{ display: "flex", gap: { sm: "48px", md: "0px", lg: "48px" } }}>
             {headerItem.map((item , index) => (
               <Button key={index} component={NavLink} to={item.to} variant="text" sx={{ color: "var(--jetGray)" }}>
                 {item.name}
@@ -130,7 +130,7 @@ const LandingPage = () => {
               <Button
                 variant="contained"
                 onClick={() => navigate("/login")}
-                sx={{ padding: "8px 24px", backgroundColor: "var(--softCrimson)" }}
+                sx={{ width:"90px" , padding: "8px 24px", backgroundColor: "var(--softCrimson)" }}
               >
                 Log In
               </Button>
@@ -191,10 +191,10 @@ const LandingPage = () => {
                   justifyContent: "center",
                 }}
               >                            
-                <Typography sx={{ fontSize: { xs: "20px", sm: "32px", md: "32px", lg: "48px" } }}>
+                <Typography sx={{ fontSize: { xs: "20px", sm: "24px", md: "32px", lg: "48px" } }}>
                   {currentSlider.title1}
                 </Typography>
-                <Typography sx={{ fontSize: { xs: "20px", sm: "32px", md: "32px", lg: "48px" } }}>
+                <Typography sx={{ fontSize: { xs: "20px", sm: "24px", md: "32px", lg: "48px" } }}>
                   {currentSlider.title2}                           
                 </Typography>                                             
                                                        
@@ -208,7 +208,7 @@ const LandingPage = () => {
                     }}
                     onClick={() => navigate("/menu")}
                   >
-                    View Menu
+                    View Menu 
                   </Button>
                 </Box>
               </Box>
@@ -217,7 +217,7 @@ const LandingPage = () => {
 
           <Box
             sx={{
-              width: { xs: "45%", sm: "32%", md: "35%", lg: "35%" },
+              width: { xs: "200px", sm: "300px", md: "350px", lg: "400px" },
               height: { xs: "250px", sm: "250px", md: "300px", lg: "400px" },
             }}
           >
@@ -241,7 +241,7 @@ const LandingPage = () => {
 
         <Box
           sx={{
-            marginTop: "100px",
+            marginTop: {xs:"70px" , sm:"80px" , md:"90px" , lg:"100px" },
             display: "grid",
             gridTemplateColumns: "repeat(auto-fit , minmax(300px ,1fr))",
             gap: "24px",

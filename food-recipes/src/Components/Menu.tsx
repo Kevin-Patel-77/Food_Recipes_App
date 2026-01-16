@@ -22,7 +22,6 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { fetchRecipes, increasePage, type Recipe } from "../Redux/RecipesSlice";
 import RecipeSkeleton from "./RecipeSkeleton";
 import { NavLink, useNavigate, useSearchParams } from "react-router-dom";
-import { addCart } from "../Redux/Cart/CartSlice"
 import search from "../assets/search.png";
 import rupee from "../assets/rupee.png";
 import { debounce } from "lodash";
@@ -130,7 +129,6 @@ const Menu = () => {
 
   //   Add To Cart
   function handleCart(foodItem: Recipe) {
-    dispatch(addCart(foodItem));
     dispatch(addToCartServer({...foodItem , quantity:1}))
     toast.success("Cart Added");
   }

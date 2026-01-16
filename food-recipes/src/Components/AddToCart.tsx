@@ -1,7 +1,7 @@
 import { NavLink, useNavigate } from "react-router-dom";
 import { CookingPot } from "lucide-react";
 import { Plus } from "lucide-react";
-import { addCart, CartItem, deleteCart } from "../Redux/Cart/CartSlice"
+import { CartItem } from "../Redux/Cart/CartSlice"
 import { useAppDispatch, useAppSelector } from "./hooks";
 import { Box, Button, Typography } from "@mui/material";
 import { addToCartServer, deleteFromCartServer, fetchCartFromServer } from "../Redux/Cart/CartThunk";
@@ -13,12 +13,10 @@ const AddToCart = () => {
   const navigate = useNavigate()
 
   function handleDelete(food:CartItem) {
-    dispatch(deleteCart(food.id));
     dispatch(deleteFromCartServer(food))
   }
 
   function handleAdd(foodItem: CartItem) {
-    dispatch(addCart(foodItem));
     dispatch(addToCartServer(foodItem))
   }
 

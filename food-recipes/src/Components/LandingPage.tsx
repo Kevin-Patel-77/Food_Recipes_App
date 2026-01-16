@@ -22,7 +22,7 @@ const LandingPage = () => {
   const dispatch = useAppDispatch();
   const { isAuthenticated } = useAuthSelector((state) => state.foodAuth);
   const { items } = useAppSelector((state) => state.foodCart);
-  const {user , error} = useAppSelector((state) => state.foodAuth)
+  const { user, error } = useAppSelector((state) => state.foodAuth);
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -48,17 +48,15 @@ const LandingPage = () => {
     handleClose();
   }
 
-  useEffect(()=>{
-
-    if(error){
-      toast.error(error)
+  useEffect(() => {
+    if (error) {
+      toast.error(error);
     }
 
-    if(user?.success == true){
-      toast.success(user?.message)
+    if (user?.success == true) {
+      toast.success(user?.message);
     }
-
-  },[user , error])
+  }, [user, error]);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -77,7 +75,7 @@ const LandingPage = () => {
           sx={{
             display: "flex",
             flexDirection: { xs: "column", sm: "column", md: "row", lg: "row" },
-            gap: { xs: "16px", sm: "16px" , md:"0px" , lg:"0px" },
+            gap: { xs: "16px", sm: "16px", md: "0px", lg: "0px" },
             justifyContent: { lg: "space-around", md: "space-around", sm: "center", xs: "center" },
             alignItems: "center",
           }}
@@ -93,7 +91,7 @@ const LandingPage = () => {
           </Box>
 
           <Box sx={{ display: "flex", gap: { sm: "48px", md: "0px", lg: "48px" } }}>
-            {headerItem.map((item , index) => (
+            {headerItem.map((item, index) => (
               <Button key={index} component={NavLink} to={item.to} variant="text" sx={{ color: "var(--jetGray)" }}>
                 {item.name}
               </Button>
@@ -130,7 +128,7 @@ const LandingPage = () => {
               <Button
                 variant="contained"
                 onClick={() => navigate("/login")}
-                sx={{ width:"90px" , padding: "8px 24px", backgroundColor: "var(--softCrimson)" }}
+                sx={{ width: "90px", padding: "8px 24px", backgroundColor: "var(--softCrimson)" }}
               >
                 Log In
               </Button>
@@ -178,26 +176,26 @@ const LandingPage = () => {
         >
           <AnimatePresence mode="wait">
             <MotionBox
-              key={currentIndex}                                        
+              key={currentIndex}
               initial={{ opacity: 0, x: 80 }}
               animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -80 }}                                 
+              exit={{ opacity: 0, x: -80 }}
               transition={{ duration: 0.6, ease: "easeInOut" }}
-            >                           
+            >
               <Box
                 sx={{
                   display: "flex",
                   flexDirection: "column",
                   justifyContent: "center",
                 }}
-              >                            
+              >
                 <Typography sx={{ fontSize: { xs: "20px", sm: "24px", md: "32px", lg: "48px" } }}>
                   {currentSlider.title1}
                 </Typography>
                 <Typography sx={{ fontSize: { xs: "20px", sm: "24px", md: "32px", lg: "48px" } }}>
-                  {currentSlider.title2}                           
-                </Typography>                                             
-                                                       
+                  {currentSlider.title2}
+                </Typography>
+
                 <Box sx={{ textAlign: "left" }}>
                   <Button
                     variant="contained"
@@ -208,7 +206,7 @@ const LandingPage = () => {
                     }}
                     onClick={() => navigate("/menu")}
                   >
-                    View Menu 
+                    View Menu
                   </Button>
                 </Box>
               </Box>
@@ -241,13 +239,13 @@ const LandingPage = () => {
 
         <Box
           sx={{
-            marginTop: {xs:"70px" , sm:"80px" , md:"90px" , lg:"100px" },
+            marginTop: { xs: "70px", sm: "80px", md: "90px", lg: "100px" },
             display: "grid",
             gridTemplateColumns: "repeat(auto-fit , minmax(300px ,1fr))",
             gap: "24px",
           }}
         >
-          {BowlItems.map((item , index) => (
+          {BowlItems.map((item, index) => (
             <Box key={index} sx={{ position: "relative", marginTop: "120px" }}>
               <Box sx={{ position: "absolute", top: "0", left: "50%", transform: "translate(-50%, -50%)" }}>
                 <Box
@@ -329,7 +327,7 @@ const LandingPage = () => {
               <Box sx={{ marginTop: "48px" }}>
                 <Button
                   variant="contained"
-                  onClick={()=> navigate("/menu")}
+                  onClick={() => navigate("/menu")}
                   sx={{
                     padding: { xs: "8px 40px", sm: "8px 60px", md: "8px 80px", lg: "8px 80px" },
                     fontWeight: "bold",
@@ -360,12 +358,12 @@ const LandingPage = () => {
       <Box sx={{ marginTop: "80px", backgroundColor: "#DED2CB" }}>
         <Box
           sx={{
-            display: {xs:"grid" , sm:"grid" , md:"flex" ,lg:"flex"} ,
+            display: { xs: "grid", sm: "grid", md: "flex", lg: "flex" },
             justifyContent: "space-around",
-            padding: { xs:"16px 32px" , sm: "24px 48px", md: "32px 112px", lg: "32px 112px" },
+            padding: { xs: "16px 32px", sm: "24px 48px", md: "32px 112px", lg: "32px 112px" },
           }}
         >
-          <Box sx={{ display: "grid", gap: "20px"}}>
+          <Box sx={{ display: "grid", gap: "20px" }}>
             <Box
               sx={{
                 border: "1px solid black",
@@ -406,10 +404,17 @@ const LandingPage = () => {
             </Box>
           </Box>
 
-          <Box sx={{ display: "flex", justifyContent: "space-between",  marginTop:{xs:"48px" , sm:"48px" , md:"0px"} ,   width:{ xs:"100%" ,sm:"100%" , md:"40%" , lg:"40%"} }}>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              marginTop: { xs: "48px", sm: "48px", md: "0px" },
+              width: { xs: "100%", sm: "100%", md: "40%", lg: "40%" },
+            }}
+          >
             <Box>
               <Typography variant="h6">Quick links</Typography>
-              <Box sx={{ display: "grid", gap: "10px", marginTop: "15px"  , cursor:"pointer" }}>
+              <Box sx={{ display: "grid", gap: "10px", marginTop: "15px", cursor: "pointer" }}>
                 <Typography variant="body2">All Categories</Typography>
                 <Typography variant="body2">Site Map</Typography>
                 <Typography variant="body2">About Us</Typography>
@@ -420,7 +425,7 @@ const LandingPage = () => {
             <Box>
               <Typography variant="h6">Get In Touch</Typography>
 
-              <Box sx={{ display: "grid", gap: "10px", marginTop: "15px" , cursor:"pointer" }}>
+              <Box sx={{ display: "grid", gap: "10px", marginTop: "15px", cursor: "pointer" }}>
                 <Typography variant="body2">Privacy Policy</Typography>
                 <Typography variant="body2">Terms and Services</Typography>
               </Box>

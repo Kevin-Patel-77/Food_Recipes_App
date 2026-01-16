@@ -8,28 +8,27 @@ export type SignupPayload = {
 };
 
 export type LoginLogoutSignupResponse = {
-  success:boolean;
-  message:string
+  success: boolean;
+  message: string;
 };
 
 export type LoginPayload = {
-  email:string;
-  password:string;
-}
+  email: string;
+  password: string;
+};
 
 export type LoginWithCaptcha = LoginPayload & {
   hcaptchaToken: string;
 };
 
-
 export type AuthState = {
-  user: LoginLogoutSignupResponse  | null;
+  user: LoginLogoutSignupResponse | null;
   isAuthenticated: boolean;
   loading: boolean;
   error: string | null;
 };
 
- const token = localStorage.getItem("accessToken")
+const token = localStorage.getItem("accessToken");
 
 const initialState: AuthState = {
   user: null,
@@ -54,40 +53,40 @@ const authSlice = createSlice({
       })
       .addCase(signUpUser.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload as string || "Something went wrong";
-      })
-      
-    // Login 
-      .addCase(loginUser.pending,(state) => {
-        state.loading = true;
-        state.error = null
-      })
-      .addCase(loginUser.fulfilled , (state , action)=>{
-        state.loading = false;
-        state.user = action.payload
-        state.isAuthenticated = action.payload.success
-      })
-      .addCase(loginUser.rejected , (state , action)=>{
-        state.loading = false;
-        state.error = action.payload as string || "Something went wrong"
+        state.error = (action.payload as string) || "Something went wrong";
       })
 
-    // Logout
-      .addCase(logoutUser.pending , (state)=>{
-        state.loading = true
-        state.error = null
+      // Login
+      .addCase(loginUser.pending, (state) => {
+        state.loading = true;
+        state.error = null;
       })
-      .addCase(logoutUser.fulfilled , (state , action)=>{
-        state.loading = false
-        state.isAuthenticated = false
-        state.user = action.payload
-        localStorage.removeItem("accessToken")
-        localStorage.removeItem("refreshToken")
-      }) 
-      .addCase(logoutUser.rejected , (state , action)=>{
-        state.loading = false
-        state.error = action.payload as string || "Something went wrong"
+      .addCase(loginUser.fulfilled, (state, action) => {
+        state.loading = false;
+        state.user = action.payload;
+        state.isAuthenticated = action.payload.success;
       })
+      .addCase(loginUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = (action.payload as string) || "Something went wrong";
+      })
+
+      // Logout
+      .addCase(logoutUser.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(logoutUser.fulfilled, (state, action) => {
+        state.loading = false;
+        state.isAuthenticated = false;
+        state.user = action.payload;
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("refreshToken");
+      })
+      .addCase(logoutUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = (action.payload as string) || "Something went wrong";
+      });
   },
 });
 

@@ -13,7 +13,7 @@ const Signup = () => {
 
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const { user , error } = useAppSelector((state) => state.foodAuth);
+  const { user, error } = useAppSelector((state) => state.foodAuth);
 
   const {
     register,
@@ -29,18 +29,17 @@ const Signup = () => {
     if (error) {
       toast.error(error);
     }
-    
+
     if (user?.success) {
       toast.success(user.message);
       navigate("/login");
     }
-
-  }, [user , error , navigate]);
+  }, [user, error, navigate]);
 
   return (
     <Box
       sx={{
-        height: "80vh",
+        height: { xs: "100vh", sm: "100vh", md: "90vh", lg: "80vh" },
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
@@ -60,7 +59,12 @@ const Signup = () => {
           Create Account
         </Typography>
 
-        <Box component="form" noValidate onSubmit={handleSubmit(onSubmit)} sx={{ width: "50%", margin: "auto" }}>
+        <Box
+          component="form"
+          noValidate
+          onSubmit={handleSubmit(onSubmit)}
+          sx={{ width: { sm: "80%", md: "70%", lg: "60%" }, margin: "auto" }}
+        >
           <InputLabel htmlFor="username" sx={{ color: "var(--jetGray)" }}>
             UserName:
           </InputLabel>

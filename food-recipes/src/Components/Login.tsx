@@ -166,7 +166,7 @@ const Login = () => {
             >
               Log In
             </Button>
-            <Box sx={{mt:1}}>
+            <Box sx={{ mt: 1 }}>
               <Typography sx={{ fontSize: { xs: "12px", sm: "16px" } }}>
                 Don't have an account?{" "}
                 <Typography

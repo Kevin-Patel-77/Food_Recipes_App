@@ -161,7 +161,6 @@ const Login = () => {
               sx={{
                 p: "8px 48px",
                 width: "90%",
-                backgroundColor: "var(--softCrimson)",
               }}
             >
               Log In

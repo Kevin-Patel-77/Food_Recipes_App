@@ -13,6 +13,7 @@ import EastIcon from "@mui/icons-material/East";
 import { BowlItems, headerItem, socialMedias } from "../data/staticData";
 import { sliderData } from "../data/staticData";
 import { logoutUser } from "../Redux/Auth/AuthThunk";
+import { clearUser } from "../Redux/Auth/AuthSlice";
 
 const MotionBox = motion(Box);
 
@@ -50,13 +51,15 @@ const LandingPage = () => {
 
   useEffect(() => {
     if (error) {
+      console.log("Hello Error")
       toast.error(error);
     }
 
     if (user?.success == true) {
       toast.success(user?.message);
+      dispatch(clearUser());
     }
-  }, [user, error]);
+  }, [user, error, dispatch]);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -90,9 +93,9 @@ const LandingPage = () => {
             </Typography>
           </Box>
 
-          <Box sx={{ display: "flex", gap: { sm: "48px", md: "0px", lg: "48px" } }}>
+          <Box sx={{ display: "flex", gap: { xs: "0px", sm: "32px", md: "0px", lg: "48px" } }}>
             {headerItem.map((item, index) => (
-              <Button key={index} component={NavLink} to={item.to} variant="text" sx={{ color: "var(--jetGray)" }}>
+              <Button key={index} component={NavLink} to={item.to} variant="text" sx={{ backgroundColor:"#EFE7E2", color: "var(--jetGray)" }}>
                 {item.name}
               </Button>
             ))}
@@ -128,7 +131,7 @@ const LandingPage = () => {
               <Button
                 variant="contained"
                 onClick={() => navigate("/login")}
-                sx={{ width: "90px", padding: "8px 24px", backgroundColor: "var(--softCrimson)" }}
+                sx={{ width: "90px", padding: "8px 24px"}}
               >
                 Log In
               </Button>
@@ -200,7 +203,6 @@ const LandingPage = () => {
                   <Button
                     variant="contained"
                     sx={{
-                      backgroundColor: "var(--softCrimson)",
                       marginTop: "48px",
                       padding: { sm: "8px 32px", md: "8px 80px", lg: "8px 112px" },
                     }}
@@ -333,7 +335,7 @@ const LandingPage = () => {
                     fontWeight: "bold",
                     gap: "16px",
                     borderRadius: "100px",
-                    backgroundColor: "var(--softCrimson)",
+                    
                   }}
                 >
                   See Recipes <EastIcon />{" "}
@@ -428,6 +430,16 @@ const LandingPage = () => {
               <Box sx={{ display: "grid", gap: "10px", marginTop: "15px", cursor: "pointer" }}>
                 <Typography variant="body2">Privacy Policy</Typography>
                 <Typography variant="body2">Terms and Services</Typography>
+
+                {isAuthenticated && (
+                  <Button
+                    variant="contained"
+                    onClick={() => navigate("/chats")}
+                    sx={{ padding: { xs: "4px 8px", sm: "6px 14px" } }}
+                  >
+                    Chat with us
+                  </Button>
+                )}
               </Box>
             </Box>
           </Box>

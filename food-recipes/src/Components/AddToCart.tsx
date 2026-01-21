@@ -77,7 +77,7 @@ const AddToCart = () => {
                       variant="contained"
                       component={NavLink}
                       to={`/home/${food.id}`}
-                      sx={{ padding: "6px 16px" , backgroundColor:"var(--softCrimson)" }}
+                      sx={{ padding: "6px 16px" }}
                     >
                       View Details
                     </Button>
@@ -131,7 +131,7 @@ const AddToCart = () => {
             }}
           >
             <Typography variant="h4">Your Recipes Cart is empty</Typography>
-            <Button variant="contained" onClick={()=> navigate("/menu")}   sx={{backgroundColor:"var(--softCrimson)"}}>Explore Recipes</Button>
+            <Button variant="contained" onClick={()=> navigate("/menu")}>Explore Recipes</Button>
           </Box>
       )}
     </Box>

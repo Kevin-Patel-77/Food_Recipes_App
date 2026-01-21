@@ -57,7 +57,7 @@ const ChooseLanguage: React.FC<popUp> = ({ setPopup }) => {
         </Box>
 
         <Box sx={{ textAlign: "right", marginRight: "32px" }}>
-          <Button variant="contained" sx={{ backgroundColor: "var(--softCrimson)" }} onClick={() => setPopup(false)}>
+          <Button variant="contained" onClick={() => setPopup(false)}>
             Cancel
           </Button>
         </Box>

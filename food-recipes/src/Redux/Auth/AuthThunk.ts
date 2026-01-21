@@ -3,11 +3,18 @@ import axios from "axios";
 import { LoginLogoutSignupResponse, LoginWithCaptcha, SignupPayload } from "../Auth/AuthSlice";
 import api from "../../Utils/axiosInstance/axiosInstance";
 
+
 export const signUpUser = createAsyncThunk<LoginLogoutSignupResponse, SignupPayload, { rejectValue: string }>(
   "auth/signupUser",
   async (userData, { rejectWithValue }) => {
     try {
-      const response = await api.post(`/auth/signup`, userData);
+      const signupData = {
+        name: userData.name,
+        email: userData.email.toLowerCase().trim(),
+        password: userData.password,
+      };
+
+      const response = await api.post(`/auth/signup`, signupData);
 
       return response.data;
     } catch (err) {
@@ -16,14 +23,20 @@ export const signUpUser = createAsyncThunk<LoginLogoutSignupResponse, SignupPayl
       }
       return rejectWithValue("Something went wrong");
     }
-  }
+  },
 );
 
 export const loginUser = createAsyncThunk<LoginLogoutSignupResponse, LoginWithCaptcha, { rejectValue: string }>(
   "auth/loginUser",
   async (userauthentication, { rejectWithValue }) => {
     try {
-      const response = await api.post(`/auth/login`, userauthentication);
+      const loginData = {
+        email: userauthentication.email.toLowerCase().trim(),
+        password: userauthentication.password,
+        hcaptchaToken: userauthentication.hcaptchaToken,
+      };
+
+      const response = await api.post(`/auth/login`, loginData);
 
       localStorage.setItem("accessToken", response.data.access_token);
       localStorage.setItem("refreshToken", response.data.refresh_token);
@@ -34,7 +47,7 @@ export const loginUser = createAsyncThunk<LoginLogoutSignupResponse, LoginWithCa
       }
       return rejectWithValue("Something went wrong");
     }
-  }
+  },
 );
 
 export const logoutUser = createAsyncThunk<LoginLogoutSignupResponse, void, { rejectValue: string }>(
@@ -42,7 +55,6 @@ export const logoutUser = createAsyncThunk<LoginLogoutSignupResponse, void, { re
   async (_, { rejectWithValue }) => {
     try {
       const res = await api.post("/auth/logout");
-
       return res.data;
     } catch (error) {
       if (axios.isAxiosError(error)) {
@@ -50,5 +62,5 @@ export const logoutUser = createAsyncThunk<LoginLogoutSignupResponse, void, { re
       }
       return rejectWithValue("Something went wrong");
     }
-  }
+  },
 );

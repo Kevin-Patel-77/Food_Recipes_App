@@ -43,9 +43,11 @@ export const theme = createTheme({
     MuiButton: {
       styleOverrides: {
         root: {
+          backgroundColor:"var(--softCrimson)",
+          color:"var(--white)",
           "&:hover": {
             backgroundColor: "var(--darkCrimson)",
-            color: "white",
+            color:"var(--white)"
           },
           borderRadius: "10px",
           fontWeight: "bold",

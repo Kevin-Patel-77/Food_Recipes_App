@@ -6,7 +6,7 @@ import { useForm, type SubmitHandler } from "react-hook-form";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { signUpUser } from "../Redux/Auth/AuthThunk";
-import { SignupPayload } from "../Redux/Auth/AuthSlice";
+import { clearUser, SignupPayload } from "../Redux/Auth/AuthSlice";
 
 const Signup = () => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
@@ -32,9 +32,10 @@ const Signup = () => {
 
     if (user?.success) {
       toast.success(user.message);
+      dispatch(clearUser())
       navigate("/login");
     }
-  }, [user, error, navigate]);
+  }, [user, error, navigate , dispatch]);
 
   return (
     <Box
@@ -124,7 +125,7 @@ const Signup = () => {
 
           <Button
             variant="contained"
-            sx={{ p: "8px 48px", marginTop: "24px", marginBottom: "16px", backgroundColor: "var(--softCrimson)" }}
+            sx={{ p: "8px 48px", marginTop: "24px", marginBottom: "16px"}}
             type="submit"
           >
             Sign Up

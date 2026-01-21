@@ -29,7 +29,7 @@ import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
 import GridViewIcon from "@mui/icons-material/GridView";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { toast } from "react-toastify";
-import { addToCartServer } from "../Redux/Cart/CartThunk"
+import { addToCartServer } from "../Redux/Cart/CartThunk";
 
 const tabelCell = {
   borderBottom: "1px solid black",
@@ -129,7 +129,7 @@ const Menu = () => {
 
   //   Add To Cart
   function handleCart(foodItem: Recipe) {
-    dispatch(addToCartServer({...foodItem , quantity:1}))
+    dispatch(addToCartServer({ ...foodItem, quantity: 1 }));
     toast.success("Cart Added");
   }
 
@@ -237,10 +237,10 @@ const Menu = () => {
               onChange={handleSearchChange}
               sx={{
                 "& .MuiInputBase-root": {
-                  height: "2rem",
+                  height: "32px",
                   borderRadius: "5px",
                   backgroundColor: "white",
-                  paddingRight: "0.5rem",
+                  paddingRight: "8px",
                 },
               }}
               InputProps={{
@@ -339,7 +339,8 @@ const Menu = () => {
                 border: "1px solid red",
                 borderRadius: "100px",
                 padding: "5px 20px",
-                backgroundColor: "var(--softCrimson)",
+                
+
               }}
             >
               <ShoppingCartIcon />
@@ -362,7 +363,7 @@ const Menu = () => {
                   border: "1px solid red",
                   borderRadius: "100px",
                   padding: "5px 30px",
-                  backgroundColor: "var(--softCrimson)",
+                  
                 }}
               >
                 <FormatListBulletedIcon />
@@ -377,7 +378,7 @@ const Menu = () => {
                   border: "1px solid red",
                   borderRadius: "100px",
                   padding: "5px 30px",
-                  backgroundColor: "var(--softCrimson)",
+                  
                 }}
               >
                 <GridViewIcon />
@@ -478,7 +479,7 @@ const Menu = () => {
                               to={`/home/${food.id}`}
                               variant="contained"
                               size="small"
-                              sx={{ padding: "5px 10px", backgroundColor: "var(--softCrimson)" }}
+                              sx={{ padding: "5px 10px" }}
                             >
                               View Details
                             </Button>
@@ -489,7 +490,7 @@ const Menu = () => {
                               <Button
                                 onClick={() => navigate("/cart")}
                                 variant="contained"
-                                sx={{ backgroundColor: "var(--softCrimson)" }}
+                               
                               >
                                 GO TO BAG
                               </Button>
@@ -497,7 +498,7 @@ const Menu = () => {
                               <Button
                                 onClick={() => handleCart(food)}
                                 variant="contained"
-                                sx={{ backgroundColor: "var(--softCrimson)" }}
+                                
                               >
                                 ADD TO CART
                               </Button>
@@ -653,7 +654,7 @@ const Menu = () => {
                       <Box>
                         <Button
                           onClick={() => navigate(`/home/${food.id}`)}
-                          sx={{ padding: "10px 20px", backgroundColor: "var(--softCrimson)" }}
+                          sx={{ padding: "10px 20px" }}
                           variant="contained"
                         >
                           VIEW DETAILS
@@ -664,7 +665,7 @@ const Menu = () => {
                         {items.find((item) => item.id === food.id) ? (
                           <Button
                             onClick={() => navigate("/cart")}
-                            sx={{ padding: "10px 25px", backgroundColor: "var(--softCrimson)" }}
+                            sx={{ padding: "10px 25px"}}
                             variant="contained"
                           >
                             GO TO BAG
@@ -672,7 +673,7 @@ const Menu = () => {
                         ) : (
                           <Button
                             onClick={() => handleCart(food)}
-                            sx={{ padding: "10px 20px", backgroundColor: "var(--softCrimson)" }}
+                            sx={{ padding: "10px 20px"}}
                             variant="contained"
                           >
                             ADD TO CART

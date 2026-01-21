@@ -4,7 +4,7 @@ import AddToCart from "./Components/AddToCart";
 import Signup from "./Components/Signup";
 import RecipesDetails from "./Components/RecipesDetails";
 import ProtectedRoutes from "./Components/ProtectedRoutes";
-import Login from "../src/Components/Login"
+import Login from "../src/Components/Login";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import { theme } from "./Components/theme";
 import "react-toastify/dist/ReactToastify.css";
@@ -16,10 +16,9 @@ import Menu from "./Components/Menu";
 import LanguageSync from "./Components/LanguageSync";
 import { syncPendingOperation } from "./Redux/Cart/syncPendingOperations";
 import { useEffect } from "react";
+import Chats from "./Components/Chats"
 
 function App() {
-
-  
   useEffect(() => {
     window.addEventListener("online", syncPendingOperation);
     if (navigator.onLine) {
@@ -30,7 +29,6 @@ function App() {
     };
   }, []);
 
-
   return (
     <>
       <ThemeProvider theme={theme}>
@@ -38,6 +36,7 @@ function App() {
         <Routes>
           <Route path="/" element={<LandingPage />}></Route>
           <Route path="/home" element={<LandingPage />}></Route>
+
           <Route
             path="/menu"
             element={
@@ -46,6 +45,7 @@ function App() {
               </ProtectedRoutes>
             }
           ></Route>
+
           <Route path="/home/:id" element={<RecipesDetails />}></Route>
           <Route path="/cart" element={<AddToCart />}></Route>
 
@@ -67,6 +67,7 @@ function App() {
             }
           ></Route>
 
+          <Route path="/chats" element={<Chats/>}></Route>
           <Route path="*" element={<NotFound />}></Route>
         </Routes>
         <LanguageSync />

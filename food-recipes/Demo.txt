@@ -94,3 +94,55 @@ Captcha Setup
 
 
 -------------------------------------------------------------------------------------------------------------------------------
+
+Slash Command
+
+const celebrationEmojis = ["🎉", "🎊", "🥳", "🔥", "✨", "💥", "🎈"];
+  const [celebrating, setCelebrating] = useState(false);
+
+
+const handleCelebrate = () => {
+    setCelebrating(true);
+    setMessageText("");
+
+    setTimeout(() => {
+      setCelebrating(false);
+    }, 3000);
+  };
+
+   if (messageText.trim() === "/celebrate") {
+      handleCelebrate();
+      return;
+    }
+
+
+{celebrating && (
+                  <Box
+                    sx={{
+                      position: "absolute",
+                      inset: 0,
+                      pointerEvents: "none",
+                      overflow: "hidden",
+                      zIndex: 10,
+                    }}
+                  >
+                    {Array.from({ length: 30 }).map((_, i) => {
+                      const emoji = celebrationEmojis[Math.floor(Math.random() * celebrationEmojis.length)];
+
+                      return (
+                        <Typography
+                          key={i}
+                          sx={{
+                            position: "absolute",
+                            bottom: "-20px",
+                            left: `${Math.random() * 100}%`,
+                            fontSize: `${20 + Math.random() * 20}px`,
+                            animation: "floatUp 3s linear forwards",
+                          }}
+                        >
+                          {emoji}
+                        </Typography>
+                      );
+                    })}
+                  </Box>
+                )}

@@ -33,7 +33,7 @@ const Login = () => {
         email: data.email,
         password: data.password,
         hcaptchaToken: captchaToken,
-      })
+      }),
     );
   };
 

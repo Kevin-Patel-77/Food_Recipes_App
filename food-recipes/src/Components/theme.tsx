@@ -92,7 +92,7 @@ export const theme = createTheme({
       styleOverrides: {
         root: {
           "&.Mui-error": {
-            color: "black",
+            color: "var(--darkCrimson)",
             fontWeight: "bold",
           },
         },

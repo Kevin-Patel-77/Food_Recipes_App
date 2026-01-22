@@ -38,7 +38,7 @@ and state management.
 - Internationalization 
 - Captcha/reCaptcha
 - hCaptcha
-- Outbox Pattern
+- Chat Setup with Socket.io
 
 
 ## 🚀 Getting Started

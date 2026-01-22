@@ -9,11 +9,6 @@ import { LoginPayload } from "../Redux/Auth/AuthSlice";
 import { loginUser } from "../Redux/Auth/AuthThunk";
 import HCaptcha from "@hcaptcha/react-hcaptcha";
 
-const topBottomMargin = {
-  marginTop: "32px",
-  marginBottom: "16px",
-};
-
 const Login = () => {
   const disptach = useAppDispatch();
   const navigate = useNavigate();
@@ -32,30 +27,31 @@ const Login = () => {
       toast.error("Please verify captcha");
       return;
     }
+
     disptach(
       loginUser({
         email: data.email,
         password: data.password,
-        hcaptchaToken:captchaToken
+        hcaptchaToken: captchaToken,
       })
     );
   };
 
   useEffect(() => {
+    if (error) {
+      toast.error(error);
+    }
+
     if (user?.success == true) {
       toast.success(user.message);
       navigate("/home");
-    }
-
-    if (error) {
-      toast.error(user?.message);
     }
   }, [user, error, navigate]);
 
   return (
     <Box
       sx={{
-        height: "80vh",
+        height: { xs: "100vh", sm: "100vh", md: "90vh", lg: "80vh" },
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
@@ -75,7 +71,7 @@ const Login = () => {
             variant="body1"
             sx={{
               mb: "48px",
-              fontSize: "2.5rem",
+              fontSize: "40px",
               fontWeight: "bold",
               color: "var(--jetGray)",
             }}
@@ -84,7 +80,12 @@ const Login = () => {
           </Typography>
         </Box>
 
-        <Box component="form" noValidate onSubmit={handleSubmit(onSubmit)} sx={{ width: "50%", margin: "auto" }}>
+        <Box
+          component="form"
+          noValidate
+          onSubmit={handleSubmit(onSubmit)}
+          sx={{ width: { sm: "80%", md: "70%", lg: "60%" }, margin: "auto" }}
+        >
           <InputLabel htmlFor="email" sx={{ color: "var(--jetGray)", marginTop: "16px" }}>
             Email
           </InputLabel>
@@ -127,15 +128,33 @@ const Login = () => {
             }}
           />
 
-          <Box sx={topBottomMargin}>
-            <HCaptcha
-              sitekey="20000000-ffff-ffff-ffff-000000000002"
-              onVerify={(token) => setCaptchaToken(token)}
-              onExpire={() => setCaptchaToken(null)}
-            />
+          <Box
+            sx={{
+              mt: 4,
+              mb: 2,
+              display: "flex",
+              justifyContent: "center",
+              overflow: "hidden",
+            }}
+          >
+            <Box
+              sx={{
+                transform: {
+                  xs: "scale(0.85)",
+                  sm: "scale(1)",
+                },
+                transformOrigin: "center",
+              }}
+            >
+              <HCaptcha
+                sitekey="20000000-ffff-ffff-ffff-000000000002"
+                onVerify={(token) => setCaptchaToken(token)}
+                onExpire={() => setCaptchaToken(null)}
+              />
+            </Box>
           </Box>
 
-          <Box sx={topBottomMargin}>
+          <Box sx={{ marginTop: "32px", marginBottom: "16px" }}>
             <Button
               variant="contained"
               type="submit"
@@ -147,12 +166,18 @@ const Login = () => {
             >
               Log In
             </Button>
-            <Typography>
-              Don't have an account?{" "}
-              <Typography sx={{ color: "var(--darkCrimson)" }} component={NavLink} to="/signup">
-                Register here
+            <Box sx={{mt:1}}>
+              <Typography sx={{ fontSize: { xs: "12px", sm: "16px" } }}>
+                Don't have an account?{" "}
+                <Typography
+                  sx={{ color: "var(--darkCrimson)", fontSize: { xs: "12px", sm: "16px" } }}
+                  component={NavLink}
+                  to="/signup"
+                >
+                  Register here
+                </Typography>
               </Typography>
-            </Typography>
+            </Box>
           </Box>
         </Box>
       </Box>

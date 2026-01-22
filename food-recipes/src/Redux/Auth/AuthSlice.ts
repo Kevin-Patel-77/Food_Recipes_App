@@ -1,6 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { loginUser, signUpUser } from "./AuthThunk";
-
+import { loginUser, logoutUser, signUpUser } from "./AuthThunk";
 
 export type SignupPayload = {
   name: string;
@@ -8,31 +7,32 @@ export type SignupPayload = {
   password: string;
 };
 
-export type LoginSignupResponse = {
-  success:boolean;
-  message:string
+export type LoginLogoutSignupResponse = {
+  success: boolean;
+  message: string;
 };
 
 export type LoginPayload = {
-  email:string;
-  password:string;
-}
+  email: string;
+  password: string;
+};
 
 export type LoginWithCaptcha = LoginPayload & {
   hcaptchaToken: string;
 };
 
-
 export type AuthState = {
-  user: LoginSignupResponse  | null;
+  user: LoginLogoutSignupResponse | null;
   isAuthenticated: boolean;
   loading: boolean;
   error: string | null;
 };
 
+const token = localStorage.getItem("accessToken");
+
 const initialState: AuthState = {
   user: null,
-  isAuthenticated: false,
+  isAuthenticated: Boolean(token),
   loading: false,
   error: null,
 };
@@ -40,12 +40,7 @@ const initialState: AuthState = {
 const authSlice = createSlice({
   name: "auth",
   initialState,
-  reducers: {
-    logout(state) {
-      state.user = null;
-      state.isAuthenticated = false;
-    },
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder
       .addCase(signUpUser.pending, (state) => {
@@ -58,25 +53,41 @@ const authSlice = createSlice({
       })
       .addCase(signUpUser.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload as string || "Something went wrong";
+        state.error = (action.payload as string) || "Something went wrong";
       })
-      
-    // Login 
-      .addCase(loginUser.pending,(state) => {
+
+      // Login
+      .addCase(loginUser.pending, (state) => {
         state.loading = true;
-        state.error = null
+        state.error = null;
       })
-      .addCase(loginUser.fulfilled , (state , action)=>{
+      .addCase(loginUser.fulfilled, (state, action) => {
         state.loading = false;
-        state.user = action.payload
-        state.isAuthenticated = true
+        state.user = action.payload;
+        state.isAuthenticated = action.payload.success;
       })
-      .addCase(loginUser.rejected , (state , action)=>{
+      .addCase(loginUser.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload as string || "Something went wrong"
+        state.error = (action.payload as string) || "Something went wrong";
       })
+
+      // Logout
+      .addCase(logoutUser.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(logoutUser.fulfilled, (state, action) => {
+        state.loading = false;
+        state.isAuthenticated = false;
+        state.user = action.payload;
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("refreshToken");
+      })
+      .addCase(logoutUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = (action.payload as string) || "Something went wrong";
+      });
   },
 });
 
-export const { logout } = authSlice.actions;
 export default authSlice.reducer;

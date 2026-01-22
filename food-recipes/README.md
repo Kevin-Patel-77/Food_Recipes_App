@@ -37,8 +37,8 @@ and state management.
 - IFrame Integration
 - Internationalization 
 - Captcha/reCaptcha
-
-
+- hCaptcha
+- Outbox Pattern
 
 
 ## 🚀 Getting Started

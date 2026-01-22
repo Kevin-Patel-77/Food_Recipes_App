@@ -1,16 +1,14 @@
 import { Navigate } from "react-router-dom";
-
+import { useAppSelector } from "./hooks";
 
 type GuestProps = {
   children: React.ReactNode;
 };
 
+const GuestRoutes: React.FC<GuestProps> = ({ children }) => {
+  const { isAuthenticated } = useAppSelector((state) => state.foodAuth);
 
-const GuestRoutes: React.FC<GuestProps> = ({children}) => {
-    const storedValues = localStorage.getItem("isLogin");
-    const isLogin:boolean = storedValues ? JSON.parse(storedValues) : false;
+  return isAuthenticated ? <Navigate to="/home" /> : children;
+};
 
-    return isLogin ? <Navigate to="/home" /> : children
-}
-
-export default GuestRoutes
+export default GuestRoutes;

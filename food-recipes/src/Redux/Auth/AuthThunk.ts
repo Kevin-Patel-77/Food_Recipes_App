@@ -37,6 +37,7 @@ export const loginUser = createAsyncThunk<LoginLogoutSignupResponse, LoginWithCa
       };
 
       const response = await api.post(`/auth/login`, loginData);
+      console.log(response)
 
       localStorage.setItem("accessToken", response.data.access_token);
       localStorage.setItem("refreshToken", response.data.refresh_token);

@@ -1,9 +1,13 @@
-import { Box, Button, GlobalStyles, TextField, Typography } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import { Box, Button, Chip, InputAdornment, TextField, Typography } from "@mui/material";
+import React, { useEffect, useRef, useState } from "react";
 import api from "../Utils/axiosInstance/axiosInstance";
 import { connectSocket, disconnectSocket } from "../Utils/Socket/socket";
 import { Socket } from "socket.io-client";
 import { jwtDecode } from "jwt-decode";
+import KeyboardBackspaceIcon from "@mui/icons-material/KeyboardBackspace";
+import { useMediaQuery, useTheme } from "@mui/material";
+import AttachFileIcon from "@mui/icons-material/AttachFile";
+import axios from "axios";
 
 interface User {
   id: string;
@@ -15,22 +19,27 @@ interface Message {
   sender: { id: string };
   content: string;
   createdAt: string;
+  attachments?: { id: string; url?: string }[];
+  type: "text" | "image";
 }
-
 
 const Chats = () => {
   const [userList, setUserList] = useState<User[]>([]);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [messageText, setMessageText] = useState("");
-
   const [conversationId, setConversationId] = useState<string | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
+  const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(true);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const socketRef = useRef<Socket | null>(null);
 
-
-  const socketRef = React.useRef<Socket | null>(null);
+  const theme = useTheme();
+  const isXs = useMediaQuery(theme.breakpoints.down("sm"));
 
   const token = localStorage.getItem("accessToken");
   const loggedInUserId = token ? jwtDecode<{ sub: string }>(token).sub : null;
+
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const joinConversation = (anotherUserId: string) => {
     if (!socketRef.current) return;
@@ -40,15 +49,64 @@ const Chats = () => {
     });
   };
 
-  const sendMessage = () => {
+  const sendMessage = async () => {
     if (!socketRef.current) return;
     if (!conversationId || !selectedUser) return;
+
+    if (selectedFile) {
+      const formData = new FormData();
+      formData.append("file", selectedFile);
+
+      const getFileId = await api.post(
+        "/files/upload/signed-url",
+        {
+          filename: selectedFile.name,
+          type: selectedFile.type,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+
+      console.log(getFileId)
+
+      await axios.put(getFileId.data.data.signedUrl, 
+        selectedFile , 
+        {
+        headers: {
+          "Content-Type": selectedFile.type,
+        }});
+
+      await api.post(
+        `/files/${getFileId.data.data.fileId}/confirm`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+
+      socketRef.current.emit("send_message", {
+        conversationId,
+        content: messageText,
+        type: "image",
+        attachments: [{ id: getFileId.data.data.fileId }],
+      });
+
+      setSelectedFile(null);
+      setMessageText("");
+
+      return;
+    }
+
     if (!messageText.trim()) return;
 
     socketRef.current.emit("send_message", {
       conversationId,
       content: messageText,
-      receiverId: selectedUser.id,
       type: "text",
     });
 
@@ -87,7 +145,12 @@ const Chats = () => {
       setMessages(data.messages);
     });
 
-    socket.on("receive_message", (data) => {
+    socket.on("receive_message", async (data) => {
+      if (data.type === "image") {
+        setMessages((prev) => [...prev, { ...data, url: data.attachments[0]?.url }]);
+        return
+      }
+
       setMessages((prev) => [...prev, data]);
     });
 
@@ -98,27 +161,20 @@ const Chats = () => {
 
   return (
     <>
-      <GlobalStyles
-        styles={{
-          "@keyframes floatUp": {
-            from: { transform: "translateY(0)", opacity: 1 },
-            to: { transform: "translateY(-120vh)", opacity: 0 },
-          },
-        }}
-      />
-
       <Box>
         <Box sx={{ display: "flex" }}>
           <Box
             sx={{
-              width: "20%",
+              width: { xs: isSidebarOpen ? "100%" : "0%", sm: "35%", md: "25%", lg: "25%" },
               height: "100vh",
               border: "1px solid var(--jetGray)",
               display: "flex",
               flexDirection: "column",
+              transition: "width 0.3s ease",
+              overflow: "hidden",
             }}
           >
-            <Typography variant="h4" sx={{ padding: "16px 24px", flexShrink: 0 }}>
+            <Typography variant="h4" sx={{ padding: "16px 24px" }}>
               Chats
             </Typography>
 
@@ -138,7 +194,6 @@ const Chats = () => {
                 "&::-webkit-scrollbar-thumb": {
                   backgroundColor: "#999",
                   borderRadius: "10px",
-                  minHeight: "16px",
                 },
 
                 "&::-webkit-scrollbar-thumb:hover": {
@@ -152,6 +207,9 @@ const Chats = () => {
                   onClick={() => {
                     setSelectedUser(user);
                     joinConversation(user.id);
+                    if (isXs) {
+                      setIsSidebarOpen(false);
+                    }
                   }}
                   sx={{
                     cursor: "pointer",
@@ -169,10 +227,12 @@ const Chats = () => {
 
           <Box
             sx={{
-              width: "80%",
+              width: { xs: isSidebarOpen ? "0%" : "100%", sm: "65%", md: "75%", lg: "75%" },
               height: "100vh",
               display: "flex",
               flexDirection: "column",
+              transition: "width 0.3s ease",
+              overflow: "hidden",
             }}
           >
             {selectedUser ? (
@@ -190,7 +250,12 @@ const Chats = () => {
                     flexShrink: 0,
                   }}
                 >
-                  <Typography variant="h4">{selectedUser.name}</Typography>
+                  <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                    {isXs && (
+                      <KeyboardBackspaceIcon onClick={() => setIsSidebarOpen(true)} sx={{ cursor: "pointer" }} />
+                    )}
+                    <Typography variant="h4">{selectedUser.name}</Typography>
+                  </Box>
                 </Box>
 
                 <Box
@@ -219,7 +284,7 @@ const Chats = () => {
                         sx={{
                           alignSelf: isMine ? "flex-end" : "flex-start",
                           maxWidth: "60%",
-                          backgroundColor: isMine ? "var(--softCrimson)" : "var(--jetGray)",
+                          backgroundColor: isMine ? (msg.type === "image" ? "none" :  "var(--softCrimson)") : (msg.type === "image" ? "none" :  "var(--jetGray)"),
                           color: "white",
                           padding: "8px 16px",
                           borderRadius: "12px",
@@ -228,23 +293,53 @@ const Chats = () => {
                         }}
                       >
                         <Typography variant="body1">{msg.content}</Typography>
+
+                        {msg.type === "image" && msg.attachments && msg.attachments[0].url && (
+                          <Box sx={{ mt: 1 }}>
+                            <img
+                              src={msg.attachments[0].url}
+                              alt="attachment"
+                              style={{ maxWidth: "100%", borderRadius: "8px" }}
+                            />
+                          </Box>
+                        )}
                       </Box>
                     );
                   })}
                 </Box>
 
+                {selectedFile && (
+                  <Chip label={selectedFile.name} onDelete={() => setSelectedFile(null)} sx={{ mb: 1 }} />
+                )}
+
                 <Box
                   sx={{
-                    padding: "16px 32px",
+                    padding: "8px 16px",
                     display: "flex",
                     gap: 2,
                     alignItems: "center",
                     flexShrink: 0,
+                    margin: "10px",
+                    marginBottom: "20px",
+                    backgroundColor: "var(--white)",
+                    borderRadius: "100px",
                   }}
                 >
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    hidden
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (file) {
+                        setSelectedFile(file);
+                      }
+                    }}
+                  />
+
                   <TextField
                     fullWidth
-                    type="search"
+                    type="text"
                     placeholder="Type a message"
                     value={messageText}
                     onChange={(e) => setMessageText(e.target.value)}
@@ -253,6 +348,15 @@ const Chats = () => {
                         e.preventDefault();
                         sendMessage();
                       }
+                    }}
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <Box onClick={() => fileInputRef.current?.click()}>
+                            <AttachFileIcon sx={{ cursor: "pointer" }} />
+                          </Box>
+                        </InputAdornment>
+                      ),
                     }}
                   />
                   <Button onClick={sendMessage}>Send</Button>

@@ -1,34 +1,25 @@
 import { Box, Button, Chip, InputAdornment, TextField, Typography } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
-import api from "../Utils/axiosInstance/axiosInstance";
 import { connectSocket, disconnectSocket } from "../Utils/Socket/socket";
 import { Socket } from "socket.io-client";
 import { jwtDecode } from "jwt-decode";
 import KeyboardBackspaceIcon from "@mui/icons-material/KeyboardBackspace";
 import { useMediaQuery, useTheme } from "@mui/material";
 import AttachFileIcon from "@mui/icons-material/AttachFile";
-import axios from "axios";
-
-interface User {
-  id: string;
-  name: string;
-}
-
-interface Message {
-  id: string;
-  sender: { id: string };
-  content: string;
-  createdAt: string;
-  attachments?: { id: string; url?: string }[];
-  type: "text" | "image";
-}
+import { useAppDispatch, useAppSelector } from "./hooks";
+import { confirmFileUpload, fetchUserList, getFileId, uploadFileToSignedUrl } from "../Redux/Chats/ChatThunk";
+import { addConversation, addManyConversations, clearConversations, Messages, User } from "../Redux/Chats/ChatSlice";
+import api from "../Utils/axiosInstance/axiosInstance";
 
 const Chats = () => {
-  const [userList, setUserList] = useState<User[]>([]);
+  const dispatch = useAppDispatch();
+
+  const { userList, conversations } = useAppSelector((state) => state.foodChats);
+
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [messageText, setMessageText] = useState("");
   const [conversationId, setConversationId] = useState<string | null>(null);
-  const [messages, setMessages] = useState<Message[]>([]);
+
   const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(true);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const socketRef = useRef<Socket | null>(null);
@@ -40,6 +31,7 @@ const Chats = () => {
   const loggedInUserId = token ? jwtDecode<{ sub: string }>(token).sub : null;
 
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+  // const chatsPerPage = 15
 
   const joinConversation = (anotherUserId: string) => {
     if (!socketRef.current) return;
@@ -53,52 +45,53 @@ const Chats = () => {
     if (!socketRef.current) return;
     if (!conversationId || !selectedUser) return;
 
-    if (selectedFile) {
+    if (selectedFile?.type.split("/")[0] === "video") {
       const formData = new FormData();
       formData.append("file", selectedFile);
 
-      const getFileId = await api.post(
-        "/files/upload/signed-url",
-        {
-          filename: selectedFile.name,
-          type: selectedFile.type,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        },
-      );
+      const SSE_URL = "http://localhost:3000/video/events";
+      const eventSource = new EventSource(SSE_URL);
 
-      console.log(getFileId)
-
-      await axios.put(getFileId.data.data.signedUrl, 
-        selectedFile , 
-        {
+      await api.post("/video/upload", formData, {
         headers: {
-          "Content-Type": selectedFile.type,
-        }});
-
-      await api.post(
-        `/files/${getFileId.data.data.fileId}/confirm`,
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          Authorization: `Bearer ${token}`,
         },
-      );
+      });
+
+      eventSource.onmessage = (event) => {
+        console.log("[SSE] Raw event:", event.data);
+
+        if (event.data.url !== "") {
+          eventSource.close();
+        }
+      };
+
+      eventSource.onerror = () => {
+        eventSource.close();
+      };
+      
+      setSelectedFile(null)
+      return;
+    }
+
+    if (selectedFile) {
+      const getFile = await getFileId({ file: selectedFile, token });
+
+      // Upload file to supabase
+      await uploadFileToSignedUrl(getFile.signedUrl, selectedFile);
+
+      // Confirm upload
+      await confirmFileUpload({ fileId: getFile.fileId, token });
 
       socketRef.current.emit("send_message", {
         conversationId,
         content: messageText,
-        type: "image",
-        attachments: [{ id: getFileId.data.data.fileId }],
+        type: "media",
+        attachments: [{ id: getFile.fileId, mediaType: selectedFile?.type.split("/")[0], mimeType: selectedFile.type }],
       });
 
       setSelectedFile(null);
       setMessageText("");
-
       return;
     }
 
@@ -111,20 +104,12 @@ const Chats = () => {
     });
 
     setMessageText("");
+    return;
   };
 
   useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        const res = await api.get("/user");
-        setUserList(res.data.data);
-      } catch (err) {
-        console.error("Failed to fetch users", err);
-      }
-    };
-
-    fetchUsers();
-  }, []);
+    dispatch(fetchUserList());
+  }, [dispatch]);
 
   useEffect(() => {
     if (!token) return;
@@ -140,24 +125,20 @@ const Chats = () => {
       console.log("Socket disconnected");
     });
 
-    socket.on("joined", (data: { conversationId: string; messages: Message[] }) => {
+    socket.on("joined", (data: { conversationId: string; messages: Messages[] }) => {
+      dispatch(clearConversations());
       setConversationId(data.conversationId);
-      setMessages(data.messages);
+      dispatch(addManyConversations(data.messages));
     });
 
-    socket.on("receive_message", async (data) => {
-      if (data.type === "image") {
-        setMessages((prev) => [...prev, { ...data, url: data.attachments[0]?.url }]);
-        return
-      }
-
-      setMessages((prev) => [...prev, data]);
+    socket.on("receive_message", (data) => {
+      dispatch(addConversation(data));
     });
 
     return () => {
       disconnectSocket();
     };
-  }, [token]);
+  }, [token, dispatch]);
 
   return (
     <>
@@ -275,8 +256,9 @@ const Chats = () => {
                     },
                   }}
                 >
-                  {messages.map((msg) => {
+                  {conversations.map((msg) => {
                     const isMine = msg.sender.id == loggedInUserId;
+                    const isMedia = msg.type === "media";
 
                     return (
                       <Box
@@ -284,25 +266,79 @@ const Chats = () => {
                         sx={{
                           alignSelf: isMine ? "flex-end" : "flex-start",
                           maxWidth: "60%",
-                          backgroundColor: isMine ? (msg.type === "image" ? "none" :  "var(--softCrimson)") : (msg.type === "image" ? "none" :  "var(--jetGray)"),
-                          color: "white",
+                          backgroundColor: isMine
+                            ? isMedia
+                              ? "none"
+                              : "var(--softCrimson)"
+                            : isMedia
+                              ? "none"
+                              : "var(--jetGray)",
+                          color: isMedia ? (isMine ? "var(--softCrimson)" : "var(--jetGray)") : "var(--white)",
                           padding: "8px 16px",
                           borderRadius: "12px",
                           borderTopRightRadius: isMine ? 0 : "12px",
                           borderTopLeftRadius: isMine ? "12px" : 0,
                         }}
                       >
-                        <Typography variant="body1">{msg.content}</Typography>
+                        {!isMedia && <Typography variant="body1">{msg.content}</Typography>}
 
-                        {msg.type === "image" && msg.attachments && msg.attachments[0].url && (
-                          <Box sx={{ mt: 1 }}>
-                            <img
-                              src={msg.attachments[0].url}
-                              alt="attachment"
-                              style={{ maxWidth: "100%", borderRadius: "8px" }}
-                            />
-                          </Box>
-                        )}
+                        {isMedia &&
+                          msg.attachments &&
+                          msg.attachments.map((att) => {
+                            switch (att.mediaType) {
+                              case "image":
+                                return (
+                                  <Box key={att.id} sx={{ mt: 1 }}>
+                                    <img
+                                      src={att.url}
+                                      alt="attachment/image"
+                                      style={{ maxWidth: "100%", borderRadius: "12px" }}
+                                    ></img>
+                                  </Box>
+                                );
+
+                              case "video":
+                                return (
+                                  <Box key={att.id} sx={{ mt: 1 }}>
+                                    <video
+                                      src={att.url}
+                                      controls
+                                      style={{ maxWidth: "100%", borderRadius: "12px" }}
+                                    ></video>
+                                  </Box>
+                                );
+
+                              case "audio":
+                                return (
+                                  <Box key={att.id} sx={{ mt: 1 }}>
+                                    <audio src={att.url} controls />
+                                  </Box>
+                                );
+
+                              case "application":
+                                return (
+                                  <Box
+                                    key={att.id}
+                                    sx={{
+                                      p: 1,
+                                      backgroundColor: isMine ? "var(--softCrimson)" : "var(--jetGray)",
+                                      color: "var(--white)",
+                                      borderRadius: "8px",
+                                      cursor: "pointer",
+                                    }}
+                                    onClick={() => window.open(att.url, "_blank")}
+                                  >
+                                    <Typography variant="body2" sx={{ wordBreak: "break-all" }}>
+                                      {"Attachment"}
+                                      <Typography sx={{ mt: 1, fontSize: "10px" }}>click to open</Typography>
+                                    </Typography>
+                                  </Box>
+                                );
+
+                              default:
+                                return null;
+                            }
+                          })}
                       </Box>
                     );
                   })}
@@ -329,6 +365,7 @@ const Chats = () => {
                     ref={fileInputRef}
                     type="file"
                     hidden
+                    multiple
                     onChange={(e) => {
                       const file = e.target.files?.[0];
                       if (file) {

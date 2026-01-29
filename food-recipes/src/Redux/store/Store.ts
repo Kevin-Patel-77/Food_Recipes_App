@@ -1,8 +1,9 @@
 import { configureStore } from "@reduxjs/toolkit";
-import recipesSlice from "../RecipesSlice";
+import recipesSlice from "../Menu/RecipesSlice"
 import cartSlice from "../Cart/CartSlice"
 import authSlice from "../Auth/AuthSlice"
 import languageSlice from "../LanguageSlice"
+import chatSlice from "../Chats/ChatSlice"
 
 
 
@@ -11,6 +12,7 @@ const recipesStore = configureStore({
     foodrecipes: recipesSlice,
     foodCart: cartSlice,
     foodAuth: authSlice ,
+    foodChats: chatSlice ,
     foodLanguage : languageSlice
   },
 });

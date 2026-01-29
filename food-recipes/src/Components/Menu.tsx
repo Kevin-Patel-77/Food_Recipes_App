@@ -19,8 +19,8 @@ import {
 } from "@mui/material";
 import { useAppDispatch, useAppSelector } from "./hooks";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { fetchRecipes, increasePage, type Recipe } from "../Redux/RecipesSlice";
-import RecipeSkeleton from "./RecipeSkeleton";
+import { fetchRecipes, increasePage, type Recipe } from "../Redux/Menu/RecipesSlice"
+import RecipeSkeleton from "./Skeleton/RecipeSkeleton"
 import { NavLink, useNavigate, useSearchParams } from "react-router-dom";
 import search from "../assets/search.png";
 import rupee from "../assets/rupee.png";

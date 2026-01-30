@@ -1,5 +1,12 @@
-import { Box, Button, Chip, InputAdornment, TextField, Typography } from "@mui/material";
-import React, { useEffect, useRef, useState } from "react";
+import {
+  Box,
+  Button,
+  Chip,
+  InputAdornment,
+  TextField,
+  Typography,
+} from "@mui/material";
+import { useEffect, useRef, useState } from "react";
 import { connectSocket, disconnectSocket } from "../Utils/Socket/socket";
 import { Socket } from "socket.io-client";
 import { jwtDecode } from "jwt-decode";
@@ -7,14 +14,28 @@ import KeyboardBackspaceIcon from "@mui/icons-material/KeyboardBackspace";
 import { useMediaQuery, useTheme } from "@mui/material";
 import AttachFileIcon from "@mui/icons-material/AttachFile";
 import { useAppDispatch, useAppSelector } from "./hooks";
-import { confirmFileUpload, fetchUserList, getFileId, uploadFileToSignedUrl } from "../Redux/Chats/ChatThunk";
-import { addConversation, addManyConversations, clearConversations, Messages, User } from "../Redux/Chats/ChatSlice";
+import {
+  chatsHistory,
+  confirmFileUpload,
+  fetchUserList,
+  getFileId,
+  uploadFileToSignedUrl,
+} from "../Redux/Chats/ChatThunk";
+import {
+  addConversation,
+  clearConversations,
+  Messages,
+  User,
+} from "../Redux/Chats/ChatSlice";
 import api from "../Utils/axiosInstance/axiosInstance";
+import { ChatSkeleton } from "./Skeleton/ChatsSkeleton";
 
 const Chats = () => {
   const dispatch = useAppDispatch();
 
-  const { userList, conversations } = useAppSelector((state) => state.foodChats);
+  const { userList, conversations, page, loading, hasMore } = useAppSelector(
+    (state) => state.foodChats,
+  );
 
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [messageText, setMessageText] = useState("");
@@ -31,7 +52,10 @@ const Chats = () => {
   const loggedInUserId = token ? jwtDecode<{ sub: string }>(token).sub : null;
 
   const fileInputRef = useRef<HTMLInputElement | null>(null);
-  // const chatsPerPage = 15
+
+  const chatContainerRef = useRef<HTMLDivElement | null>(null);
+  const isFetchingRef = useRef(false);
+  const chatsPerPage = 20;
 
   const joinConversation = (anotherUserId: string) => {
     if (!socketRef.current) return;
@@ -59,18 +83,29 @@ const Chats = () => {
       });
 
       eventSource.onmessage = (event) => {
-        console.log("[SSE] Raw event:", event.data);
+        const data = JSON.parse(event.data);
 
-        if (event.data.url !== "") {
+        if (data.status == "ACTIVE") {
           eventSource.close();
+
+          socketRef.current?.emit("send_message", {
+            conversationId,
+            content: messageText,
+            type: "media",
+            attachments: {
+              id: data.videoId,
+              mediaType: selectedFile?.type.split("/")[0],
+              mimeType: selectedFile.type,
+            },
+          });
         }
       };
 
       eventSource.onerror = () => {
         eventSource.close();
       };
-      
-      setSelectedFile(null)
+
+      setSelectedFile(null);
       return;
     }
 
@@ -87,7 +122,13 @@ const Chats = () => {
         conversationId,
         content: messageText,
         type: "media",
-        attachments: [{ id: getFile.fileId, mediaType: selectedFile?.type.split("/")[0], mimeType: selectedFile.type }],
+        attachments: [
+          {
+            id: getFile.fileId,
+            mediaType: selectedFile?.type.split("/")[0],
+            mimeType: selectedFile.type,
+          },
+        ],
       });
 
       setSelectedFile(null);
@@ -125,13 +166,23 @@ const Chats = () => {
       console.log("Socket disconnected");
     });
 
-    socket.on("joined", (data: { conversationId: string; messages: Messages[] }) => {
-      dispatch(clearConversations());
-      setConversationId(data.conversationId);
-      dispatch(addManyConversations(data.messages));
-    });
+    socket.on(
+      "joined",
+      (data: { conversationId: string; messages: Messages[] }) => {
+        dispatch(clearConversations());
+        setConversationId(data.conversationId);
+        dispatch(
+          chatsHistory({
+            limit: chatsPerPage,
+            page: 1,
+            conversationId: data.conversationId,
+          }),
+        );
+      },
+    );
 
     socket.on("receive_message", (data) => {
+      console.log(data);
       dispatch(addConversation(data));
     });
 
@@ -140,13 +191,43 @@ const Chats = () => {
     };
   }, [token, dispatch]);
 
+  // Chats Scrolling
+  useEffect(() => {
+    const el = chatContainerRef.current;
+    if (!el) return;
+
+    const onScroll = () => {
+      if (el.scrollTop === 0 && !isFetchingRef.current && hasMore && !loading) {
+        isFetchingRef.current = true;
+
+        dispatch(
+          chatsHistory({
+            conversationId,
+            limit: chatsPerPage,
+            page,
+          }),
+        ).finally(() => {
+          isFetchingRef.current = false;
+        });
+      }
+    };
+
+    el.addEventListener("scroll", onScroll);
+    return () => el.removeEventListener("scroll", onScroll);
+  }, [conversationId, page, hasMore, loading, dispatch]);
+
   return (
     <>
       <Box>
         <Box sx={{ display: "flex" }}>
           <Box
             sx={{
-              width: { xs: isSidebarOpen ? "100%" : "0%", sm: "35%", md: "25%", lg: "25%" },
+              width: {
+                xs: isSidebarOpen ? "100%" : "0%",
+                sm: "35%",
+                md: "25%",
+                lg: "25%",
+              },
               height: "100vh",
               border: "1px solid var(--jetGray)",
               display: "flex",
@@ -194,8 +275,14 @@ const Chats = () => {
                   }}
                   sx={{
                     cursor: "pointer",
-                    backgroundColor: selectedUser?.id === user.id ? "var(--softCrimson)" : "transparent",
-                    color: selectedUser?.id === user.id ? "var(--white)" : "var(--jetGray)",
+                    backgroundColor:
+                      selectedUser?.id === user.id
+                        ? "var(--softCrimson)"
+                        : "transparent",
+                    color:
+                      selectedUser?.id === user.id
+                        ? "var(--white)"
+                        : "var(--jetGray)",
                   }}
                 >
                   <Typography variant="h6" sx={{ padding: "16px 24px" }}>
@@ -208,7 +295,12 @@ const Chats = () => {
 
           <Box
             sx={{
-              width: { xs: isSidebarOpen ? "0%" : "100%", sm: "65%", md: "75%", lg: "75%" },
+              width: {
+                xs: isSidebarOpen ? "0%" : "100%",
+                sm: "65%",
+                md: "75%",
+                lg: "75%",
+              },
               height: "100vh",
               display: "flex",
               flexDirection: "column",
@@ -233,13 +325,17 @@ const Chats = () => {
                 >
                   <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                     {isXs && (
-                      <KeyboardBackspaceIcon onClick={() => setIsSidebarOpen(true)} sx={{ cursor: "pointer" }} />
+                      <KeyboardBackspaceIcon
+                        onClick={() => setIsSidebarOpen(true)}
+                        sx={{ cursor: "pointer" }}
+                      />
                     )}
                     <Typography variant="h4">{selectedUser.name}</Typography>
                   </Box>
                 </Box>
 
                 <Box
+                  ref={chatContainerRef}
                   sx={{
                     flex: 1,
                     overflowY: "auto",
@@ -248,14 +344,22 @@ const Chats = () => {
                     flexDirection: "column",
                     gap: 1.5,
 
-                    scrollbarWidth: "none",
-                    msOverflowStyle: "none",
+                    // scrollbarWidth: "none",
+                    // msOverflowStyle: "none",
 
-                    "&::-webkit-scrollbar": {
-                      display: "none",
-                    },
+                    // "&::-webkit-scrollbar": {
+                    //   display: "none",
+                    // },
                   }}
                 >
+                  {loading &&
+                    Array.from({ length: chatsPerPage }).map((_, i) => (
+                      <ChatSkeleton
+                        key={`skeleton-${i}`}
+                        align={i % 2 === 0 ? "left" : "right"}
+                      />
+                    ))}
+
                   {conversations.map((msg) => {
                     const isMine = msg.sender.id == loggedInUserId;
                     const isMedia = msg.type === "media";
@@ -273,14 +377,20 @@ const Chats = () => {
                             : isMedia
                               ? "none"
                               : "var(--jetGray)",
-                          color: isMedia ? (isMine ? "var(--softCrimson)" : "var(--jetGray)") : "var(--white)",
+                          color: isMedia
+                            ? isMine
+                              ? "var(--softCrimson)"
+                              : "var(--jetGray)"
+                            : "var(--white)",
                           padding: "8px 16px",
                           borderRadius: "12px",
                           borderTopRightRadius: isMine ? 0 : "12px",
                           borderTopLeftRadius: isMine ? "12px" : 0,
                         }}
                       >
-                        {!isMedia && <Typography variant="body1">{msg.content}</Typography>}
+                        {!isMedia && (
+                          <Typography variant="body1">{msg.content}</Typography>
+                        )}
 
                         {isMedia &&
                           msg.attachments &&
@@ -292,7 +402,10 @@ const Chats = () => {
                                     <img
                                       src={att.url}
                                       alt="attachment/image"
-                                      style={{ maxWidth: "100%", borderRadius: "12px" }}
+                                      style={{
+                                        maxWidth: "100%",
+                                        borderRadius: "12px",
+                                      }}
                                     ></img>
                                   </Box>
                                 );
@@ -303,7 +416,10 @@ const Chats = () => {
                                     <video
                                       src={att.url}
                                       controls
-                                      style={{ maxWidth: "100%", borderRadius: "12px" }}
+                                      style={{
+                                        maxWidth: "100%",
+                                        borderRadius: "12px",
+                                      }}
                                     ></video>
                                   </Box>
                                 );
@@ -321,16 +437,27 @@ const Chats = () => {
                                     key={att.id}
                                     sx={{
                                       p: 1,
-                                      backgroundColor: isMine ? "var(--softCrimson)" : "var(--jetGray)",
+                                      backgroundColor: isMine
+                                        ? "var(--softCrimson)"
+                                        : "var(--jetGray)",
                                       color: "var(--white)",
                                       borderRadius: "8px",
                                       cursor: "pointer",
                                     }}
-                                    onClick={() => window.open(att.url, "_blank")}
+                                    onClick={() =>
+                                      window.open(att.url, "_blank")
+                                    }
                                   >
-                                    <Typography variant="body2" sx={{ wordBreak: "break-all" }}>
+                                    <Typography
+                                      variant="body2"
+                                      sx={{ wordBreak: "break-all" }}
+                                    >
                                       {"Attachment"}
-                                      <Typography sx={{ mt: 1, fontSize: "10px" }}>click to open</Typography>
+                                      <Typography
+                                        sx={{ mt: 1, fontSize: "10px" }}
+                                      >
+                                        click to open
+                                      </Typography>
                                     </Typography>
                                   </Box>
                                 );
@@ -345,7 +472,11 @@ const Chats = () => {
                 </Box>
 
                 {selectedFile && (
-                  <Chip label={selectedFile.name} onDelete={() => setSelectedFile(null)} sx={{ mb: 1 }} />
+                  <Chip
+                    label={selectedFile.name}
+                    onDelete={() => setSelectedFile(null)}
+                    sx={{ mb: 1 }}
+                  />
                 )}
 
                 <Box

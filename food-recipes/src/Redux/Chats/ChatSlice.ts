@@ -28,9 +28,10 @@ export interface User {
 
 export interface initialStatetype {
   loading: boolean;
-  userList: User[]
+  userList: User[];
   conversations: Messages[];
-  page:number
+  page: number;
+  hasMore: boolean;
   error: string | null;
 }
 
@@ -38,7 +39,8 @@ export const initialState: initialStatetype = {
   loading: false,
   userList: [],
   conversations: [],
-  page:1,
+  page: 1,
+  hasMore: true,
   error: null,
 };
 
@@ -46,41 +48,53 @@ const chatSlice = createSlice({
   name: "chat",
   initialState,
   reducers: {
-    addConversation(state , action:PayloadAction<Messages>){
-      state.conversations.push(action.payload)
+    addConversation(state, action: PayloadAction<Messages>) {
+      state.conversations.push(action.payload);
     },
-    addManyConversations(state , action:PayloadAction<Messages[]>){
-      state.conversations = [...action.payload]
+    clearConversations(state) {
+      state.conversations = [];
     },
-    clearConversations(state){
-      state.conversations = []
-    }
   },
-  extraReducers: (builder)=>{
+  extraReducers: (builder) => {
     builder
 
-    // Fetch Users List
-    .addCase(fetchUserList.pending, (state)=>{
+      // Fetch Users List
+      .addCase(fetchUserList.pending, (state) => {
         state.loading = true;
         state.error = null;
-    })
-    .addCase(fetchUserList.fulfilled , (state , action)=>{
+      })
+      .addCase(fetchUserList.fulfilled, (state, action) => {
         state.loading = false;
         state.userList = action.payload;
-    })
-    .addCase(fetchUserList.rejected , (state , action)=>{
+      })
+      .addCase(fetchUserList.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload || "SomeThing went wrong"
-    })
+        state.error = action.payload || "SomeThing went wrong";
+      })
 
-    // Fetch Chats History
-    .addCase(chatsHistory.pending , (state)=>{
-      state.loading = true
-      state.error = null
-    })
-  }
+      // Fetch Chats History
+      .addCase(chatsHistory.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(chatsHistory.fulfilled, (state, action) => {
+        state.loading = false;
+        const reverseChats = action.payload.reverse()
+        state.conversations.unshift(...reverseChats);
+
+        if (action.payload.length < 20) {
+          state.hasMore = false;
+        } else {
+          state.page += 1;
+        }
+      })
+      .addCase(chatsHistory.rejected, (state) => {
+        state.loading = false;
+        state.error = "SomeThing went wrong";
+      });
+  },
 });
 
-export const {addConversation , addManyConversations , clearConversations} = chatSlice.actions
+export const { addConversation, clearConversations } = chatSlice.actions;
 
 export default chatSlice.reducer;

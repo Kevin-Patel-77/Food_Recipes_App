@@ -16,23 +16,26 @@ interface confirmFileUploadPayload {
 interface chatsHistoryPayload {
   limit: number;
   page: number;
-  conversationId: string;
+  conversationId: string | null;
 }
 
-export const fetchUserList = createAsyncThunk<User[], void, { rejectValue: string }>(
-  "chat/fetchUserList",
-  async (_, { rejectWithValue }) => {
-    try {
-      const res = await api.get("/user");
-      return res.data.data as User[];
-    } catch (err) {
-      if (axios.isAxiosError(err)) {
-        return rejectWithValue(err.response?.data?.message || "Failed to fetch users");
-      }
-      return rejectWithValue("Something went wrong");
+export const fetchUserList = createAsyncThunk<
+  User[],
+  void,
+  { rejectValue: string }
+>("chat/fetchUserList", async (_, { rejectWithValue }) => {
+  try {
+    const res = await api.get("/user");
+    return res.data.data as User[];
+  } catch (err) {
+    if (axios.isAxiosError(err)) {
+      return rejectWithValue(
+        err.response?.data?.message || "Failed to fetch users",
+      );
     }
-  },
-);
+    return rejectWithValue("Something went wrong");
+  }
+});
 
 export const getFileId = async ({ file, token }: GetSignedUrlPayload) => {
   try {
@@ -55,7 +58,10 @@ export const getFileId = async ({ file, token }: GetSignedUrlPayload) => {
   }
 };
 
-export const uploadFileToSignedUrl = async (signedUrl: string, selectedFile: File) => {
+export const uploadFileToSignedUrl = async (
+  signedUrl: string,
+  selectedFile: File,
+) => {
   try {
     await api.put(signedUrl, selectedFile, {
       headers: {
@@ -68,7 +74,10 @@ export const uploadFileToSignedUrl = async (signedUrl: string, selectedFile: Fil
   }
 };
 
-export const confirmFileUpload = async ({ fileId, token }: confirmFileUploadPayload) => {
+export const confirmFileUpload = async ({
+  fileId,
+  token,
+}: confirmFileUploadPayload) => {
   try {
     const res = await api.post(
       `/files/${fileId}/confirm`,
@@ -92,7 +101,9 @@ export const chatsHistory = createAsyncThunk(
     try {
       const skip = (page - 1) * limit;
 
-      const res = await api.get(`/websocket/messages/${conversationId}?_start:${skip}&_limit:${limit}`);
+      const res = await api.get(
+        `/websocket/messages/${conversationId}?_start=${skip}&_limit=${limit}`,
+      );
       return res.data;
     } catch (error) {
       console.log("Error to fetch chats", error);

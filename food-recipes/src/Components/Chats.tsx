@@ -90,7 +90,7 @@ const Chats = () => {
 
       eventSource.onmessage = (event) => {
         const data = JSON.parse(event.data);
-        console.log(data.videoId)
+        console.log(data.videoId);
 
         if (data.status == "ACTIVE") {
           eventSource.close();
@@ -102,7 +102,7 @@ const Chats = () => {
             type: "media",
             attachments: [
               {
-                id: data.videoId,
+                media: { id: data.videoId },
                 mediaType: selectedFile?.type.split("/")[0],
                 mimeType: selectedFile.type,
               },
@@ -117,7 +117,7 @@ const Chats = () => {
       };
 
       setSelectedFile(null);
-       setMessageText("");
+      setMessageText("");
       return;
     }
 
@@ -136,7 +136,7 @@ const Chats = () => {
         type: "media",
         attachments: [
           {
-            id: getFile.fileId,
+            media: { id: getFile.fileId },
             mediaType: selectedFile?.type.split("/")[0],
             mimeType: selectedFile.type,
           },
@@ -183,7 +183,7 @@ const Chats = () => {
       (data: { conversationId: string; messages: Messages[] }) => {
         dispatch(clearConversations());
         setConversationId(data.conversationId);
-        console.log(data)
+        console.log(data);
         dispatch(
           chatsHistory({
             limit: chatsPerPage,
@@ -195,6 +195,7 @@ const Chats = () => {
     );
 
     socket.on("receive_message", (data) => {
+      console.log(data);
       dispatch(addConversation(data));
     });
 
@@ -425,7 +426,7 @@ const Chats = () => {
                               case "video":
                                 return (
                                   <Box key={att.id} sx={{ mt: 1 }}>
-                                    <HlsVideoPlayer videoId={att.id} />
+                                    <HlsVideoPlayer videoId={att.media.id} />
                                   </Box>
                                 );
 

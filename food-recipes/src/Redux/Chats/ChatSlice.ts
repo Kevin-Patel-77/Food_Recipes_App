@@ -3,14 +3,20 @@ import { chatsHistory, fetchUserList } from "./ChatThunk";
 
 export type MessageType = "text" | "media";
 
-export type MediaType = "image" | "video" | "audio" | "application";
-
-export interface Attachment {
-  id: string;
+type BaseAttachment = {
+  id?: string;
   url: string;
-  mediaType: MediaType;
   mimeType: string;
-}
+};
+export type Attachment =
+  | (BaseAttachment & {
+      mediaType: "video";
+      media: { id: string };
+    })
+  | (BaseAttachment & {
+      mediaType: "image" | "audio" | "application";
+      media?: undefined;
+    });
 
 export interface Messages {
   id: string;

@@ -29,6 +29,8 @@ import {
 } from "../Redux/Chats/ChatSlice";
 import api from "../Utils/axiosInstance/axiosInstance";
 import { ChatSkeleton } from "./Skeleton/ChatsSkeleton";
+import HlsVideoPlayer from "../Utils/HlsVideoPlayer/HlsVideoPlayer";
+import CircularProgress from "@mui/material/CircularProgress";
 
 const Chats = () => {
   const dispatch = useAppDispatch();
@@ -45,17 +47,19 @@ const Chats = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const socketRef = useRef<Socket | null>(null);
 
-  const theme = useTheme();
-  const isXs = useMediaQuery(theme.breakpoints.down("sm"));
-
-  const token = localStorage.getItem("accessToken");
-  const loggedInUserId = token ? jwtDecode<{ sub: string }>(token).sub : null;
-
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const chatContainerRef = useRef<HTMLDivElement | null>(null);
   const isFetchingRef = useRef(false);
   const chatsPerPage = 20;
+
+  const [isVideoPending, setIsVideoPending] = useState<boolean>(false);
+
+  const theme = useTheme();
+  const isXs = useMediaQuery(theme.breakpoints.down("sm"));
+
+  const token = localStorage.getItem("accessToken");
+  const loggedInUserId = token ? jwtDecode<{ sub: string }>(token).sub : null;
 
   const joinConversation = (anotherUserId: string) => {
     if (!socketRef.current) return;
@@ -70,6 +74,8 @@ const Chats = () => {
     if (!conversationId || !selectedUser) return;
 
     if (selectedFile?.type.split("/")[0] === "video") {
+      setIsVideoPending(true);
+
       const formData = new FormData();
       formData.append("file", selectedFile);
 
@@ -84,28 +90,34 @@ const Chats = () => {
 
       eventSource.onmessage = (event) => {
         const data = JSON.parse(event.data);
+        console.log(data.videoId)
 
         if (data.status == "ACTIVE") {
           eventSource.close();
+          setIsVideoPending(false);
 
           socketRef.current?.emit("send_message", {
             conversationId,
             content: messageText,
             type: "media",
-            attachments: {
-              id: data.videoId,
-              mediaType: selectedFile?.type.split("/")[0],
-              mimeType: selectedFile.type,
-            },
+            attachments: [
+              {
+                id: data.videoId,
+                mediaType: selectedFile?.type.split("/")[0],
+                mimeType: selectedFile.type,
+              },
+            ],
           });
         }
       };
 
       eventSource.onerror = () => {
+        setIsVideoPending(false);
         eventSource.close();
       };
 
       setSelectedFile(null);
+       setMessageText("");
       return;
     }
 
@@ -171,6 +183,7 @@ const Chats = () => {
       (data: { conversationId: string; messages: Messages[] }) => {
         dispatch(clearConversations());
         setConversationId(data.conversationId);
+        console.log(data)
         dispatch(
           chatsHistory({
             limit: chatsPerPage,
@@ -182,7 +195,6 @@ const Chats = () => {
     );
 
     socket.on("receive_message", (data) => {
-      console.log(data);
       dispatch(addConversation(data));
     });
 
@@ -344,12 +356,12 @@ const Chats = () => {
                     flexDirection: "column",
                     gap: 1.5,
 
-                    // scrollbarWidth: "none",
-                    // msOverflowStyle: "none",
+                    scrollbarWidth: "none",
+                    msOverflowStyle: "none",
 
-                    // "&::-webkit-scrollbar": {
-                    //   display: "none",
-                    // },
+                    "&::-webkit-scrollbar": {
+                      display: "none",
+                    },
                   }}
                 >
                   {loading &&
@@ -413,14 +425,7 @@ const Chats = () => {
                               case "video":
                                 return (
                                   <Box key={att.id} sx={{ mt: 1 }}>
-                                    <video
-                                      src={att.url}
-                                      controls
-                                      style={{
-                                        maxWidth: "100%",
-                                        borderRadius: "12px",
-                                      }}
-                                    ></video>
+                                    <HlsVideoPlayer videoId={att.id} />
                                   </Box>
                                 );
 
@@ -470,6 +475,22 @@ const Chats = () => {
                     );
                   })}
                 </Box>
+
+                {isVideoPending && (
+                  <Box
+                    sx={{
+                      alignSelf: "flex-end",
+                      maxWidth: "60%",
+                      padding: "16px",
+                      borderRadius: "12px",
+                      backgroundColor: "var(--softCrimson)",
+                      display: "flex",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <CircularProgress size={24} sx={{ color: "white" }} />
+                  </Box>
+                )}
 
                 {selectedFile && (
                   <Chip

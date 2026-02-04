@@ -1,7 +1,7 @@
 # React Vite Project
 
-This project focuses on performance, clean UI, reusable components, 
-and real-world frontend features like filtering, caching, routing, 
+This project focuses on performance, clean UI, reusable components,
+and real-world frontend features like filtering, caching, routing,
 and state management.
 
 ## 🛠 Tech Stack
@@ -16,10 +16,10 @@ and state management.
 - 🎞 Framer Motion
 - 🧪 Playwright (Testing)
 
-
 ## ✅ Topics Covered
+
 - React Hooks & State Management
-- Redux Toolkit 
+- Redux Toolkit
 - Query Params based Filtering
 - Debouncing Search
 - Checkbox & Slider Filters
@@ -35,12 +35,12 @@ and state management.
 - Tag Based Filters
 - List / Grid View Toggle
 - IFrame Integration
-- Internationalization 
+- Internationalization
 - Captcha/reCaptcha
 - hCaptcha
 - Chat Setup with Socket.io
 
-
 ## 🚀 Getting Started
+
 npm install  
-npm run dev  
+npm run dev

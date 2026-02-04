@@ -6,11 +6,12 @@ const api = axios.create({
 
 api.interceptors.request.use((config) => {
     const token = localStorage.getItem("accessToken")
+    console.log(token)
 
     if (token) {
-        config.headers.Authorization = `Bearer ${token}`
+        config.headers.Authorization = `${import.meta.env.VITE_SOCKET_TOKEN_PREFIX} ${token}`
     }
-
+     
     return config
 })
 
@@ -32,16 +33,16 @@ api.interceptors.response.use(
 
             try {
                 const res  = await api.post("/auth/refresh-token" , {
-                    refreshToken
+                    refreshToken : `${import.meta.env.VITE_SOCKET_TOKEN_PREFIX} ${refreshToken}`
                 }) 
 
-                const newAccessToken  = res.data.access_token
-                const newRefreshToken = res.data.refresh_token  
+                const newAccessToken  = res.data.data.access_token
+                const newRefreshToken = res.data.data.refresh_token  
 
                 localStorage.setItem("accessToken" , newAccessToken)
                 localStorage.setItem("refreshToken" , newRefreshToken)
 
-                originalRequest.headers.authorization = `Bearer ${newAccessToken}`;
+                originalRequest.headers.authorization = `${import.meta.env.VITE_SOCKET_TOKEN_PREFIX} ${newAccessToken}`;
                 return api(originalRequest);
 
             } catch (error) {

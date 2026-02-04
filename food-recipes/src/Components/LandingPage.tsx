@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import rupee from "../assets/rupee.png";
 import cheese from "../assets/Cheese.jpg";
-import { useAppDispatch, useAppSelector, useAuthSelector } from "./hooks";
+import { useAppDispatch, useAppSelector } from "./hooks";
 import { toast } from "react-toastify";
 import { AccountCircle, CheckBox, Language, Logout } from "@mui/icons-material";
 import ChooseLanguage from "./ChooseLanguage";
@@ -21,7 +21,7 @@ const LandingPage = () => {
   const [currentIndex, setCurrentIndex] = useState<number>(1);
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const { isAuthenticated } = useAuthSelector((state) => state.foodAuth);
+  const { isAuthenticated } = useAppSelector((state) => state.foodAuth);
   const { items } = useAppSelector((state) => state.foodCart);
   const { user, error } = useAppSelector((state) => state.foodAuth);
 

@@ -7,29 +7,29 @@ import {
   Typography,
 } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
-import { connectSocket, disconnectSocket } from "../Utils/Socket/socket";
+import { connectSocket, disconnectSocket } from "../../Utils/Socket/socket";
 import { Socket } from "socket.io-client";
 import { jwtDecode } from "jwt-decode";
 import KeyboardBackspaceIcon from "@mui/icons-material/KeyboardBackspace";
 import { useMediaQuery, useTheme } from "@mui/material";
 import AttachFileIcon from "@mui/icons-material/AttachFile";
-import { useAppDispatch, useAppSelector } from "./hooks";
+import { useAppDispatch, useAppSelector } from "../hooks";
 import {
   chatsHistory,
   confirmFileUpload,
   fetchUserList,
   getFileId,
   uploadFileToSignedUrl,
-} from "../Redux/Chats/ChatThunk";
+} from "../../Redux/Chats/ChatThunk";
 import {
   addConversation,
   clearConversations,
   Messages,
   User,
-} from "../Redux/Chats/ChatSlice";
-import api from "../Utils/axiosInstance/axiosInstance";
-import { ChatSkeleton } from "./Skeleton/ChatsSkeleton";
-import HlsVideoPlayer from "../Utils/HlsVideoPlayer/HlsVideoPlayer";
+} from "../../Redux/Chats/ChatSlice";
+import api from "../../Utils/axiosInstance/axiosInstance";
+import { ChatSkeleton } from "../Skeleton/ChatsSkeleton";
+import HlsVideoPlayer from "../../Utils/HlsVideoPlayer/HlsVideoPlayer";
 import CircularProgress from "@mui/material/CircularProgress";
 
 const Chats = () => {
@@ -79,18 +79,17 @@ const Chats = () => {
       const formData = new FormData();
       formData.append("file", selectedFile);
 
-      const SSE_URL = "http://localhost:3000/video/events";
+      const SSE_URL = `${import.meta.env.VITE_SSE_VIDEO_EVENTS}`;
       const eventSource = new EventSource(SSE_URL);
 
       await api.post("/video/upload", formData, {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `${import.meta.env.VITE_SOCKET_TOKEN_PREFIX} ${token}`,
         },
       });
 
       eventSource.onmessage = (event) => {
         const data = JSON.parse(event.data);
-        console.log(data.videoId);
 
         if (data.status == "ACTIVE") {
           eventSource.close();
@@ -181,9 +180,24 @@ const Chats = () => {
     socket.on(
       "joined",
       (data: { conversationId: string; messages: Messages[] }) => {
+        if (data) {
+          const SSE_URL = `${import.meta.env.VITE_SSE_NOTIFICATION_EVENTS}`;
+          const eventSource = new EventSource(SSE_URL);
+
+          eventSource.onmessage = (event) => {
+            const data = JSON.parse(event.data);
+            console.log(data);
+
+            if (data.status == "SENT") {
+              if (data.senderId != loggedInUserId) {
+                alert("Hey You have a message");
+              }
+            }
+          };
+        }
+
         dispatch(clearConversations());
         setConversationId(data.conversationId);
-        console.log(data);
         dispatch(
           chatsHistory({
             limit: chatsPerPage,
@@ -195,7 +209,6 @@ const Chats = () => {
     );
 
     socket.on("receive_message", (data) => {
-      console.log(data);
       dispatch(addConversation(data));
     });
 

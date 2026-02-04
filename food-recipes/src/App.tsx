@@ -16,7 +16,7 @@ import Menu from "./Components/Menu";
 import LanguageSync from "./Components/LanguageSync";
 import { syncPendingOperation } from "./Redux/Cart/syncPendingOperations";
 import { useEffect } from "react";
-import Chats from "./Components/Chats"
+import Chats from "../src/Components/Chats/Chats"
 
 function App() {
   useEffect(() => {

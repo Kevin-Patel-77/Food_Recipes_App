@@ -19,7 +19,7 @@ import {
 } from "@mui/material";
 import { useAppDispatch, useAppSelector } from "./hooks";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { fetchRecipes, increasePage, type Recipe } from "../Redux/Menu/RecipesSlice"
+import { increasePage, type Recipe } from "../Redux/Menu/RecipesSlice"
 import RecipeSkeleton from "./Skeleton/RecipeSkeleton"
 import { NavLink, useNavigate, useSearchParams } from "react-router-dom";
 import search from "../assets/search.png";
@@ -30,6 +30,7 @@ import GridViewIcon from "@mui/icons-material/GridView";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { toast } from "react-toastify";
 import { addToCartServer } from "../Redux/Cart/CartThunk";
+import { fetchRecipes } from "../Redux/Menu/RecipesThunk";
 
 const tabelCell = {
   borderBottom: "1px solid black",

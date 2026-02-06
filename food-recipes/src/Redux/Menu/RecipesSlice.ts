@@ -1,10 +1,5 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import axios from "axios";
-
-type scrolling = {
-  page: number;
-  limit: number;
-};
+import { createSlice } from "@reduxjs/toolkit";
+import { fetchRecipes } from "./RecipesThunk";
 
 export type Recipe = {
   id: number;
@@ -25,12 +20,6 @@ export type Recipe = {
   reviewCount: number;
   mealType: string[];
 };
-
-export const fetchRecipes = createAsyncThunk("recipes/fetchRecipes", async ({ page, limit }: scrolling) => {
-  const skip = (page - 1) * limit;
-  const res = await axios.get( `http://localhost:3000/recipes?_start=${skip}&_limit=${limit}`);
-  return res.data;
-});
 
 export type initial = {
   loading: boolean;

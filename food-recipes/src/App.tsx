@@ -17,6 +17,7 @@ import LanguageSync from "./Components/LanguageSync";
 import { syncPendingOperation } from "./Redux/Cart/syncPendingOperations";
 import { useEffect } from "react";
 import Chats from "../src/Components/Chats/Chats";
+import Test from "./Components/Test/Test";
 
 function App() {
   useEffect(() => {
@@ -68,6 +69,7 @@ function App() {
           ></Route>
 
           <Route path="/chats" element={<Chats />}></Route>
+          <Route path="/test" element={<Test/>}></Route>
           <Route path="*" element={<NotFound />}></Route>
         </Routes>
         <LanguageSync />

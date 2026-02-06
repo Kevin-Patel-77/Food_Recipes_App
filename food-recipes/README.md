@@ -39,6 +39,8 @@ and state management.
 - Captcha/reCaptcha
 - hCaptcha
 - Chat Setup with Socket.io
+- Video with hls.js 
+- Image with signed URL
 
 ## 🚀 Getting Started
 

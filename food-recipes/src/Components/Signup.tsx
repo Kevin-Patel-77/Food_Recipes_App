@@ -1,7 +1,15 @@
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "./hooks";
 import { Eye, EyeOff } from "lucide-react";
-import { Box, Button, InputLabel, TextField, Typography, IconButton, InputAdornment } from "@mui/material";
+import {
+  Box,
+  Button,
+  InputLabel,
+  TextField,
+  Typography,
+  IconButton,
+  InputAdornment,
+} from "@mui/material";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
@@ -32,10 +40,10 @@ const Signup = () => {
 
     if (user?.success) {
       toast.success(user.message);
-      dispatch(clearUser())
+      dispatch(clearUser());
       navigate("/login");
     }
-  }, [user, error, navigate , dispatch]);
+  }, [user, error, navigate, dispatch]);
 
   return (
     <Box
@@ -77,7 +85,10 @@ const Signup = () => {
             fullWidth
           />
 
-          <InputLabel htmlFor="email" sx={{ color: "var(--jetGray)", marginTop: "16px" }}>
+          <InputLabel
+            htmlFor="email"
+            sx={{ color: "var(--jetGray)", marginTop: "16px" }}
+          >
             Email:
           </InputLabel>
           <TextField
@@ -85,14 +96,20 @@ const Signup = () => {
             type="email"
             {...register("email", {
               required: "Email is required",
-              pattern: { value: /^[a-z0-9]+(\.[a-z0-9]+)*@[a-z0-9]+\.[a-z]{2,}$/i, message: "Invalid email format" },
+              pattern: {
+                value: /^[a-z0-9]+(\.[a-z0-9]+)*@[a-z0-9]+\.[a-z]{2,}$/i,
+                message: "Invalid email format",
+              },
             })}
             error={!!errors.email}
             helperText={errors.email?.message}
             fullWidth
           />
 
-          <InputLabel htmlFor="password" sx={{ color: "var(--jetGray)", marginTop: "16px" }}>
+          <InputLabel
+            htmlFor="password"
+            sx={{ color: "var(--jetGray)", marginTop: "16px" }}
+          >
             Password:
           </InputLabel>
           <TextField
@@ -105,8 +122,10 @@ const Signup = () => {
                 message: "Password must be at least 8 characters",
               },
               pattern: {
-                value: /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
-                message: "Password must contain uppercase, lowercase, number & special character",
+                value:
+                  /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+                message:
+                  "Password must contain uppercase, lowercase, number & special character",
               },
             })}
             error={!!errors.password}
@@ -115,7 +134,10 @@ const Signup = () => {
             InputProps={{
               endAdornment: (
                 <InputAdornment position="end">
-                  <IconButton onClick={() => setShowPassword((prev) => !prev)} edge="end">
+                  <IconButton
+                    onClick={() => setShowPassword((prev) => !prev)}
+                    edge="end"
+                  >
                     {showPassword ? <Eye /> : <EyeOff />}
                   </IconButton>
                 </InputAdornment>
@@ -125,7 +147,7 @@ const Signup = () => {
 
           <Button
             variant="contained"
-            sx={{ p: "8px 48px", marginTop: "24px", marginBottom: "16px"}}
+            sx={{ p: "8px 48px", marginTop: "24px", marginBottom: "16px" }}
             type="submit"
           >
             Sign Up

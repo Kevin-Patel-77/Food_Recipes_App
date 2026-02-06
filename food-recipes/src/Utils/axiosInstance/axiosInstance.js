@@ -6,7 +6,6 @@ const api = axios.create({
 
 api.interceptors.request.use((config) => {
     const token = localStorage.getItem("accessToken")
-    console.log(token)
 
     if (token) {
         config.headers.Authorization = `${import.meta.env.VITE_SOCKET_TOKEN_PREFIX} ${token}`

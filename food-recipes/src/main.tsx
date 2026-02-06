@@ -12,8 +12,6 @@ if ("serviceWorker" in navigator) {
   });
 }
 
-
-
 createRoot(document.getElementById("root")!).render(
   <Provider store={recipesStore}>
     <BrowserRouter>
@@ -21,3 +19,4 @@ createRoot(document.getElementById("root")!).render(
     </BrowserRouter>
   </Provider>
 );
+ 

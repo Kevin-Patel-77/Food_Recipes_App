@@ -14,23 +14,21 @@ import KeyboardBackspaceIcon from "@mui/icons-material/KeyboardBackspace";
 import { useMediaQuery, useTheme } from "@mui/material";
 import AttachFileIcon from "@mui/icons-material/AttachFile";
 import { useAppDispatch, useAppSelector } from "../hooks";
-import {
-  chatsHistory,
-  confirmFileUpload,
-  fetchUserList,
-  getFileId,
-  uploadFileToSignedUrl,
-} from "../../Redux/Chats/ChatThunk";
+import { chatsHistory, fetchUserList } from "../../Redux/Chats/ChatThunk";
 import {
   addConversation,
   clearConversations,
   Messages,
   User,
 } from "../../Redux/Chats/ChatSlice";
-import api from "../../Utils/axiosInstance/axiosInstance";
 import { ChatSkeleton } from "../Skeleton/ChatsSkeleton";
 import HlsVideoPlayer from "../../Utils/HlsVideoPlayer/HlsVideoPlayer";
 import CircularProgress from "@mui/material/CircularProgress";
+import {
+  sendMediaMessage,
+  sendTextMessage,
+  sendVideoMessage,
+} from "./sendMessages";
 
 const Chats = () => {
   const dispatch = useAppDispatch();
@@ -73,90 +71,25 @@ const Chats = () => {
     if (!socketRef.current) return;
     if (!conversationId || !selectedUser) return;
 
-    if (selectedFile?.type.split("/")[0] === "video") {
-      setIsVideoPending(true);
-
-      const formData = new FormData();
-      formData.append("file", selectedFile);
-
-      const SSE_URL = `${import.meta.env.VITE_SSE_VIDEO_EVENTS}`;
-      const eventSource = new EventSource(SSE_URL);
-
-      await api.post("/video/upload", formData, {
-        headers: {
-          Authorization: `${import.meta.env.VITE_SOCKET_TOKEN_PREFIX} ${token}`,
-        },
-      });
-
-      eventSource.onmessage = (event) => {
-        const data = JSON.parse(event.data);
-
-        if (data.status == "ACTIVE") {
-          eventSource.close();
-          setIsVideoPending(false);
-
-          socketRef.current?.emit("send_message", {
-            conversationId,
-            content: messageText,
-            type: "media",
-            attachments: [
-              {
-                media: { id: data.videoId },
-                mediaType: selectedFile?.type.split("/")[0],
-                mimeType: selectedFile.type,
-              },
-            ],
-          });
-        }
-      };
-
-      eventSource.onerror = () => {
-        setIsVideoPending(false);
-        eventSource.close();
-      };
-
-      setSelectedFile(null);
-      setMessageText("");
-      return;
-    }
+    const sendArgs = {
+      chatSocket: socketRef.current,
+      conversationId,
+      token,
+      content: messageText,
+    };
 
     if (selectedFile) {
-      const getFile = await getFileId({ file: selectedFile, token });
-
-      // Upload file to supabase
-      await uploadFileToSignedUrl(getFile.signedUrl, selectedFile);
-
-      // Confirm upload
-      await confirmFileUpload({ fileId: getFile.fileId, token });
-
-      socketRef.current.emit("send_message", {
-        conversationId,
-        content: messageText,
-        type: "media",
-        attachments: [
-          {
-            media: { id: getFile.fileId },
-            mediaType: selectedFile?.type.split("/")[0],
-            mimeType: selectedFile.type,
-          },
-        ],
-      });
-
-      setSelectedFile(null);
-      setMessageText("");
-      return;
+      if (selectedFile.type.startsWith("video")) {
+        await sendVideoMessage(sendArgs, selectedFile, setIsVideoPending);
+      } else {
+        await sendMediaMessage(sendArgs, selectedFile);
+      }
+    } else {
+      sendTextMessage(sendArgs);
     }
 
-    if (!messageText.trim()) return;
-
-    socketRef.current.emit("send_message", {
-      conversationId,
-      content: messageText,
-      type: "text",
-    });
-
     setMessageText("");
-    return;
+    setSelectedFile(null);
   };
 
   useEffect(() => {
@@ -166,7 +99,9 @@ const Chats = () => {
   useEffect(() => {
     if (!token) return;
 
-    const socket = connectSocket(`Bearer ${token}`);
+    const socket = connectSocket(
+      `${import.meta.env.VITE_SOCKET_TOKEN_PREFIX} ${token}`,
+    );
     socketRef.current = socket;
 
     socket.on("connect", () => {
@@ -180,22 +115,6 @@ const Chats = () => {
     socket.on(
       "joined",
       (data: { conversationId: string; messages: Messages[] }) => {
-        if (data) {
-          const SSE_URL = `${import.meta.env.VITE_SSE_NOTIFICATION_EVENTS}`;
-          const eventSource = new EventSource(SSE_URL);
-
-          eventSource.onmessage = (event) => {
-            const data = JSON.parse(event.data);
-            console.log(data);
-
-            if (data.status == "SENT") {
-              if (data.senderId != loggedInUserId) {
-                alert("Hey You have a message");
-              }
-            }
-          };
-        }
-
         dispatch(clearConversations());
         setConversationId(data.conversationId);
         dispatch(
@@ -209,13 +128,30 @@ const Chats = () => {
     );
 
     socket.on("receive_message", (data) => {
+      if (data) {
+        const SSE_URL = `${import.meta.env.VITE_SSE_NOTIFICATION_EVENTS}`;
+        const eventSource = new EventSource(SSE_URL);
+
+        eventSource.onmessage = (event) => {
+          const data = JSON.parse(event.data);
+
+          if (
+            data.status == "SENT" &&
+            data.conversationId != conversationId &&
+            data.senderId != loggedInUserId
+          ) {
+            alert("Hey You have a message");
+          }
+        };
+      }
+
       dispatch(addConversation(data));
     });
 
     return () => {
       disconnectSocket();
     };
-  }, [token, dispatch]);
+  }, [token, conversationId, loggedInUserId, dispatch]);
 
   // Chats Scrolling
   useEffect(() => {

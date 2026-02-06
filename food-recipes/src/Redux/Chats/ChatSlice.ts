@@ -3,7 +3,7 @@ import { chatsHistory, fetchUserList } from "./ChatThunk";
 
 export type MessageType = "text" | "media";
 
-type BaseAttachment = {
+interface BaseAttachment  {
   id?: string;
   url: string;
   mimeType: string;

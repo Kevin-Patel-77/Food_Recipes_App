@@ -1,5 +1,5 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { Recipe } from "../RecipesSlice";
+import { createSlice } from "@reduxjs/toolkit";
+import { Recipe } from "../Menu/RecipesSlice"
 import { fetchCartFromServer } from "./CartThunk";
 
 export type CartItem = Recipe & { quantity: number };

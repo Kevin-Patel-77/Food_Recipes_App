@@ -1,10 +1,10 @@
 import { Box, Button, Divider, IconButton, ListItemIcon, Menu, MenuItem, Typography } from "@mui/material";
 import { NavLink, useNavigate } from "react-router-dom";
-import cart from "../assets/cart.png";
+import cartImage from "../assets/cart.png";
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import rupee from "../assets/rupee.png";
-import cheese from "../assets/Cheese.jpg";
+import rupeeIcon from "../assets/rupee.png";
+import cheeseImage from "../assets/Cheese.jpg";
 import { useAppDispatch, useAppSelector } from "./hooks";
 import { toast } from "react-toastify";
 import { AccountCircle, CheckBox, Language, Logout } from "@mui/icons-material";
@@ -105,7 +105,7 @@ const LandingPage = () => {
             <Box sx={{ position: "relative", display: "flex" }}>
               <Box
                 component="img"
-                src={cart}
+                src={cartImage}
                 alt="cart"
                 onClick={() => navigate("/cart")}
                 sx={{ width: "25px", height: "auto", cursor: "pointer" }}
@@ -277,7 +277,7 @@ const LandingPage = () => {
                 </Box>
 
                 <Box sx={{ display: "flex", alignItems: "center" }}>
-                  <img src={rupee} alt="rupee" style={{ width: "15px", height: "15px" }} />
+                  <img src={rupeeIcon} alt="rupee" style={{ width: "15px", height: "15px" }}/>
                   <Typography>{item.price}</Typography>
                 </Box>
               </Box>
@@ -346,7 +346,7 @@ const LandingPage = () => {
             <Box sx={{ width: { xs: "100%", sm: "100%", md: "100%", lg: "50%", xl: "45%" }, height: "auto" }}>
               <Box
                 component="img"
-                src={cheese}
+                src={cheeseImage}
                 alt="Cheese"
                 width="100%"
                 height="auto"
@@ -450,23 +450,3 @@ const LandingPage = () => {
 };
 
 export default LandingPage;
-
-{
-  /* <Box sx={{ marginTop: "80px", padding: "10px 112px" }}>
-        <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-          <Box>
-            <Typography variant="h3" sx={{ fontWeight: "bold" , color:"#333333" }}>
-              Crave-Worthy Dishes
-            </Typography>
-            <Typography variant="h3" sx={{ fontWeight: "bold" , color:"#333333" }}>
-              You'll Love
-            </Typography>
-          </Box>
-
-          <Box>
-            <Typography variant="body1">Discover crave-worthy dishes you'll love--easy to make,</Typography>
-            <Typography variant="body1">full of flavor , and always satisfying </Typography>
-          </Box>
-        </Box>
-      </Box> */
-}

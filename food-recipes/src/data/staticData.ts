@@ -50,10 +50,6 @@ export const headerItem : header[] = [
     name:"Contact",
     to:"/contact"
   },
-  {
-    name:"Test",
-    to:"/test"
-  }
 ]
 
 

@@ -3,7 +3,7 @@ import {
   confirmFileUpload,
   getFileId,
   uploadFileToSignedUrl,
-} from "../../Redux/Chats/ChatThunk";
+} from "../../Redux/Chats/ChatApi";
 import api from "../../Utils/axiosInstance/axiosInstance";
 import { toast } from "react-toastify";
 

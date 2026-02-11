@@ -26,7 +26,7 @@ import {
   type Recipe,
 } from "../Redux/Menu/RecipesSlice";
 import RecipeSkeleton from "./Skeleton/RecipeSkeleton";
-import {useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import searchIcon from "../assets/search.png";
 import rupeeIcon from "../assets/rupee.png";
 import { debounce } from "lodash";
@@ -36,6 +36,8 @@ import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { toast } from "react-toastify";
 import { addToCartServer } from "../Redux/Cart/CartThunk";
 import { fetchRecipes, filteredData } from "../Redux/Menu/RecipesThunk";
+import { productExists } from "../Redux/Cart/CartApi";
+import { CartData } from "../Redux/Cart/CartSlice";
 
 const tabelCell = {
   borderBottom: "1px solid black",
@@ -133,9 +135,24 @@ const Menu = () => {
   }
 
   //   Add To Cart
-  function handleCart(foodItem: Recipe) {
-    dispatch(addToCartServer({ ...foodItem, quantity: 1 }));
-    toast.success("Cart Added");
+  async function handleCart(foodItem: Recipe) {
+    const isProductExists = await productExists(foodItem.id);
+
+    if (isProductExists === true) {
+      const cartItem: CartData = {
+        productId: foodItem.id,
+        quantity: 1,
+        price: foodItem.price,
+        image: foodItem.image,
+        name: foodItem.name,
+        mealType: foodItem.mealType,
+      };
+
+      dispatch(addToCartServer(cartItem));
+      toast.success("Cart Added");
+    } else {
+      toast.error("Product Not Found");
+    }
   }
 
   // List and Grid View
@@ -530,7 +547,7 @@ const Menu = () => {
                           </TableCell>
                           <TableCell align="right">
                             <Button
-                              onClick={()=> navigate(`/home/${food.id}`)}
+                              onClick={() => navigate(`/home/${food.id}`)}
                               variant="contained"
                               size="small"
                               sx={{ padding: "8px 13px" }}
@@ -540,7 +557,9 @@ const Menu = () => {
                           </TableCell>
 
                           <TableCell align="right">
-                            {items.find((item) => item.id === food.id) ? (
+                            {items.find(
+                              (item) => item.productId === food.id,
+                            ) ? (
                               <Button
                                 onClick={() => navigate("/cart")}
                                 variant="contained"
@@ -735,7 +754,7 @@ const Menu = () => {
                       </Box>
 
                       <Box>
-                        {items.find((item) => item.id === food.id) ? (
+                        {items.find((item) => item.productId === food.id) ? (
                           <Button
                             onClick={() => navigate("/cart")}
                             sx={{ padding: "10px 25px" }}

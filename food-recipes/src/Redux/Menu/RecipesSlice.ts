@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { fetchRecipes, filteredData } from "./RecipesThunk";
 
-export type Recipe = {
+export interface Recipe {
   id: string;
   price: number;
   name: string;
@@ -14,9 +14,9 @@ export type Recipe = {
   image: string;
   rating: number;
   mealType: string[];
-};
+}
 
-export type RecipeResponses = {
+export interface RecipeResponses {
   success: boolean;
   message: string;
   items: Recipe[];
@@ -28,15 +28,15 @@ export type RecipeResponses = {
   };
   expired: false;
   statusCode: 200;
-};
+}
 
-export type initial = {
+export interface initial {
   loading: boolean;
   recipes: Recipe[];
   page: number;
   error: string | null;
   hasMore: boolean;
-};
+}
 
 const initialState: initial = {
   loading: false,

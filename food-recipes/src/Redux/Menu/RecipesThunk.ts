@@ -9,47 +9,37 @@ interface scrolling {
 }
 
 interface Filterdata extends scrolling {
-   query : string
+  query: string;
 }
 
-
-export const fetchRecipes = createAsyncThunk<
-  RecipeResponses,
-  scrolling,
-  { rejectValue: string }
->("recipes/fetchRecipes", async ({ page, limit }, { rejectWithValue }) => {
-  try {
-    const skip = (page - 1) * limit;
-    const res = await api.get(`/product?_start=${skip}&_limit=${limit}`);
-
-    return res.data.data;
-  } catch (error) {
-    if (axios.isAxiosError(error)) {
-      return rejectWithValue(
-        error.response?.data?.message || "Failed to fetch recipes",
-      );
+export const fetchRecipes = createAsyncThunk<RecipeResponses, scrolling, { rejectValue: string }>(
+  "recipes/fetchRecipes",
+  async ({ page, limit }, { rejectWithValue }) => {
+    try {
+      const skip = (page - 1) * limit;
+      const res = await api.get(`/product?_start=${skip}&_limit=${limit}`);
+      return res.data.data;
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        return rejectWithValue(error.response?.data?.message || "Failed to fetch recipes");
+      }
+      return rejectWithValue("Something went wrong");
     }
-    return rejectWithValue("Something went wrong");
-  }
-});
+  },
+);
 
-export const filteredData = createAsyncThunk<
-  RecipeResponses,
-  Filterdata,
-  { rejectValue: string }
->("recipes/filteredData", async ( {page , limit , query} , { rejectWithValue }) => {
-  try {
-    const skip = (page - 1) * limit;
-    const res = await api.get(`/product?${query}&_start=${skip}&_limit=${limit}`)
-    return res.data.data
-  } catch (error) {
-    if (axios.isAxiosError(error)) {
-      return rejectWithValue(
-        error.response?.data?.message || "Failed to fetch filteredRecipes",
-      );
+export const filteredData = createAsyncThunk<RecipeResponses, Filterdata, { rejectValue: string }>(
+  "recipes/filteredData",
+  async ({ page, limit, query }, { rejectWithValue }) => {
+    try {
+      const skip = (page - 1) * limit;
+      const res = await api.get(`/product?${query}&_start=${skip}&_limit=${limit}`);
+      return res.data.data;
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        return rejectWithValue(error.response?.data?.message || "Failed to fetch filteredRecipes");
+      }
+      return rejectWithValue("Something went wrong");
     }
-    return rejectWithValue("Something went wrong");
-  }
-});
-
-
+  },
+);

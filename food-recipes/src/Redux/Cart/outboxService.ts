@@ -1,9 +1,9 @@
 import localForage from "localforage";
-import { CartItem } from "./CartSlice";
+import { CartData} from "./CartSlice";
 
 export type CartOperation =
-  | { type: "ADD";item: CartItem }
-  | { type: "REMOVE"; item: CartItem };
+  | { type: "ADD";item: CartData }
+  | { type: "REMOVE"; item: CartData };
 
 
 export async function pushToOutbox(op: CartOperation) {

@@ -1,15 +1,39 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { Recipe } from "../Menu/RecipesSlice"
-import { fetchCartFromServer } from "./CartThunk";
+import { addToCartServer, fetchCartFromServer } from "./CartThunk";
 
-export type CartItem = Recipe & { quantity: number };
+export interface CartData {
+  productId: string;
+  quantity: number;
+  price: number;
+  image: string;
+  name: string;
+  mealType: string[];
+}
 
-type initial = {
-  items: CartItem[];
-};
+export interface CartResponses {
+  success: boolean;
+  message: string;
+  data: CartData[];
+  meta: {
+    limit: number;
+    skip: number;
+    total: number;
+    totalItems: number;
+  };
+  expired: false;
+  statusCode: number;
+}
+
+interface initial {
+  loading: boolean;
+  items: CartData[];
+  error: string | null;
+}
 
 const initialState: initial = {
+  loading: false,
   items: [],
+  error: null,
 };
 
 const cartSlice = createSlice({
@@ -17,9 +41,35 @@ const cartSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(fetchCartFromServer.fulfilled, (state, action) => {
-      state.items = action.payload;
-    });
+    builder
+
+      // Fetch CartData
+      .addCase(fetchCartFromServer.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchCartFromServer.fulfilled, (state, action) => {
+        state.loading = false;
+        state.items = action.payload.data;
+      })
+      .addCase(fetchCartFromServer.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || "Something went wrong";
+      })
+
+      // Add To Cart
+      .addCase(addToCartServer.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(addToCartServer.fulfilled, (state, action) => {
+        state.loading = false;
+        state.items = [...state.items, ...action.payload.data];
+      })
+      .addCase(addToCartServer.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || "Something went wrong";
+      });
   },
 });
 

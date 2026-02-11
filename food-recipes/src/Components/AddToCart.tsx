@@ -1,7 +1,7 @@
 import { NavLink, useNavigate } from "react-router-dom";
 import { CookingPot } from "lucide-react";
 import { Plus } from "lucide-react";
-import { CartItem } from "../Redux/Cart/CartSlice"
+import { CartData } from "../Redux/Cart/CartSlice"
 import { useAppDispatch, useAppSelector } from "./hooks";
 import { Box, Button, Typography } from "@mui/material";
 import { addToCartServer, deleteFromCartServer, fetchCartFromServer } from "../Redux/Cart/CartThunk";
@@ -12,11 +12,13 @@ const AddToCart = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate()
 
-  function handleDelete(food:CartItem) {
+  console.log(items)
+
+  function handleDelete(food:CartData) {
     dispatch(deleteFromCartServer(food))
   }
 
-  function handleAdd(foodItem: CartItem) {
+  function handleAdd(foodItem: CartData) {
     dispatch(addToCartServer(foodItem))
   }
 
@@ -44,7 +46,7 @@ const AddToCart = () => {
                 textAlign: "center",
                 padding: "16px",
               }}
-              key={food.id}
+              key={food.productId}
             >
               <Box
                 component="img"
@@ -76,7 +78,7 @@ const AddToCart = () => {
                     <Button
                       variant="contained"
                       component={NavLink}
-                      to={`/home/${food.id}`}
+                      to={`/home/${food.productId}`}
                       sx={{ padding: "6px 16px" }}
                     >
                       View Details

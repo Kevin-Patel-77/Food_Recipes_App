@@ -14,21 +14,20 @@ import LandingPage from "./Components/LandingPage";
 import GuestRoutes from "./Components/GuestRoutes";
 import Menu from "./Components/Menu";
 import LanguageSync from "./Components/LanguageSync";
-import { syncPendingOperation } from "./Redux/Cart/syncPendingOperations";
+// import { syncPendingOperation } from "./Redux/Cart/syncPendingOperations";
 import { useEffect } from "react";
 import Chats from "../src/Components/Chats/Chats";
 
-
 function App() {
-  useEffect(() => {
-    window.addEventListener("online", syncPendingOperation);
-    if (navigator.onLine) {
-      syncPendingOperation();
-    }
-    return () => {
-      window.removeEventListener("online", syncPendingOperation);
-    };
-  }, []);
+  // useEffect(() => {
+  //   window.addEventListener("online", syncPendingOperation);
+  //   if (navigator.onLine) {
+  //     syncPendingOperation();
+  //   }
+  //   return () => {
+  //     window.removeEventListener("online", syncPendingOperation);
+  //   };
+  // }, []);
 
   return (
     <>

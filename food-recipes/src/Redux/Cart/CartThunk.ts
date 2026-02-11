@@ -1,41 +1,69 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { CartItem } from "./CartSlice";
+import { CartData, CartResponses } from "./CartSlice";
 import axios from "axios";
 import { pushToOutbox } from "./outboxService";
+import api from "../../Utils/axiosInstance/axiosInstance";
 
-export const fetchCartFromServer = createAsyncThunk("cart/fetchCart", async () => {
-  const res = await axios.get<CartItem[]>("/api/cart");
-  return res.data;
-});
-
-export const addToCartServer = createAsyncThunk("cart/add", async (item: CartItem) => {
-  if (navigator.onLine) {
-    const existing = await axios.get(`/api/cart/${item.id}`).catch(() => null);
-
-    if (existing && existing.data) {
-      const res = await axios.patch(`/api/cart/${item.id}`, {
-        quantity: existing.data.quantity + 1,
-      });
+export const fetchCartFromServer = createAsyncThunk<CartResponses, void, { rejectValue: string }>(
+  "cart/fetchCart",
+  async (_, { rejectWithValue }) => {
+    try {
+      const res = await api.get("/cart");
       return res.data;
-    } else {
-      const res = await axios.post("/api/cart", item);
-      return res.data;
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        return rejectWithValue(error.response?.data?.message || "Failed to fetch cart");
+      }
+      return rejectWithValue("Something went wrong");
     }
-  } else {
-    await pushToOutbox({ type: "ADD", item});
-    return item; 
-  }
-});
+  },
+);
 
-export const deleteFromCartServer = createAsyncThunk("cart/remove", async (item: CartItem) => {
+export const addToCartServer = createAsyncThunk<CartResponses, CartData, { rejectValue: string }>(
+  "cart/add",
+  async (item, { rejectWithValue }) => {
+    try {
+      if (navigator.onLine) {
+        const existing = await api.get(`/cart/${item.productId}`).catch(() => null);
+
+        if (existing && existing.data) {
+          const res = await api.patch(`/cart/product/${item.productId}`, {
+            quantity: existing.data.data.quantity + 1,
+          });
+          return res.data;
+        } else {
+          const res = await api.post("/cart/add", {
+            items: [
+              {
+                productId: item.productId,
+                price: item.price,
+              },
+            ],
+          });
+          return res.data;
+        }
+      } else {
+        await pushToOutbox({ type: "ADD", item });
+        return item;
+      }
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        return rejectWithValue(error.response?.data?.message || "Failed to add data");
+      }
+      return rejectWithValue("Something went wrong");
+    }
+  },
+);
+
+export const deleteFromCartServer = createAsyncThunk("cart/remove", async (item: CartData) => {
   if (navigator.onLine) {
     if (item.quantity > 1) {
-      const res = await axios.patch(`/api/cart/${item.id}`, {
+      const res = await axios.patch(`/api/cart/${item.productId}`, {
         quantity: item.quantity - 1,
       });
       return res.data;
     } else {
-      await axios.delete(`/api/cart/${item.id}`);
+      await axios.delete(`/api/cart/${item.productId}`);
     }
   } else {
     await pushToOutbox({ type: "REMOVE", item });

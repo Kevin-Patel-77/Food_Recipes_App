@@ -9,6 +9,7 @@ export const fetchCartFromServer = createAsyncThunk<CartResponses, void, { rejec
   async (_, { rejectWithValue }) => {
     try {
       const res = await api.get("/cart");
+      console.log("Fetch", res);
       return res.data;
     } catch (error) {
       if (axios.isAxiosError(error)) {
@@ -19,28 +20,27 @@ export const fetchCartFromServer = createAsyncThunk<CartResponses, void, { rejec
   },
 );
 
-export const addToCartServer = createAsyncThunk<CartResponses, CartData, { rejectValue: string }>(
+export const addToCartServer = createAsyncThunk<CartData, CartData, { rejectValue: string }>(
   "cart/add",
   async (item, { rejectWithValue }) => {
     try {
       if (navigator.onLine) {
+        console.log(navigator.onLine);
         const existing = await api.get(`/cart/${item.productId}`).catch(() => null);
 
         if (existing && existing.data) {
           const res = await api.patch(`/cart/product/${item.productId}`, {
             quantity: existing.data.data.quantity + 1,
           });
-          return res.data;
+
+          return res.data.data;
         } else {
           const res = await api.post("/cart/add", {
-            items: [
-              {
-                productId: item.productId,
-                price: item.price,
-              },
-            ],
+            productId: item.productId,
+            price: item.price,
           });
-          return res.data;
+
+          return res.data.data;
         }
       } else {
         await pushToOutbox({ type: "ADD", item });
@@ -55,18 +55,29 @@ export const addToCartServer = createAsyncThunk<CartResponses, CartData, { rejec
   },
 );
 
-export const deleteFromCartServer = createAsyncThunk("cart/remove", async (item: CartData) => {
-  if (navigator.onLine) {
-    if (item.quantity > 1) {
-      const res = await axios.patch(`/api/cart/${item.productId}`, {
-        quantity: item.quantity - 1,
-      });
-      return res.data;
-    } else {
-      await axios.delete(`/api/cart/${item.productId}`);
+export const deleteFromCartServer = createAsyncThunk<CartData, CartData, { rejectValue: string }>(
+  "cart/remove",
+  async (item, { rejectWithValue }) => {
+    try {
+      if (navigator.onLine) {
+        if (item.quantity > 1) {
+          const res = await api.patch(`/cart/product/${item.productId}`, {
+            quantity: item.quantity - 1,
+          });
+          return res.data.data;
+        } else {
+          await api.delete(`/cart/${item.productId}`);
+          return { ...item, quantity: 0 };
+        }
+      } else {
+        await pushToOutbox({ type: "REMOVE", item });
+      }
+      return item;
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        return rejectWithValue(error.response?.data?.message || "Failed to add data");
+      }
+      return rejectWithValue("Something went wrong");
     }
-  } else {
-    await pushToOutbox({ type: "REMOVE", item });
-  }
-  return item;
-});
+  },
+);

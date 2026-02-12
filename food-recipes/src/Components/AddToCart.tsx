@@ -1,33 +1,55 @@
-import { NavLink, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { CookingPot } from "lucide-react";
 import { Plus } from "lucide-react";
-import { CartData } from "../Redux/Cart/CartSlice"
+import { CartData } from "../Redux/Cart/CartSlice";
 import { useAppDispatch, useAppSelector } from "./hooks";
 import { Box, Button, Typography } from "@mui/material";
-import { addToCartServer, deleteFromCartServer, fetchCartFromServer } from "../Redux/Cart/CartThunk";
+import {
+  addToCartServer,
+  deleteFromCartServer,
+  fetchCartFromServer,
+} from "../Redux/Cart/CartThunk";
 import { useEffect } from "react";
 
 const AddToCart = () => {
   const { items } = useAppSelector((state) => state.foodCart);
   const dispatch = useAppDispatch();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
-  console.log(items)
-
-  function handleDelete(food:CartData) {
-    dispatch(deleteFromCartServer(food))
+  function handleDelete(food: CartData) {
+    dispatch(deleteFromCartServer(food));
   }
 
   function handleAdd(foodItem: CartData) {
-    dispatch(addToCartServer(foodItem))
+    dispatch(addToCartServer(foodItem));
   }
 
   useEffect(() => {
     dispatch(fetchCartFromServer());
-}, [dispatch]);
+  }, [dispatch]);
 
   return (
-    <Box sx={{ padding:"32px" }}>
+    <Box sx={{ padding: "32px" }}>
+      {items.length <= 0 && (
+        <Box
+          sx={{
+            width: "100%",
+            height: "90vh",
+            display: "flex",
+            flexDirection: "column",
+            gap: "20px",
+            justifyContent: "center",
+            alignItems: "center",
+            color: "var(--jetGray)",
+            borderRadius: "10px",
+          }}
+        >
+          <Typography variant="h4">Your Recipes Cart is empty</Typography>
+          <Button variant="contained" onClick={() => navigate("/menu")}>
+            Explore Recipes
+          </Button>
+        </Box>
+      )}
       <Box
         sx={{
           width: "96%",
@@ -36,7 +58,7 @@ const AddToCart = () => {
           gap: "16px",
         }}
       >
-        {items.length > 0 && (
+        {items.length > 0 &&
           items.map((food) => (
             <Box
               sx={{
@@ -73,12 +95,18 @@ const AddToCart = () => {
                   ))}
                 </Typography>
 
-                <Box sx={{ display: "flex", justifyContent: "center", marginBottom: "16px", gap: "16px" }}>
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "center",
+                    marginBottom: "16px",
+                    gap: "16px",
+                  }}
+                >
                   <Box>
                     <Button
                       variant="contained"
-                      component={NavLink}
-                      to={`/home/${food.productId}`}
+                      onClick={() => navigate(`/home/${food.productId}`)}
                       sx={{ padding: "6px 16px" }}
                     >
                       View Details
@@ -100,42 +128,20 @@ const AddToCart = () => {
                       fontSize: "medium",
                       textDecoration: "none",
                     }}
-                    >
-                      <Box>
-                          <CookingPot size={24} onClick={() => handleDelete(food)} />
-                      </Box>
-                      <Box sx={{ width:"24px"}}>
-                        {food.quantity}
-                      </Box> 
-                      <Box>
-                        <Plus size={24} onClick={() => handleAdd(food)} />
-                      </Box>
+                  >
+                    <Box>
+                      <CookingPot size={24} onClick={() => handleDelete(food)} />
+                    </Box>
+                    <Box sx={{ width: "24px" }}>{food.quantity}</Box>
+                    <Box>
+                      <Plus size={24} onClick={() => handleAdd(food)} />
+                    </Box>
                   </Box>
                 </Box>
               </Box>
             </Box>
-          ))
-        )}
+          ))}
       </Box>
-
-      {items.length <= 0 && (
-        <Box
-            sx={{
-              width:"100%",
-              height: "90vh",
-              display: "flex",
-              flexDirection:"column",
-              gap:"20px",
-              justifyContent: "center",
-              alignItems: "center",
-              color: "var(--jetGray)",
-              borderRadius: "10px"
-            }}
-          >
-            <Typography variant="h4">Your Recipes Cart is empty</Typography>
-            <Button variant="contained" onClick={()=> navigate("/menu")}>Explore Recipes</Button>
-          </Box>
-      )}
     </Box>
   );
 };

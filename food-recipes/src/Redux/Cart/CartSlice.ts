@@ -1,25 +1,19 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { addToCartServer, fetchCartFromServer } from "./CartThunk";
+import { addToCartServer, deleteFromCartServer, fetchCartFromServer } from "./CartThunk";
 
 export interface CartData {
   productId: string;
   quantity: number;
   price: number;
   image: string;
-  name: string;
   mealType: string[];
+  name: string;
 }
 
 export interface CartResponses {
   success: boolean;
   message: string;
   data: CartData[];
-  meta: {
-    limit: number;
-    skip: number;
-    total: number;
-    totalItems: number;
-  };
   expired: false;
   statusCode: number;
 }
@@ -64,9 +58,43 @@ const cartSlice = createSlice({
       })
       .addCase(addToCartServer.fulfilled, (state, action) => {
         state.loading = false;
-        state.items = [...state.items, ...action.payload.data];
+
+        const updatedItem = action.payload;
+
+        const index = state.items.findIndex((item) => item.productId === updatedItem.productId);
+
+        if (index !== -1) {
+          state.items[index] = updatedItem;
+        } else {
+          state.items.push(updatedItem);
+        }
       })
       .addCase(addToCartServer.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || "Something went wrong";
+      })
+
+      // Delete From Cart Server
+      .addCase(deleteFromCartServer.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(deleteFromCartServer.fulfilled, (state, action) => {
+        state.loading = false;
+
+        const updatedItem = action.payload;
+
+        const index = state.items.findIndex((item) => item.productId === updatedItem.productId);
+
+        if (index !== -1) {
+          if (updatedItem.quantity > 0) {
+            state.items[index] = updatedItem;
+          } else {
+            state.items.splice(index, 1);
+          }
+        }
+      })
+      .addCase(deleteFromCartServer.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload || "Something went wrong";
       });

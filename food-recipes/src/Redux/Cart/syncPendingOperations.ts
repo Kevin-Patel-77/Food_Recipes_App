@@ -7,32 +7,46 @@ export async function syncPendingOperation() {
 
   if (!storedData || storedData.length === 0) return;
 
+  const remainingOperations: CartOperation[] = [];
   for (const data of storedData) {
-    if (data.type == "ADD") {
-      const existing = await api.get(`/cart/pcart/${data.item.productId}`).catch(() => null);
+    try {
+      if (data.type == "ADD") {
+        const existing = await api.get(`/cart/${data.item.productId}`).catch(() => null);
 
-      if (existing && existing.data) {
-        await api.patch(`/cart/product/${data.item.productId}`, {
-          quantity: existing.data.quantity + 1
-        });
-      } else {
-        await api.post(`/cart`, data.item);
+        if (existing && existing.data) {
+          await api.patch(`/cart/product/${data.item.productId}`, {
+            quantity: data.item.quantity,
+          });
+        } else {
+          await api.post(`/cart/add`, {
+            productId: data.item.productId,
+            price: data.item.price,
+          });
+        }
       }
-    }
-     
-    if (data.type === "REMOVE") {
-      const existing = await api.get(`/cart/pcart/${data.item.productId}`).catch(() => null);
-      if (!existing || !existing.data) continue;
 
-      const newQty = existing.data.quantity - 1
-      if (newQty > 0) {
-        await api.patch(`/cart/product/${data.item.productId}`, { quantity: newQty });
-      } else {
-        await api.delete(`/cart/${data.item.productId}`);
+      if (data.type === "REMOVE") {
+        const existing = await api.get(`/cart/${data.item.productId}`).catch(() => null);
+        if (!existing || !existing.data) continue;
+
+        if (existing.data.data.quantity > 1) {
+          await api.patch(`/cart/product/${data.item.productId}`, {
+            quantity: data.item.quantity,
+          });
+        } else {
+          await api.delete(`/cart/${data.item.productId}`);
+          return { ...data.item, quantity: 0 };
+        }
       }
+    } catch (error) {
+      console.error("Sync failed for:", data);
+      remainingOperations.push(data);
     }
   }
 
+  if (remainingOperations.length > 0) {
+    await localforage.setItem("cartOutbox", remainingOperations);
+  } else {
     await localforage.removeItem("cartOutbox");
-
+  }
 }

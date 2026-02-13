@@ -9,7 +9,6 @@ export const fetchCartFromServer = createAsyncThunk<CartResponses, void, { rejec
   async (_, { rejectWithValue }) => {
     try {
       const res = await api.get("/cart");
-      console.log("Fetch", res);
       return res.data;
     } catch (error) {
       if (axios.isAxiosError(error)) {
@@ -25,7 +24,6 @@ export const addToCartServer = createAsyncThunk<CartData, CartData, { rejectValu
   async (item, { rejectWithValue }) => {
     try {
       if (navigator.onLine) {
-        console.log(navigator.onLine);
         const existing = await api.get(`/cart/${item.productId}`).catch(() => null);
 
         if (existing && existing.data) {

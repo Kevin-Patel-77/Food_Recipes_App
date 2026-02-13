@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { CookingPot } from "lucide-react";
 import { Plus } from "lucide-react";
+import { Minus } from "lucide-react";
 import { CartData } from "../Redux/Cart/CartSlice";
 import { useAppDispatch, useAppSelector } from "./hooks";
 import { Box, Button, Typography } from "@mui/material";
@@ -123,14 +124,18 @@ const AddToCart = () => {
                       backgroundColor: "var(--softCrimson)",
                       color: "white",
                       marginBottom: "16px",
-                      padding: "3px 10px",
+                      padding: "6px 16px",
                       cursor: "pointer",
                       fontSize: "medium",
                       textDecoration: "none",
                     }}
                   >
                     <Box>
-                      <CookingPot size={24} onClick={() => handleDelete(food)} />
+                      {food.quantity > 1 ? (
+                        <Minus size={24} onClick={() => handleDelete(food)} />
+                      ) : (
+                        <CookingPot size={24} onClick={() => handleDelete(food)} />
+                      )}
                     </Box>
                     <Box sx={{ width: "24px" }}>{food.quantity}</Box>
                     <Box>

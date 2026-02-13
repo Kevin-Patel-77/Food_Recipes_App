@@ -17,17 +17,29 @@ import LanguageSync from "./Components/LanguageSync";
 import { syncPendingOperation } from "./Redux/Cart/syncPendingOperations";
 import { useEffect } from "react";
 import Chats from "../src/Components/Chats/Chats";
+import { useAppDispatch } from "./Components/hooks";
+import { fetchCartFromServer } from "./Redux/Cart/CartThunk";
 
 function App() {
+  const dispatch = useAppDispatch();
+
   useEffect(() => {
-    window.addEventListener("online", syncPendingOperation);
-    if (navigator.onLine) {
-      syncPendingOperation();
+    async function handleOnline() {
+      console.log("Back online. Syncing...");
+
+      await syncPendingOperation();
+      dispatch(fetchCartFromServer());
     }
+
+    window.addEventListener("online", handleOnline);
+    if (navigator.onLine) {
+      handleOnline();
+    }
+
     return () => {
-      window.removeEventListener("online", syncPendingOperation);
+      window.removeEventListener("online", handleOnline);
     };
-  }, []);
+  }, [dispatch]);
 
   return (
     <>

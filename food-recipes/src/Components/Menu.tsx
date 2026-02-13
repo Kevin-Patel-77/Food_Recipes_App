@@ -545,7 +545,7 @@ const Menu = () => {
                           <TableCell align="right">
                             {items.find((item) => item.productId == food.id) ? (
                               <Button onClick={() => navigate("/cart")} variant="contained">
-                                GO TO BAG
+                                View Cart
                               </Button>
                             ) : (
                               <Button onClick={() => handleCart(food)} variant="contained">
@@ -723,7 +723,7 @@ const Menu = () => {
                             sx={{ padding: "10px 25px" }}
                             variant="contained"
                           >
-                            GO TO BAG
+                           View Cart
                           </Button>
                         ) : (
                           <Button

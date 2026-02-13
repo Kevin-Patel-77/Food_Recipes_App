@@ -1,27 +1,27 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { loginUser, logoutUser, signUpUser } from "./AuthThunk";
 
-export type SignupPayload = {
-  name: string;
-  email: string;
-  password: string;
+export interface SignupPayload  {
+name: string;
+email: string;
+password: string;
 };
 
-export type LoginLogoutSignupResponse = {
+export interface LoginLogoutSignupResponse  {
   success: boolean;
   message: string;
 };
 
-export type LoginPayload = {
+export interface LoginPayload  {
   email: string;
   password: string;
 };
 
-export type LoginWithCaptcha = LoginPayload & {
+export interface LoginWithCaptcha extends LoginPayload  {
   hcaptchaToken: string;
 };
 
-export type AuthState = {
+export interface AuthState  {
   user: LoginLogoutSignupResponse | null;
   isAuthenticated: boolean;
   loading: boolean;

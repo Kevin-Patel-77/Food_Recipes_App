@@ -61,8 +61,17 @@ export const logoutUser = createAsyncThunk<
   void,
   { rejectValue: string }
 >("auth/logoutUser", async (_, { rejectWithValue }) => {
+  const refreshToken = localStorage.getItem("refreshToken");
   try {
-    const res = await api.post("/auth/logout");
+    const res = await api.post(
+      "/auth/logout",
+      {},
+      {
+        headers: {
+          Authorization: `${import.meta.env.VITE_SOCKET_TOKEN_PREFIX} ${refreshToken}`,
+        },
+      },
+    );
     return res.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {

@@ -19,14 +19,9 @@ import {
 } from "@mui/material";
 import { useAppDispatch, useAppSelector } from "./hooks";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
-import {
-  clearRecipes,
-  increasePage,
-  resetPage,
-  type Recipe,
-} from "../Redux/Menu/RecipesSlice";
+import { clearRecipes, increasePage, resetPage, type Recipe } from "../Redux/Menu/RecipesSlice";
 import RecipeSkeleton from "./Skeleton/RecipeSkeleton";
-import {useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import searchIcon from "../assets/search.png";
 import rupeeIcon from "../assets/rupee.png";
 import { debounce } from "lodash";
@@ -36,6 +31,8 @@ import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { toast } from "react-toastify";
 import { addToCartServer } from "../Redux/Cart/CartThunk";
 import { fetchRecipes, filteredData } from "../Redux/Menu/RecipesThunk";
+import { productExists } from "../Redux/Cart/CartApi";
+import { CartData } from "../Redux/Cart/CartSlice";
 
 const tabelCell = {
   borderBottom: "1px solid black",
@@ -46,9 +43,7 @@ const tabelCell = {
 const Menu = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const { recipes, loading, error, page, hasMore } = useAppSelector(
-    (state) => state.foodrecipes,
-  );
+  const { recipes, loading, error, page, hasMore } = useAppSelector((state) => state.foodrecipes);
   const [params, setParams] = useSearchParams();
   const [searchItem, setSearchItem] = useState(params.get("search") || "");
   const [debouncedValue, setDebouncedValue] = useState(searchItem);
@@ -72,6 +67,9 @@ const Menu = () => {
   );
 
   const { items } = useAppSelector((state) => state.foodCart);
+
+  // console.log(items)
+  // console.log(recipes)
 
   const [isListView, setIsListView] = useState<boolean>(() => {
     const saved = localStorage.getItem("listToggle");
@@ -133,9 +131,23 @@ const Menu = () => {
   }
 
   //   Add To Cart
-  function handleCart(foodItem: Recipe) {
-    dispatch(addToCartServer({ ...foodItem, quantity: 1 }));
-    toast.success("Cart Added");
+  async function handleCart(foodItem: Recipe) {
+    const isProductExists = await productExists(foodItem.id);
+    if (isProductExists === true) {
+      const cartItem: CartData = {
+        productId: foodItem.id,
+        quantity: 1,
+        price: foodItem.price,
+        image: foodItem.image,
+        name: foodItem.name,
+        mealType: foodItem.mealType,
+      };
+
+      dispatch(addToCartServer(cartItem));
+      toast.success("Cart Added");
+    } else {
+      toast.error("Product Not Found");
+    }
   }
 
   // List and Grid View
@@ -188,11 +200,7 @@ const Menu = () => {
     const handleScroll = () => {
       if (loading || !hasMore) return;
 
-      if (
-        window.innerHeight + window.scrollY >=
-          document.body.offsetHeight - 10 &&
-        !loading
-      ) {
+      if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 10 && !loading) {
         dispatch(increasePage());
       }
     };
@@ -204,6 +212,24 @@ const Menu = () => {
   useEffect(() => {
     return () => {
       debouncedSearch.current.cancel();
+    };
+  }, []);
+
+  useEffect(() => {
+    const handleOnline = () => {
+      console.log("Online");
+    };
+
+    const handleOffline = () => {
+      console.log("Offline");
+    };
+
+    window.addEventListener("online", handleOnline);
+    window.addEventListener("offline", handleOffline);
+
+    return () => {
+      window.removeEventListener("online", handleOnline);
+      window.removeEventListener("offline", handleOffline);
     };
   }, []);
 
@@ -227,9 +253,7 @@ const Menu = () => {
 
   return (
     <Box sx={{ padding: "30px" }}>
-      <Box
-        sx={{ display: { sm: "grid", md: "flex", lg: "flex" }, gap: "20px" }}
-      >
+      <Box sx={{ display: { sm: "grid", md: "flex", lg: "flex" }, gap: "20px" }}>
         <Box
           sx={{
             width: { sm: "100%", md: "50%", lg: "20%" },
@@ -239,10 +263,7 @@ const Menu = () => {
             padding: "16px",
           }}
         >
-          <Typography
-            variant="h4"
-            sx={{ textAlign: "center", color: "var(--softCrimson)" }}
-          >
+          <Typography variant="h4" sx={{ textAlign: "center", color: "var(--softCrimson)" }}>
             Menu
           </Typography>
 
@@ -299,16 +320,11 @@ const Menu = () => {
                 justifyContent: "space-between",
               }}
             >
-              <Typography
-                variant="h5"
-                sx={{ marginTop: "30px", color: "var(--softCrimson)" }}
-              >
+              <Typography variant="h5" sx={{ marginTop: "30px", color: "var(--softCrimson)" }}>
                 Cuisine
               </Typography>
 
-              {searchItem.trim() ||
-              cuisine.length > 0 ||
-              priceRange.length > 0 ? (
+              {searchItem.trim() || cuisine.length > 0 || priceRange.length > 0 ? (
                 <Button variant="text" onClick={handleClearAll}>
                   Clear All
                 </Button>
@@ -328,9 +344,7 @@ const Menu = () => {
                       <Checkbox
                         size="small"
                         checked={cuisine.includes(cuis)}
-                        onChange={(e) =>
-                          handleCuisineChange(cuis, e.target.checked)
-                        }
+                        onChange={(e) => handleCuisineChange(cuis, e.target.checked)}
                       />
                     }
                   />
@@ -340,10 +354,7 @@ const Menu = () => {
           </Box>
 
           <Box>
-            <Typography
-              variant="h5"
-              sx={{ marginTop: "20px", color: "var(--softCrimson)" }}
-            >
+            <Typography variant="h5" sx={{ marginTop: "20px", color: "var(--softCrimson)" }}>
               Price
             </Typography>
             <hr />
@@ -367,10 +378,7 @@ const Menu = () => {
           </Box>
 
           <Box>
-            <Typography
-              variant="h5"
-              sx={{ marginTop: "20px", color: "var(--softCrimson)" }}
-            >
+            <Typography variant="h5" sx={{ marginTop: "20px", color: "var(--softCrimson)" }}>
               Shopping Cart
             </Typography>
             <hr />
@@ -392,10 +400,7 @@ const Menu = () => {
           </Box>
 
           <Box>
-            <Typography
-              variant="h5"
-              sx={{ marginTop: "20px", color: "var(--softCrimson)" }}
-            >
+            <Typography variant="h5" sx={{ marginTop: "20px", color: "var(--softCrimson)" }}>
               Layout
             </Typography>
             <hr />
@@ -449,9 +454,7 @@ const Menu = () => {
                 <RecipeSkeleton key={`init-${i}`} />
               ))}
 
-            {!loading &&
-            recipes.length === 0 &&
-            params.toString().length > 0 ? (
+            {!loading && recipes.length === 0 && params.toString().length > 0 ? (
               <Typography
                 variant="h4"
                 sx={{
@@ -530,7 +533,7 @@ const Menu = () => {
                           </TableCell>
                           <TableCell align="right">
                             <Button
-                              onClick={()=> navigate(`/home/${food.id}`)}
+                              onClick={() => navigate(`/home/${food.id}`)}
                               variant="contained"
                               size="small"
                               sx={{ padding: "8px 13px" }}
@@ -540,18 +543,12 @@ const Menu = () => {
                           </TableCell>
 
                           <TableCell align="right">
-                            {items.find((item) => item.id === food.id) ? (
-                              <Button
-                                onClick={() => navigate("/cart")}
-                                variant="contained"
-                              >
-                                GO TO BAG
+                            {items.find((item) => item.productId == food.id) ? (
+                              <Button onClick={() => navigate("/cart")} variant="contained">
+                                View Cart
                               </Button>
                             ) : (
-                              <Button
-                                onClick={() => handleCart(food)}
-                                variant="contained"
-                              >
+                              <Button onClick={() => handleCart(food)} variant="contained">
                                 ADD TO CART
                               </Button>
                             )}
@@ -593,9 +590,7 @@ const Menu = () => {
                 <RecipeSkeleton key={`init-${i}`} />
               ))}
 
-            {!loading &&
-            recipes.length === 0 &&
-            params.toString().length > 0 ? (
+            {!loading && recipes.length === 0 && params.toString().length > 0 ? (
               <Typography
                 variant="h4"
                 sx={{
@@ -690,27 +685,14 @@ const Menu = () => {
                         gap: "2px",
                       }}
                     >
-                      Amount:{" "}
-                      <Box
-                        component="img"
-                        src={rupeeIcon}
-                        width="15px"
-                        height="12px"
-                      ></Box>
+                      Amount: <Box component="img" src={rupeeIcon} width="15px" height="12px"></Box>
                       {food.price}
                     </Typography>
 
-                    <Typography
-                      variant="body1"
-                      sx={{ marginBottom: "16px", color: "black" }}
-                    >
+                    <Typography variant="body1" sx={{ marginBottom: "16px", color: "black" }}>
                       Meal Type:{" "}
                       {food.mealType.map((meal, index) => (
-                        <Typography
-                          key={index}
-                          component="span"
-                          sx={{ marginRight: "8px" }}
-                        >
+                        <Typography key={index} component="span" sx={{ marginRight: "8px" }}>
                           {meal}
                         </Typography>
                       ))}
@@ -735,13 +717,13 @@ const Menu = () => {
                       </Box>
 
                       <Box>
-                        {items.find((item) => item.id === food.id) ? (
+                        {items.find((item) => item.productId === food.id) ? (
                           <Button
                             onClick={() => navigate("/cart")}
                             sx={{ padding: "10px 25px" }}
                             variant="contained"
                           >
-                            GO TO BAG
+                           View Cart
                           </Button>
                         ) : (
                           <Button

@@ -1,31 +1,56 @@
-import { NavLink, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { CookingPot } from "lucide-react";
 import { Plus } from "lucide-react";
-import { CartItem } from "../Redux/Cart/CartSlice"
+import { Minus } from "lucide-react";
+import { CartData } from "../Redux/Cart/CartSlice";
 import { useAppDispatch, useAppSelector } from "./hooks";
 import { Box, Button, Typography } from "@mui/material";
-import { addToCartServer, deleteFromCartServer, fetchCartFromServer } from "../Redux/Cart/CartThunk";
+import {
+  addToCartServer,
+  deleteFromCartServer,
+  fetchCartFromServer,
+} from "../Redux/Cart/CartThunk";
 import { useEffect } from "react";
 
 const AddToCart = () => {
   const { items } = useAppSelector((state) => state.foodCart);
   const dispatch = useAppDispatch();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
-  function handleDelete(food:CartItem) {
-    dispatch(deleteFromCartServer(food))
+  function handleDelete(food: CartData) {
+    dispatch(deleteFromCartServer(food));
   }
 
-  function handleAdd(foodItem: CartItem) {
-    dispatch(addToCartServer(foodItem))
+  function handleAdd(foodItem: CartData) {
+    dispatch(addToCartServer(foodItem));
   }
 
   useEffect(() => {
     dispatch(fetchCartFromServer());
-}, [dispatch]);
+  }, [dispatch]);
 
   return (
-    <Box sx={{ padding:"32px" }}>
+    <Box sx={{ padding: "32px" }}>
+      {items.length <= 0 && (
+        <Box
+          sx={{
+            width: "100%",
+            height: "90vh",
+            display: "flex",
+            flexDirection: "column",
+            gap: "20px",
+            justifyContent: "center",
+            alignItems: "center",
+            color: "var(--jetGray)",
+            borderRadius: "10px",
+          }}
+        >
+          <Typography variant="h4">Your Recipes Cart is empty</Typography>
+          <Button variant="contained" onClick={() => navigate("/menu")}>
+            Explore Recipes
+          </Button>
+        </Box>
+      )}
       <Box
         sx={{
           width: "96%",
@@ -34,7 +59,7 @@ const AddToCart = () => {
           gap: "16px",
         }}
       >
-        {items.length > 0 && (
+        {items.length > 0 &&
           items.map((food) => (
             <Box
               sx={{
@@ -44,7 +69,7 @@ const AddToCart = () => {
                 textAlign: "center",
                 padding: "16px",
               }}
-              key={food.id}
+              key={food.productId}
             >
               <Box
                 component="img"
@@ -71,12 +96,18 @@ const AddToCart = () => {
                   ))}
                 </Typography>
 
-                <Box sx={{ display: "flex", justifyContent: "center", marginBottom: "16px", gap: "16px" }}>
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "center",
+                    marginBottom: "16px",
+                    gap: "16px",
+                  }}
+                >
                   <Box>
                     <Button
                       variant="contained"
-                      component={NavLink}
-                      to={`/home/${food.id}`}
+                      onClick={() => navigate(`/home/${food.productId}`)}
                       sx={{ padding: "6px 16px" }}
                     >
                       View Details
@@ -93,47 +124,29 @@ const AddToCart = () => {
                       backgroundColor: "var(--softCrimson)",
                       color: "white",
                       marginBottom: "16px",
-                      padding: "3px 10px",
+                      padding: "6px 16px",
                       cursor: "pointer",
                       fontSize: "medium",
                       textDecoration: "none",
                     }}
-                    >
-                      <Box>
-                          <CookingPot size={24} onClick={() => handleDelete(food)} />
-                      </Box>
-                      <Box sx={{ width:"24px"}}>
-                        {food.quantity}
-                      </Box> 
-                      <Box>
-                        <Plus size={24} onClick={() => handleAdd(food)} />
-                      </Box>
+                  >
+                    <Box>
+                      {food.quantity > 1 ? (
+                        <Minus size={24} onClick={() => handleDelete(food)} />
+                      ) : (
+                        <CookingPot size={24} onClick={() => handleDelete(food)} />
+                      )}
+                    </Box>
+                    <Box sx={{ width: "24px" }}>{food.quantity}</Box>
+                    <Box>
+                      <Plus size={24} onClick={() => handleAdd(food)} />
+                    </Box>
                   </Box>
                 </Box>
               </Box>
             </Box>
-          ))
-        )}
+          ))}
       </Box>
-
-      {items.length <= 0 && (
-        <Box
-            sx={{
-              width:"100%",
-              height: "90vh",
-              display: "flex",
-              flexDirection:"column",
-              gap:"20px",
-              justifyContent: "center",
-              alignItems: "center",
-              color: "var(--jetGray)",
-              borderRadius: "10px"
-            }}
-          >
-            <Typography variant="h4">Your Recipes Cart is empty</Typography>
-            <Button variant="contained" onClick={()=> navigate("/menu")}>Explore Recipes</Button>
-          </Box>
-      )}
     </Box>
   );
 };

@@ -115,3 +115,87 @@ export const sliderData: slider[] = [
       icons : XIcon
     }
   ] 
+
+
+  // import { useState, useRef, useEffect } from 'react';
+
+// const useLazyRender = (items, preloadCount = 3) => {
+//   const [visibleItems, setVisibleItems] = useState(new Set());
+//   const [preloadedItems, setPreloadedItems] = useState(new Set());
+//   const itemRefs = useRef(new Map());
+
+//   useEffect(() => {
+//     const observer = new IntersectionObserver(
+//       (entries) => {
+//         entries.forEach((entry) => {
+//           const target = entry.target as HTMLElement;
+//           const itemId = target.dataset.id;
+
+//           if (itemId) {
+//             if (entry.isIntersecting) {
+//               setVisibleItems((prev) => {
+//                 const newSet = new Set(prev).add(itemId);
+
+//                 // Find index of current item
+//                 const currentIndex = items.findIndex(
+//                   (item, idx) => (item.id || idx.toString()) === itemId,
+//                 );
+
+//                 // Preload items before and after
+//                 if (currentIndex !== -1) {
+//                   const newPreloadSet = new Set();
+
+//                   // Preload previous N items
+//                   for (let i = 1; i <= preloadCount; i += 1) {
+//                     const preloadIndex = currentIndex - i;
+//                     if (preloadIndex >= 0) {
+//                       const preloadId =
+//                         items[preloadIndex].id || preloadIndex.toString();
+//                       newPreloadSet.add(preloadId);
+//                     }
+//                   }
+
+//                   // Preload next N items
+//                   for (let i = 1; i <= preloadCount; i += 1) {
+//                     const preloadIndex = currentIndex + i;
+//                     if (preloadIndex < items.length) {
+//                       const preloadId =
+//                         items[preloadIndex].id || preloadIndex.toString();
+//                       newPreloadSet.add(preloadId);
+//                     }
+//                   }
+
+//                   setPreloadedItems(newPreloadSet);
+//                 }
+
+//                 return newSet;
+//               });
+//             } else {
+//               setVisibleItems((prev) => {
+//                 const newSet = new Set(prev);
+//                 newSet.delete(itemId);
+//                 return newSet;
+//               });
+//             }
+//           }
+//         });
+//       },
+//       { threshold: 0.1, rootMargin: '300px 0px' },
+//     );
+
+//     itemRefs.current.forEach((node) => {
+//       if (node) observer.observe(node);
+//     });
+
+//     return () => observer.disconnect();
+//   }, [items, preloadCount]);
+
+//   // Determine if an item should be rendered (visible or preloaded)
+//   const shouldRender = (itemId) =>
+//     visibleItems.has(itemId) || preloadedItems.has(itemId);
+
+//   return { shouldRender, itemRefs };
+// };
+
+// export default useLazyRender;
+ 

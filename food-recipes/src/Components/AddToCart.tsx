@@ -30,7 +30,7 @@ const AddToCart = () => {
   }, [dispatch]);
 
   return (
-    <Box sx={{ padding: "32px" }}>
+    <Box sx={{ padding: { xs: "0px", sm: "20px", lg: "32px" } }}>
       {items.length <= 0 && (
         <Box
           sx={{
@@ -53,9 +53,9 @@ const AddToCart = () => {
       )}
       <Box
         sx={{
-          width: "96%",
+          width: "100%",
           display: "grid",
-          gridTemplateColumns: "repeat(auto-fill , minmax(300px , 1fr))",
+          gridTemplateColumns: "repeat(auto-fill , minmax(350px , 1fr))",
           gap: "16px",
         }}
       >

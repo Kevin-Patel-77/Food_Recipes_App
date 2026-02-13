@@ -68,9 +68,6 @@ const Menu = () => {
 
   const { items } = useAppSelector((state) => state.foodCart);
 
-  // console.log(items)
-  // console.log(recipes)
-
   const [isListView, setIsListView] = useState<boolean>(() => {
     const saved = localStorage.getItem("listToggle");
 
@@ -723,7 +720,7 @@ const Menu = () => {
                             sx={{ padding: "10px 25px" }}
                             variant="contained"
                           >
-                           View Cart
+                            View Cart
                           </Button>
                         ) : (
                           <Button

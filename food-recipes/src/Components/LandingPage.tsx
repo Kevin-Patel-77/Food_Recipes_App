@@ -1,4 +1,13 @@
-import { Box, Button, Divider, IconButton, ListItemIcon, Menu, MenuItem, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Divider,
+  IconButton,
+  ListItemIcon,
+  Menu,
+  MenuItem,
+  Typography,
+} from "@mui/material";
 import { NavLink, useNavigate } from "react-router-dom";
 import cartImage from "../assets/cart.png";
 import { useEffect, useState } from "react";
@@ -51,7 +60,7 @@ const LandingPage = () => {
 
   useEffect(() => {
     if (error) {
-      console.log("Hello Error")
+      console.log("Hello Error");
       toast.error(error);
     }
 
@@ -95,13 +104,25 @@ const LandingPage = () => {
 
           <Box sx={{ display: "flex", gap: { xs: "0px", sm: "32px", md: "0px", lg: "48px" } }}>
             {headerItem.map((item, index) => (
-              <Button key={index} component={NavLink} to={item.to} variant="text" sx={{ backgroundColor:"#EFE7E2", color: "var(--jetGray)" }}>
+              <Button
+                key={index}
+                component={NavLink}
+                to={item.to}
+                variant="text"
+                sx={{ backgroundColor: "#EFE7E2", color: "var(--jetGray)" }}
+              >
                 {item.name}
               </Button>
             ))}
           </Box>
 
-          <Box sx={{ display: "flex", alignItems: "center", gap: { xs: "32px", sm: "64px", md: "16px", lg: "20px" } }}>
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              gap: { xs: "32px", sm: "64px", md: "16px", lg: "20px" },
+            }}
+          >
             <Box sx={{ position: "relative", display: "flex" }}>
               <Box
                 component="img"
@@ -131,7 +152,7 @@ const LandingPage = () => {
               <Button
                 variant="contained"
                 onClick={() => navigate("/login")}
-                sx={{ width: "90px", padding: "8px 24px"}}
+                sx={{ width: "90px", padding: "8px 24px" }}
               >
                 Log In
               </Button>
@@ -224,6 +245,7 @@ const LandingPage = () => {
             <AnimatePresence mode="wait">
               <motion.img
                 key={currentIndex}
+                loading="lazy"
                 src={currentSlider.image}
                 alt="image"
                 initial={{ opacity: 0, x: 100 }}
@@ -249,9 +271,17 @@ const LandingPage = () => {
         >
           {BowlItems.map((item, index) => (
             <Box key={index} sx={{ position: "relative", marginTop: "120px" }}>
-              <Box sx={{ position: "absolute", top: "0", left: "50%", transform: "translate(-50%, -50%)" }}>
+              <Box
+                sx={{
+                  position: "absolute",
+                  top: "0",
+                  left: "50%",
+                  transform: "translate(-50%, -50%)",
+                }}
+              >
                 <Box
                   component="img"
+                  loading="lazy"
                   src={item.image}
                   alt={item.title}
                   sx={{ width: { xs: "220px", sm: "230px", md: "240px", lg: "250px" } }}
@@ -277,7 +307,7 @@ const LandingPage = () => {
                 </Box>
 
                 <Box sx={{ display: "flex", alignItems: "center" }}>
-                  <img src={rupeeIcon} alt="rupee" style={{ width: "15px", height: "15px" }}/>
+                  <img src={rupeeIcon} alt="rupee" style={{ width: "15px", height: "15px" }} />
                   <Typography>{item.price}</Typography>
                 </Box>
               </Box>
@@ -310,7 +340,13 @@ const LandingPage = () => {
                   marginTop: "24px",
                   display: "flex",
                   gap: "20px",
-                  justifyContent: { xs: "center", sm: "center", md: "center", lg: "left", xl: "left" },
+                  justifyContent: {
+                    xs: "center",
+                    sm: "center",
+                    md: "center",
+                    lg: "left",
+                    xl: "left",
+                  },
                 }}
               >
                 <Box sx={{ display: "grid", gap: "16px" }}>
@@ -335,7 +371,6 @@ const LandingPage = () => {
                     fontWeight: "bold",
                     gap: "16px",
                     borderRadius: "100px",
-                    
                   }}
                 >
                   See Recipes <EastIcon />{" "}
@@ -343,9 +378,15 @@ const LandingPage = () => {
               </Box>
             </Box>
 
-            <Box sx={{ width: { xs: "100%", sm: "100%", md: "100%", lg: "50%", xl: "45%" }, height: "auto" }}>
+            <Box
+              sx={{
+                width: { xs: "100%", sm: "100%", md: "100%", lg: "50%", xl: "45%" },
+                height: "auto",
+              }}
+            >
               <Box
                 component="img"
+                loading="lazy"
                 src={cheeseImage}
                 alt="Cheese"
                 width="100%"

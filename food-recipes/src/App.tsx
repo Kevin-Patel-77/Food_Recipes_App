@@ -1,24 +1,27 @@
 import { Route, Routes } from "react-router-dom";
 import "./App.css";
-import AddToCart from "./Components/AddToCart";
-import Signup from "./Components/Signup";
-import RecipesDetails from "./Components/RecipesDetails";
-import ProtectedRoutes from "./Components/ProtectedRoutes";
-import Login from "../src/Components/Login";
-import { CssBaseline, ThemeProvider } from "@mui/material";
+import { Box, CssBaseline, ThemeProvider } from "@mui/material";
 import { theme } from "./Components/theme";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
-import NotFound from "./Components/NotFound";
-import LandingPage from "./Components/LandingPage";
-import GuestRoutes from "./Components/GuestRoutes";
-import Menu from "./Components/Menu";
 import LanguageSync from "./Components/LanguageSync";
 import { syncPendingOperation } from "./Redux/Cart/syncPendingOperations";
 import { useEffect } from "react";
-import Chats from "../src/Components/Chats/Chats";
 import { useAppDispatch } from "./Components/hooks";
 import { fetchCartFromServer } from "./Redux/Cart/CartThunk";
+import ProtectedRoutes from "./Components/ProtectedRoutes";
+import GuestRoutes from "./Components/GuestRoutes";
+import { lazy, Suspense } from "react";
+import CircularProgress from "@mui/material/CircularProgress";
+
+const LandingPage = lazy(() => import("./Components/LandingPage"));
+const AddToCart = lazy(() => import("./Components/AddToCart"));
+const Signup = lazy(() => import("./Components/Signup"));
+const RecipesDetails = lazy(() => import("./Components/RecipesDetails"));
+const Login = lazy(() => import("./Components/Login"));
+const NotFound = lazy(() => import("./Components/NotFound"));
+const Menu = lazy(() => import("./Components/Menu"));
+const Chats = lazy(() => import("./Components/Chats/Chats"));
 
 function App() {
   const dispatch = useAppDispatch();
@@ -45,43 +48,58 @@ function App() {
     <>
       <ThemeProvider theme={theme}>
         <CssBaseline />
-        <Routes>
-          <Route path="/" element={<LandingPage />}></Route>
-          <Route path="/home" element={<LandingPage />}></Route>
+        <Suspense
+          fallback={
+            <Box 
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                height:"100vh"
+              }}
+            >
+              <CircularProgress size="48px" />
+            </Box>
+          }
+        >
+          <Routes>
+            <Route path="/" element={<LandingPage />} />
+            <Route path="/home" element={<LandingPage />} />
 
-          <Route
-            path="/menu"
-            element={
-              <ProtectedRoutes>
-                <Menu />
-              </ProtectedRoutes>
-            }
-          ></Route>
+            <Route
+              path="/menu"
+              element={
+                <ProtectedRoutes>
+                  <Menu />
+                </ProtectedRoutes>
+              }
+            />
 
-          <Route path="/home/:id" element={<RecipesDetails />}></Route>
-          <Route path="/cart" element={<AddToCart />}></Route>
+            <Route path="/home/:id" element={<RecipesDetails />} />
+            <Route path="/cart" element={<AddToCart />} />
 
-          <Route
-            path="/signup"
-            element={
-              <GuestRoutes>
-                <Signup />
-              </GuestRoutes>
-            }
-          ></Route>
+            <Route
+              path="/signup"
+              element={
+                <GuestRoutes>
+                  <Signup />
+                </GuestRoutes>
+              }
+            />
 
-          <Route
-            path="/login"
-            element={
-              <GuestRoutes>
-                <Login />
-              </GuestRoutes>
-            }
-          ></Route>
+            <Route
+              path="/login"
+              element={
+                <GuestRoutes>
+                  <Login />
+                </GuestRoutes>
+              }
+            />
 
-          <Route path="/chats" element={<Chats />}></Route>
-          <Route path="*" element={<NotFound />}></Route>
-        </Routes>
+            <Route path="/chats" element={<Chats />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </Suspense>
         <LanguageSync />
       </ThemeProvider>
 

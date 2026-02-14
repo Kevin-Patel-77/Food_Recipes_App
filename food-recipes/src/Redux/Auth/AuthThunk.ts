@@ -1,11 +1,8 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-import {
-  LoginLogoutSignupResponse,
-  LoginWithCaptcha,
-  SignupPayload,
-} from "../Auth/AuthSlice";
-import api from "../../Utils/axiosInstance/axiosInstance";
+
+import api from "../../Utils/axiosInstance/axiosInstance.ts";
+import type { LoginLogoutSignupResponse, LoginWithCaptcha, SignupPayload } from "./AuthSlice.ts";
 
 export const signUpUser = createAsyncThunk<
   LoginLogoutSignupResponse,

@@ -1,7 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { User } from "./ChatSlice";
-import api from "../../Utils/axiosInstance/axiosInstance";
+import api from "../../Utils/axiosInstance/axiosInstance.ts";
 import axios from "axios";
+import type { User } from "./ChatSlice.ts";
 
 interface chatsHistoryPayload {
   limit: number;

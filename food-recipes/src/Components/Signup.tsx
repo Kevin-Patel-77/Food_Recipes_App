@@ -14,7 +14,7 @@ import { useForm, type SubmitHandler } from "react-hook-form";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { signUpUser } from "../Redux/Auth/AuthThunk";
-import { clearUser, SignupPayload } from "../Redux/Auth/AuthSlice";
+import { clearUser, type SignupPayload } from "../Redux/Auth/AuthSlice";
 
 const Signup = () => {
   const [showPassword, setShowPassword] = useState<boolean>(false);

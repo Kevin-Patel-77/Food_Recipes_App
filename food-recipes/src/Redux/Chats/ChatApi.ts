@@ -1,4 +1,4 @@
-import api from "../../Utils/axiosInstance/axiosInstance";
+import api from "../../Utils/axiosInstance/axiosInstance.ts";
 
 interface GetSignedUrlPayload {
   file: File;

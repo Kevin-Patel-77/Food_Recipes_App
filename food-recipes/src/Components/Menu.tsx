@@ -18,7 +18,7 @@ import {
   Typography,
 } from "@mui/material";
 import { useAppDispatch, useAppSelector } from "./hooks";
-import { ChangeEvent, useEffect, useRef, useState } from "react";
+import { type ChangeEvent, useEffect, useRef, useState } from "react";
 import { clearRecipes, increasePage, resetPage, type Recipe } from "../Redux/Menu/RecipesSlice";
 import RecipeSkeleton from "./Skeleton/RecipeSkeleton";
 import { useNavigate, useSearchParams } from "react-router-dom";
@@ -32,7 +32,7 @@ import { toast } from "react-toastify";
 import { addToCartServer } from "../Redux/Cart/CartThunk";
 import { fetchRecipes, filteredData } from "../Redux/Menu/RecipesThunk";
 import { productExists } from "../Redux/Cart/CartApi";
-import { CartData } from "../Redux/Cart/CartSlice";
+import type { CartData } from "../Redux/Cart/CartSlice";
 
 const tabelCell = {
   borderBottom: "1px solid black",

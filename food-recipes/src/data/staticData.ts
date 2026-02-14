@@ -9,7 +9,7 @@ import InstagramIcon from '@mui/icons-material/Instagram';
 import FacebookIcon from '@mui/icons-material/Facebook';
 import TwitterIcon from '@mui/icons-material/Twitter';
 import XIcon from '@mui/icons-material/X';
-import { SvgIconComponent } from "@mui/icons-material";
+import { type SvgIconComponent } from "@mui/icons-material";
 
 interface header {
   name:string

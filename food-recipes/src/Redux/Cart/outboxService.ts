@@ -1,5 +1,5 @@
 import localForage from "localforage";
-import { CartData } from "./CartSlice";
+import type { CartData } from "./CartSlice";
 
 export type CartOperation = { type: "ADD"; item: CartData } | { type: "REMOVE"; item: CartData };
 

@@ -1,8 +1,8 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { CartData, CartResponses } from "./CartSlice";
 import axios from "axios";
 import { pushToOutbox } from "./outboxService";
-import api from "../../Utils/axiosInstance/axiosInstance";
+import api from "../../Utils/axiosInstance/axiosInstance.ts"
+import type { CartData, CartResponses } from "./CartSlice.js";
 
 export const fetchCartFromServer = createAsyncThunk<CartResponses, void, { rejectValue: string }>(
   "cart/fetchCart",

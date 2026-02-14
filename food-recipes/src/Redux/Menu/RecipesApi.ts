@@ -1,4 +1,4 @@
-import api from "../../Utils/axiosInstance/axiosInstance";
+import api from "../../Utils/axiosInstance/axiosInstance.ts";
 
 export const fetchRecipesById = async (recipeId: string | undefined) => {
   try {

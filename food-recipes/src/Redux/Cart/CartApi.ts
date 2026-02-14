@@ -1,4 +1,4 @@
-import api from "../../Utils/axiosInstance/axiosInstance";
+import api from "../../Utils/axiosInstance/axiosInstance.ts";
 
 export const productExists = async (id: string) => {
   try {

@@ -2,7 +2,6 @@ import { useNavigate } from "react-router-dom";
 import { CookingPot } from "lucide-react";
 import { Plus } from "lucide-react";
 import { Minus } from "lucide-react";
-import { CartData } from "../Redux/Cart/CartSlice";
 import { useAppDispatch, useAppSelector } from "./hooks";
 import { Box, Button, Typography } from "@mui/material";
 import {
@@ -11,6 +10,7 @@ import {
   fetchCartFromServer,
 } from "../Redux/Cart/CartThunk";
 import { useEffect } from "react";
+import type { CartData } from "../Redux/Cart/CartSlice";
 
 const AddToCart = () => {
   const { items } = useAppSelector((state) => state.foodCart);

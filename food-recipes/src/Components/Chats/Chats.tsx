@@ -18,8 +18,10 @@ import { chatsHistory, fetchUserList } from "../../Redux/Chats/ChatThunk";
 import {
   addConversation,
   clearConversations,
-  Messages,
-  User,
+  type Messages,
+  type User,
+  
+  
 } from "../../Redux/Chats/ChatSlice";
 import { ChatSkeleton } from "../Skeleton/ChatsSkeleton";
 import HlsVideoPlayer from "../../Utils/HlsVideoPlayer/HlsVideoPlayer";

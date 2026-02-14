@@ -5,9 +5,9 @@ import { Box, Button, IconButton, InputAdornment, InputLabel, TextField, Typogra
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { Eye, EyeOff } from "lucide-react";
 import { toast } from "react-toastify";
-import { LoginPayload } from "../Redux/Auth/AuthSlice";
 import { loginUser } from "../Redux/Auth/AuthThunk";
 import HCaptcha from "@hcaptcha/react-hcaptcha";
+import type { LoginPayload } from "../Redux/Auth/AuthSlice";
 
 const Login = () => {
   const disptach = useAppDispatch();

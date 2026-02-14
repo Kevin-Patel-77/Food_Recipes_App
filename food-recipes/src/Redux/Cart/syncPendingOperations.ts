@@ -1,6 +1,6 @@
 import localforage from "localforage";
-import { CartOperation } from "./outboxService";
-import api from "../../Utils/axiosInstance/axiosInstance";
+import api from "../../Utils/axiosInstance/axiosInstance.ts";
+import type { CartOperation } from "./outboxService.ts";
 
 export async function syncPendingOperation() {
   const storedData = await localforage.getItem<CartOperation[]>("cartOutbox");

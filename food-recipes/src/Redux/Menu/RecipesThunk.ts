@@ -1,7 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import api from "../../Utils/axiosInstance/axiosInstance";
-import { RecipeResponses } from "./RecipesSlice";
+import api from "../../Utils/axiosInstance/axiosInstance.ts";
 import axios from "axios";
+import type { RecipeResponses } from "./RecipesSlice.ts";
 
 interface scrolling {
   page: number;

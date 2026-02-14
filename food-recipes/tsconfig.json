@@ -1,11 +1,7 @@
 {
-  "compilerOptions": {
-    "strict": true,
-    "skipLibCheck": true,
-    "module": "ESNext",
-    "moduleResolution": "Bundler",
-    "allowSyntheticDefaultImports": true,
-    "esModuleInterop": true,
-  },
-  "include": ["vite.config.ts"]
+  "files": [],
+  "references": [
+    { "path": "./tsconfig.app.json" },
+    { "path": "./tsconfig.node.json" }
+  ]
 }

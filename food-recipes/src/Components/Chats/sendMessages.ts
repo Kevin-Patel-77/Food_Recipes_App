@@ -4,7 +4,7 @@ import {
   getFileId,
   uploadFileToSignedUrl,
 } from "../../Redux/Chats/ChatApi";
-import api from "../../Utils/axiosInstance/axiosInstance";
+import api from "../../Utils/axiosInstance/axiosInstance.ts";
 import { toast } from "react-toastify";
 
 interface sendArgs {

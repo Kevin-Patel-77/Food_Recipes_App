@@ -3,7 +3,7 @@ import { Box, CardMedia, Typography } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { useEffect, useState } from "react";
 import { fetchRecipesById } from "../Redux/Menu/RecipesApi";
-import { Recipe } from "../Redux/Menu/RecipesSlice";
+import type { Recipe } from "../Redux/Menu/RecipesSlice";
 
 const labelStyle = {
   listStyle: "none",

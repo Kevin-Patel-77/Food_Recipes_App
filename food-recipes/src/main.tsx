@@ -6,11 +6,6 @@ import { Provider } from "react-redux";
 import recipesStore from "./Redux/store/Store.ts";
 import "./Utils/i18n";
 
-if ("serviceWorker" in navigator) {
-  window.addEventListener("load", () => {
-    navigator.serviceWorker.register("/sw.js");
-  });
-}
 
 createRoot(document.getElementById("root")!).render(
   <Provider store={recipesStore}>

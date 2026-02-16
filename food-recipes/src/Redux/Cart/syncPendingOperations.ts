@@ -17,7 +17,7 @@ export async function syncPendingOperation() {
           await api.patch(`/cart/product/${data.item.productId}`, {
             quantity: data.item.quantity,
           });
-        } else {
+        } else { 
           await api.post(`/cart/add`, {
             productId: data.item.productId,
             price: data.item.price,
@@ -39,6 +39,7 @@ export async function syncPendingOperation() {
         }
       }
     } catch (error) {
+      console.log(error);
       console.error("Sync failed for:", data);
       remainingOperations.push(data);
     }

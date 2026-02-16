@@ -29,10 +29,11 @@ import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
 import GridViewIcon from "@mui/icons-material/GridView";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { toast } from "react-toastify";
-import { addToCartServer } from "../Redux/Cart/CartThunk";
+import { addToCartServer, fetchCartFromServer } from "../Redux/Cart/CartThunk";
 import { fetchRecipes, filteredData } from "../Redux/Menu/RecipesThunk";
 import { productExists } from "../Redux/Cart/CartApi";
 import type { CartData } from "../Redux/Cart/CartSlice";
+import { syncPendingOperation } from "../Redux/Cart/syncPendingOperations";
 
 const tabelCell = {
   borderBottom: "1px solid black",
@@ -213,22 +214,22 @@ const Menu = () => {
   }, []);
 
   useEffect(() => {
-    const handleOnline = () => {
-      console.log("Online");
-    };
+    async function handleOnline() {
+      console.log("Back online. Syncing...");
 
-    const handleOffline = () => {
-      console.log("Offline");
-    };
+      await syncPendingOperation();
+      dispatch(fetchCartFromServer());
+    }
 
     window.addEventListener("online", handleOnline);
-    window.addEventListener("offline", handleOffline);
+    if (navigator.onLine) {
+      handleOnline();
+    }
 
     return () => {
       window.removeEventListener("online", handleOnline);
-      window.removeEventListener("offline", handleOffline);
     };
-  }, []);
+  }, [dispatch]);
 
   // Error (only when no cached data)
   if (error && recipes.length === 0) {
@@ -250,10 +251,10 @@ const Menu = () => {
 
   return (
     <Box sx={{ padding: "30px" }}>
-      <Box sx={{ display: { sm: "grid", md: "flex", lg: "flex" }, gap: "20px" }}>
+      <Box sx={{ display: { sm: "grid", md: "grid", lg: "flex" }, gap: "20px" }}>
         <Box
           sx={{
-            width: { sm: "100%", md: "50%", lg: "20%" },
+            width: { xs: "100%", sm: "100%", md: "100%", lg: "20%" },
             height: "1100px",
             border: "1px solid var(--jetGray)",
             borderRadius: "12px",
@@ -439,7 +440,7 @@ const Menu = () => {
         {isListView ? (
           <Box
             sx={{
-              width: { xs: "100%", sm: "100%", md: "80%", lg: "80%" },
+              width: { xs: "100%", sm: "100%", md: "100%", lg: "80%" },
               border: "1px solid #333333",
               borderRadius: "12px",
             }}
@@ -497,6 +498,7 @@ const Menu = () => {
                             }}
                           >
                             <Box
+                              loading="lazy"
                               component="img"
                               sx={{
                                 width: "48px",
@@ -567,11 +569,11 @@ const Menu = () => {
         ) : (
           <Box
             sx={{
-              width: { xs: "100%", sm: "100%", md: "80%", lg: "80%" },
+              width: { xs: "100%", sm: "100%", md: "100%", lg: "80%" },
               display: "grid",
               gridTemplateColumns: {
                 sm: "repeat(2 , 1fr)",
-                md: "repeat(auto-fill, 450px)",
+                md: "repeat(auto-fill, 400px)",
                 lg: "repeat(auto-fill, 450px)",
               },
               gap: "16px",
@@ -612,14 +614,15 @@ const Menu = () => {
                   key={food.id}
                 >
                   <Box
+                    loading="lazy"
                     component="img"
                     sx={{
                       width: "100%",
-                      height: "20rem",
+                      // height: "20rem",
                       border: "1px solid black",
                       borderRadius: "10px",
                       marginTop: "0.8rem",
-                      marginBottom: "1rem",
+                      marginBottom: "16px",
                     }}
                     onClick={() => navigate(`/home/${food.id}`)}
                     src={food.image}
@@ -682,7 +685,14 @@ const Menu = () => {
                         gap: "2px",
                       }}
                     >
-                      Amount: <Box component="img" src={rupeeIcon} width="15px" height="12px"></Box>
+                      Amount:{" "}
+                      <Box
+                        loading="lazy"
+                        component="img"
+                        src={rupeeIcon}
+                        width="15px"
+                        height="12px"
+                      ></Box>
                       {food.price}
                     </Typography>
 

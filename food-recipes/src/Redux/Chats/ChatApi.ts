@@ -36,6 +36,7 @@ export const uploadFileToSignedUrl = async (
   signedUrl: string,
   selectedFile: File,
 ) => {
+  console.log(signedUrl)
   try {
     await api.put(signedUrl, selectedFile, {
       headers: {

@@ -5,10 +5,6 @@ import { theme } from "./Components/theme";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
 import LanguageSync from "./Components/LanguageSync";
-import { syncPendingOperation } from "./Redux/Cart/syncPendingOperations";
-import { useEffect } from "react";
-import { useAppDispatch } from "./Components/hooks";
-import { fetchCartFromServer } from "./Redux/Cart/CartThunk";
 import ProtectedRoutes from "./Components/ProtectedRoutes";
 import GuestRoutes from "./Components/GuestRoutes";
 import { lazy, Suspense } from "react";
@@ -24,38 +20,18 @@ const Menu = lazy(() => import("./Components/Menu"));
 const Chats = lazy(() => import("./Components/Chats/Chats"));
 
 function App() {
-  const dispatch = useAppDispatch();
-
-  useEffect(() => {
-    async function handleOnline() {
-      console.log("Back online. Syncing...");
-
-      await syncPendingOperation();
-      dispatch(fetchCartFromServer());
-    }
-
-    window.addEventListener("online", handleOnline);
-    if (navigator.onLine) {
-      handleOnline();
-    }
-
-    return () => {
-      window.removeEventListener("online", handleOnline);
-    };
-  }, [dispatch]);
-
   return (
     <>
       <ThemeProvider theme={theme}>
         <CssBaseline />
         <Suspense
           fallback={
-            <Box 
+            <Box
               sx={{
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
-                height:"100vh"
+                height: "100vh",
               }}
             >
               <CircularProgress size="48px" />

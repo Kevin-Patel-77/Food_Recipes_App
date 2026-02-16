@@ -1,19 +1,19 @@
-import bowl1 from "../assets/bowl1.png"
-import bowl2 from "../assets/bowl2.png"
-import bowl3 from "../assets/bowl3.png"
-import bowl4 from "../assets/bowl4.png"
-import image1 from "../assets/image1.png"
-import image2 from "../assets/image2.png"
-import image3 from "../assets/image3.png"
-import InstagramIcon from '@mui/icons-material/Instagram';
-import FacebookIcon from '@mui/icons-material/Facebook';
-import TwitterIcon from '@mui/icons-material/Twitter';
-import XIcon from '@mui/icons-material/X';
+import bowl1 from "../assets/bowl1.png";
+import bowl2 from "../assets/bowl2.png";
+import bowl3 from "../assets/bowl3.png";
+import bowl4 from "../assets/bowl4.png";
+import image1 from "../assets/image1.png";
+import image2 from "../assets/image2.png";
+import image3 from "../assets/image3.png";
+import InstagramIcon from "@mui/icons-material/Instagram";
+import FacebookIcon from "@mui/icons-material/Facebook";
+import TwitterIcon from "@mui/icons-material/Twitter";
+import XIcon from "@mui/icons-material/X";
 import { type SvgIconComponent } from "@mui/icons-material";
 
 interface header {
-  name:string
-  to:string
+  name: string;
+  to: string;
 }
 
 interface BowlItem {
@@ -24,34 +24,33 @@ interface BowlItem {
 }
 
 interface slider {
-  title1 : string;
-  title2 : string;
-  image : string
+  title1: string;
+  title2: string;
+  image: string;
 }
 
 interface socialMedia {
-  icons : SvgIconComponent
+  icons: SvgIconComponent;
 }
 
-export const headerItem : header[] = [
+export const headerItem: header[] = [
   {
-    name:"Home",
-    to:"/home"
+    name: "Home",
+    to: "/home",
   },
   {
-    name:"Menu",
-    to:"/menu"
+    name: "Menu",
+    to: "/menu",
   },
   {
-    name:"About Us",
-    to:"/about"
+    name: "About Us",
+    to: "/about",
   },
   {
-    name:"Contact",
-    to:"/contact"
+    name: "Contact",
+    to: "/contact",
   },
-]
-
+];
 
 export const BowlItems: BowlItem[] = [
   {
@@ -80,44 +79,40 @@ export const BowlItems: BowlItem[] = [
   },
 ];
 
-
-
 export const sliderData: slider[] = [
-    {
-      title1: "The essence of India,",
-      title2: "plated perfectly.",
-      image: image1,
-    },
-    {
-      title1: "Where tradition",
-      title2: "meets taste.",
-      image: image2,
-    },
-    {
-      title1: "Desserts that steal",
-      title2: "the show.",
-      image: image3,
-    },
-  ];
+  {
+    title1: "The essence of India,",
+    title2: "plated perfectly.",
+    image: image1,
+  },
+  {
+    title1: "Where tradition",
+    title2: "meets taste.",
+    image: image2,
+  },
+  {
+    title1: "Desserts that steal",
+    title2: "the show.",
+    image: image3,
+  },
+];
 
+export const socialMedias: socialMedia[] = [
+  {
+    icons: InstagramIcon,
+  },
+  {
+    icons: FacebookIcon,
+  },
+  {
+    icons: TwitterIcon,
+  },
+  {
+    icons: XIcon,
+  },
+];
 
-  export const socialMedias : socialMedia[]= [
-    {
-      icons : InstagramIcon
-    }, 
-    {
-      icons : FacebookIcon
-    },
-    {
-      icons : TwitterIcon
-    },
-    {
-      icons : XIcon
-    }
-  ] 
-
-
-  // import { useState, useRef, useEffect } from 'react';
+// import { useState, useRef, useEffect } from 'react';
 
 // const useLazyRender = (items, preloadCount = 3) => {
 //   const [visibleItems, setVisibleItems] = useState(new Set());
@@ -198,4 +193,3 @@ export const sliderData: slider[] = [
 // };
 
 // export default useLazyRender;
- 

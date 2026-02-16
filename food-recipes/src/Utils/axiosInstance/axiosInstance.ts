@@ -48,7 +48,7 @@ api.interceptors.response.use(
                 return api(originalRequest);
 
             } catch (error) {
-                console.error("Please Login Again")
+                console.error("Please Login Again" , error )
                 localStorage.removeItem("accessToken")
                 localStorage.removeItem("refreshToken")
                 window.location.href = "/login"

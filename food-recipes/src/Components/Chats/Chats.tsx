@@ -130,6 +130,7 @@ const Chats = () => {
     );
 
     socket.on("receive_message", (data) => {
+      console.log(data)
       if (data) {
         const SSE_URL = `${import.meta.env.VITE_SSE_NOTIFICATION_EVENTS}`;
         const eventSource = new EventSource(SSE_URL);

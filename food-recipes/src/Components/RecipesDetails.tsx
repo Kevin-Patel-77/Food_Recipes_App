@@ -7,16 +7,16 @@ import type { Recipe } from "../Redux/Menu/RecipesSlice";
 
 const labelStyle = {
   listStyle: "none",
-  fontSize: "1.1rem",
-  marginBottom: "1rem",
+  fontSize: "18px",
+  marginBottom: "16px",
   fontWeight: "bold",
   color: "var(--darkCrimson)",
 };
 
 const valueStyle = {
   listStyle: "none",
-  fontSize: "1.1rem",
-  marginBottom: "1rem",
+  fontSize: "18px",
+  marginBottom: "16px",
   color: "black",
 };
 
@@ -45,7 +45,7 @@ const RecipesDetails = () => {
           display: "flex",
           flexDirection: { xs: "column", md: "row" },
           justifyContent: "center",
-          gap: "2rem",
+          gap: "32px",
         }}
       >
         <Box sx={{ textAlign: "center", color: "gold" }}>
@@ -68,7 +68,7 @@ const RecipesDetails = () => {
           </Typography>
         </Box>
 
-        <Box sx={{ display: "flex", gap: "2rem" }}>
+        <Box sx={{ display: "flex", gap: "32px" }}>
           <Box>
             <Typography component={"ul"} sx={{ padding: 0 }}>
               <Typography sx={labelStyle} component={"li"}>
@@ -105,9 +105,9 @@ const RecipesDetails = () => {
               </Typography>
               <Typography
                 component="li"
-                sx={{ ...valueStyle, paddingLeft: "1rem" }}
+                sx={{ ...valueStyle, paddingLeft: "16px" }}
               >
-                <ul style={{ paddingLeft: "1rem" }}>
+                <ul style={{ paddingLeft: "16px" }}>
                   {foodInfo.ingredients.map((ing, i) => (
                     <li key={i} style={{ marginBottom: "0.3rem" }}>
                       {ing}
@@ -122,7 +122,7 @@ const RecipesDetails = () => {
 
       <Box
         sx={{
-          marginTop: "5rem",
+          marginTop: "80px",
           textAlign: "center",
           border: "1px solid black",
           borderRadius: "10px",
@@ -136,7 +136,7 @@ const RecipesDetails = () => {
           sx={{
             display: "flex",
             justifyContent: "space-evenly",
-            marginTop: "2rem",
+            marginTop: "32px",
           }}
         >
           {foodInfo.ingredients.map((ingre, i) => (

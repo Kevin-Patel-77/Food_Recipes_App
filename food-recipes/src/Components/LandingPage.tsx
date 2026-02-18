@@ -10,7 +10,7 @@ import {
 } from "@mui/material";
 import { NavLink, useNavigate } from "react-router-dom";
 import cartImage from "../assets/cart.png";
-import { useEffect,  useState } from "react";
+import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import rupeeIcon from "../assets/rupee.png";
 import cheeseImage from "../assets/Cheese.jpg";
@@ -79,7 +79,7 @@ const LandingPage = () => {
   }, []);
 
   const currentSlider = sliderData[currentIndex];
-  
+
   return (
     <Box>
       <Box sx={{ margin: { sm: "24px 48px", md: "32px 112px", lg: "48px 112px" } }}>
@@ -370,10 +370,10 @@ const LandingPage = () => {
                     padding: { xs: "8px 40px", sm: "8px 60px", md: "8px 80px", lg: "8px 80px" },
                     fontWeight: "bold",
                     gap: "16px",
-                  borderRadius: "100px",
+                    borderRadius: "100px",
                   }}
                 >
-                    See Recipes <EastIcon />{" "}
+                  See Recipes <EastIcon />{" "}
                 </Button>
               </Box>
             </Box>

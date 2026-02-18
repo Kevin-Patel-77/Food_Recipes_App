@@ -1,9 +1,5 @@
 import { Socket } from "socket.io-client";
-import {
-  confirmFileUpload,
-  getFileId,
-  uploadFileToSignedUrl,
-} from "../../Redux/Chats/ChatApi";
+import { confirmFileUpload, getFileId, uploadFileToSignedUrl } from "../../Redux/Chats/ChatApi";
 import api from "../../Utils/axiosInstance/axiosInstance.ts";
 import { toast } from "react-toastify";
 
@@ -17,16 +13,12 @@ export interface sendArgsWithToken extends sendArgs {
   token: string | null;
 }
 
-export const sendTextMessage = ({
-  chatSocket,
-  conversationId,
-  content,
-}: sendArgs) => {
+export const sendTextMessage = ({ chatSocket, conversationId, content }: sendArgs) => {
   chatSocket?.emit("send_message", {
     conversationId,
     content,
     type: "text",
-  });
+  });                         
 };
 
 export const sendMediaMessage = async (
@@ -95,8 +87,8 @@ export const sendVideoMessage = async (
 
         onPendingChange?.(false);
         eventSource.close();
-      } else{
-        toast.error("Failed to load video")
+      } else {
+        toast.error("Failed to load video");
         onPendingChange?.(false);
         eventSource.close();
       }

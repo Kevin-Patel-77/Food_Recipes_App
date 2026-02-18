@@ -112,6 +112,17 @@ export const socialMedias: socialMedia[] = [
   },
 ];
 
+export const cuisines:string[] = [
+    "Indian",
+    "Italian",
+    "Mexican",
+    "Mediterranean",
+    "Pakistani",
+    "Japanese",
+    "Russian",
+    "Korean",
+    "Greek",
+  ];
 // import { useState, useRef, useEffect } from 'react';
 
 // const useLazyRender = (items, preloadCount = 3) => {

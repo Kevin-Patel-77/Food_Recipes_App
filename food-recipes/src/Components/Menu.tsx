@@ -34,6 +34,7 @@ import { fetchRecipes, filteredData } from "../Redux/Menu/RecipesThunk";
 import { productExists } from "../Redux/Cart/CartApi";
 import type { CartData } from "../Redux/Cart/CartSlice";
 import { syncPendingOperation } from "../Redux/Cart/syncPendingOperations";
+import { cuisines } from "../data/staticData";
 
 const tabelCell = {
   borderBottom: "1px solid black",
@@ -79,18 +80,6 @@ const Menu = () => {
   });
 
   const itemsPerPage = 7;
-
-  const cuisines = [
-    "Indian",
-    "Italian",
-    "Mexican",
-    "Mediterranean",
-    "Pakistani",
-    "Japanese",
-    "Russian",
-    "Korean",
-    "Greek",
-  ];
 
   function handleSearchChange(event: ChangeEvent<HTMLInputElement>) {
     const value = event.target.value;

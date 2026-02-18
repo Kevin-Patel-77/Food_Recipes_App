@@ -1,11 +1,4 @@
-import {
-  Box,
-  Button,
-  Chip,
-  InputAdornment,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Box, Button, Chip, InputAdornment, TextField, Typography } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
 import { connectSocket, disconnectSocket } from "../../Utils/Socket/socket";
 import { Socket } from "socket.io-client";
@@ -20,17 +13,11 @@ import {
   clearConversations,
   type Messages,
   type User,
-  
-  
 } from "../../Redux/Chats/ChatSlice";
 import { ChatSkeleton } from "../Skeleton/ChatsSkeleton";
 import HlsVideoPlayer from "../../Utils/HlsVideoPlayer/HlsVideoPlayer";
 import CircularProgress from "@mui/material/CircularProgress";
-import {
-  sendMediaMessage,
-  sendTextMessage,
-  sendVideoMessage,
-} from "./sendMessages";
+import { sendMediaMessage, sendTextMessage, sendVideoMessage } from "./sendMessages";
 
 const Chats = () => {
   const dispatch = useAppDispatch();
@@ -101,9 +88,7 @@ const Chats = () => {
   useEffect(() => {
     if (!token) return;
 
-    const socket = connectSocket(
-      `${import.meta.env.VITE_SOCKET_TOKEN_PREFIX} ${token}`,
-    );
+    const socket = connectSocket(`${import.meta.env.VITE_SOCKET_TOKEN_PREFIX} ${token}`);
     socketRef.current = socket;
 
     socket.on("connect", () => {
@@ -114,23 +99,20 @@ const Chats = () => {
       console.log("Socket disconnected");
     });
 
-    socket.on(
-      "joined",
-      (data: { conversationId: string; messages: Messages[] }) => {
-        dispatch(clearConversations());
-        setConversationId(data.conversationId);
-        dispatch(
-          chatsHistory({
-            limit: chatsPerPage,
-            page: 1,
-            conversationId: data.conversationId,
-          }),
-        );
-      },
-    );
+    socket.on("joined", (data: { conversationId: string; messages: Messages[] }) => {
+      dispatch(clearConversations());
+      setConversationId(data.conversationId);
+      dispatch(
+        chatsHistory({
+          limit: chatsPerPage,
+          page: 1,
+          conversationId: data.conversationId,
+        }),
+      );
+    });
 
     socket.on("receive_message", (data) => {
-      console.log(data)
+      console.log(data);
       if (data) {
         const SSE_URL = `${import.meta.env.VITE_SSE_NOTIFICATION_EVENTS}`;
         const eventSource = new EventSource(SSE_URL);
@@ -241,13 +223,8 @@ const Chats = () => {
                   sx={{
                     cursor: "pointer",
                     backgroundColor:
-                      selectedUser?.id === user.id
-                        ? "var(--softCrimson)"
-                        : "transparent",
-                    color:
-                      selectedUser?.id === user.id
-                        ? "var(--white)"
-                        : "var(--jetGray)",
+                      selectedUser?.id === user.id ? "var(--softCrimson)" : "transparent",
+                    color: selectedUser?.id === user.id ? "var(--white)" : "var(--jetGray)",
                   }}
                 >
                   <Typography variant="h6" sx={{ padding: "16px 24px" }}>
@@ -319,10 +296,7 @@ const Chats = () => {
                 >
                   {loading &&
                     Array.from({ length: chatsPerPage }).map((_, i) => (
-                      <ChatSkeleton
-                        key={`skeleton-${i}`}
-                        align={i % 2 === 0 ? "left" : "right"}
-                      />
+                      <ChatSkeleton key={`skeleton-${i}`} align={i % 2 === 0 ? "left" : "right"} />
                     ))}
 
                   {conversations.map((msg) => {
@@ -353,9 +327,7 @@ const Chats = () => {
                           borderTopLeftRadius: isMine ? "12px" : 0,
                         }}
                       >
-                        {!isMedia && (
-                          <Typography variant="body1">{msg.content}</Typography>
-                        )}
+                        {!isMedia && <Typography variant="body1">{msg.content}</Typography>}
 
                         {isMedia &&
                           msg.attachments &&
@@ -402,18 +374,11 @@ const Chats = () => {
                                       borderRadius: "8px",
                                       cursor: "pointer",
                                     }}
-                                    onClick={() =>
-                                      window.open(att.url, "_blank")
-                                    }
+                                    onClick={() => window.open(att.url, "_blank")}
                                   >
-                                    <Typography
-                                      variant="body2"
-                                      sx={{ wordBreak: "break-all" }}
-                                    >
+                                    <Typography variant="body2" sx={{ wordBreak: "break-all" }}>
                                       {"Attachment"}
-                                      <Typography
-                                        sx={{ mt: 1, fontSize: "10px" }}
-                                      >
+                                      <Typography sx={{ mt: 1, fontSize: "10px" }}>
                                         click to open
                                       </Typography>
                                     </Typography>

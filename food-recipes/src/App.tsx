@@ -9,6 +9,7 @@ import ProtectedRoutes from "./Components/ProtectedRoutes";
 import GuestRoutes from "./Components/GuestRoutes";
 import { lazy, Suspense } from "react";
 import CircularProgress from "@mui/material/CircularProgress";
+import About from "./Components/About";
 
 const LandingPage = lazy(() => import("./Components/LandingPage"));
 const AddToCart = lazy(() => import("./Components/AddToCart"));
@@ -74,6 +75,7 @@ function App() {
 
             <Route path="/chats" element={<Chats />} />
             <Route path="*" element={<NotFound />} />
+            <Route path="/about" element={<About/>}></Route>
           </Routes>
         </Suspense>
         <LanguageSync />
